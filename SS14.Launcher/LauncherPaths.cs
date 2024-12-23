@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -31,7 +32,12 @@ public static class LauncherPaths
     public static readonly string PathClientMacLog = Path.Combine(DirLogs, ClientMacLogName);
     public static readonly string PathClientStdoutLog = Path.Combine(DirLogs, ClientStdoutLogName);
     public static readonly string PathClientStderrLog = Path.Combine(DirLogs, ClientStderrLogName);
-    public static readonly string PathPublicKey = Path.Combine(DirLauncherInstall, "signing_key");
+    public static readonly string PathPublicKey = Path.Combine(DirLauncherInstall, "signing_key_Robust"); // Used as a fallback
+    public static readonly Dictionary<string, string> PathPublicKeys = new()
+    {
+        { "Robust", PathPublicKey },
+        { "Multiverse", Path.Combine(DirLauncherInstall, "signing_key_Multiverse") },
+    };
     public static readonly string PathContentDb = Path.Combine(DirLocalData, "content.db");
     public static readonly string PathOverrideAssetsDb = Path.Combine(DirLocalData, "override_assets.db");
 

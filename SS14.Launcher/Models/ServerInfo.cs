@@ -11,7 +11,6 @@ public sealed class ServerInfo
     public string? ConnectAddress { get; set; }
 
     [JsonInclude, JsonPropertyName("build")] public ServerBuildInformation? BuildInformation;
-    [JsonInclude, JsonPropertyName("engine")] public string Engine { get; set; } = "Robust";
     [JsonPropertyName("auth")] public ServerAuthInformation AuthInformation { get; set; } = default!;
 
     [JsonPropertyName("desc")] public string? Desc { get; set; }

@@ -195,7 +195,7 @@ public sealed partial class EngineManagerDynamic : IEngineManager
             // Verify signature.
             tempFile.Seek(0, SeekOrigin.Begin);
 
-            if (!VerifyModuleSignature(tempFile, platformData.Sig))
+            if (!VerifyModuleSignature(tempFile, moduleName, platformData.Sig))
             {
 #if DEBUG
                 if (_cfg.GetCVar(CVars.DisableSigning))
@@ -283,7 +283,7 @@ public sealed partial class EngineManagerDynamic : IEngineManager
         }
     }
 
-    private static unsafe bool VerifyModuleSignature(FileStream stream, string signature)
+    private static unsafe bool VerifyModuleSignature(FileStream stream, string module, string signature)
     {
         if (stream.Length > int.MaxValue)
             throw new InvalidOperationException("Unable to handle files larger than 2 GiB");
@@ -307,7 +307,7 @@ public sealed partial class EngineManagerDynamic : IEngineManager
 
             var pubKey = PublicKey.Import(
                 SignatureAlgorithm.Ed25519,
-                File.ReadAllBytes(LauncherPaths.PathPublicKey),
+                File.ReadAllBytes(LauncherPaths.PathPublicKeys!.GetValueOrDefault(module, null) ?? LauncherPaths.PathPublicKey),
                 KeyBlobFormat.PkixPublicKeyText);
 
             var sigBytes = Convert.FromHexString(signature);
@@ -323,7 +323,7 @@ public sealed partial class EngineManagerDynamic : IEngineManager
     public async Task<EngineModuleManifest> GetEngineModuleManifest(string engine, CancellationToken cancel = default)
     {
         if (!ConfigConstants.EngineBuildsUrl.TryGetValue(engine, out var urls))
-            throw new InvalidOperationException("No manifest URL for engine module"); //TODO: Tell the user
+            throw new InvalidOperationException("No manifest URL for engine module");
 
         if (await urls.GetFromJsonAsync<EngineModuleManifest>(_http, cancel) is { } manifest)
             return manifest;

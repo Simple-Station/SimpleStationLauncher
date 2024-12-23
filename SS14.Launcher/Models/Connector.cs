@@ -336,7 +336,7 @@ public class Connector : ReactiveObject
         // Must have been set when retrieving build info (inferred to be automatic zipping).
         Debug.Assert(info.BuildInformation != null, "info.BuildInformation != null");
 
-        var installation = await _updater.RunUpdateForLaunchAsync(info.BuildInformation, info.Engine, cancel);
+        var installation = await _updater.RunUpdateForLaunchAsync(info.BuildInformation, cancel);
         if (installation == null)
         {
             throw new ConnectException(ConnectionStatus.UpdateError);
@@ -415,10 +415,10 @@ public class Connector : ReactiveObject
         IEnumerable<string> extraArgs,
         List<(string, string)> env)
     {
-        Log.Error("Launching client with engine {Engine}", engine);
-        Log.Fatal(string.Join(", ", launchInfo.ModuleInfo));
+        Log.Information("Launching client with engine {Engine}", engine);
+        Log.Debug($"Engine has modules {string.Join(", ", launchInfo.ModuleInfo)}");
 
-        var pubKey = LauncherPaths.PathPublicKey;
+        var pubKey = LauncherPaths.PathPublicKeys!.GetValueOrDefault(engine, null) ?? LauncherPaths.PathPublicKey;
         var engineVersion = launchInfo.ModuleInfo.Single(x => x.Module == engine).Version;
         var binPath = _engineManager.GetEnginePath(engineVersion);
         var sig = _engineManager.GetEngineSignature(engineVersion);

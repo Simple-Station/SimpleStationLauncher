@@ -83,8 +83,12 @@
     <RobustLinkAssemblies Include="TerraFX.Interop.Windows" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="signing_key" />
-    <Content Include="signing_key">
+    <None Remove="signing_key_Robust" />
+    <Content Include="signing_key_Robust">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="signing_key_Multiverse" />
+    <Content Include="signing_key_Multiverse">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

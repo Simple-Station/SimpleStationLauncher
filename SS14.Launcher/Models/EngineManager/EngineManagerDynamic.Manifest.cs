@@ -54,16 +54,14 @@ public sealed partial class EngineManagerDynamic
         string engine)
     {
         // First, check if we have a cached copy of the manifest.
-        if (_cachedEngineVersionInfo.TryGetValue(engine, out var versionInfo) && versionInfo != null)
+        if (_cachedEngineVersionInfo.TryGetValue(engine, out var versionInfo)
+            && versionInfo != null
+            && _robustCacheValidUntil > _manifestStopwatch.Elapsed)
             return FindVersionInfoInCached(version, followRedirects, engine);
-
-        if (_robustCacheValidUntil >= _manifestStopwatch.Elapsed)
-            return null;
 
         // If we don't have a cached copy, or it's expired, we re-request the manifest.
         await UpdateBuildManifest(cancel, engine);
         return FindVersionInfoInCached(version, followRedirects, engine);
-
     }
 
     private async Task UpdateBuildManifest(CancellationToken cancel, string name)

@@ -67,10 +67,9 @@ public sealed class Updater : ReactiveObject
 
     public async Task<ContentLaunchInfo?> RunUpdateForLaunchAsync(
         ServerBuildInformation buildInformation,
-        string engine,
         CancellationToken cancel = default)
     {
-        return await GuardUpdateAsync(() => RunUpdate(buildInformation, engine, cancel));
+        return await GuardUpdateAsync(() => RunUpdate(buildInformation, cancel));
     }
 
     public async Task<ContentLaunchInfo?> InstallContentBundleForLaunchAsync(
@@ -118,7 +117,6 @@ public sealed class Updater : ReactiveObject
 
     private async Task<ContentLaunchInfo> RunUpdate(
         ServerBuildInformation buildInfo,
-        string engine,
         CancellationToken cancel)
     {
         Status = UpdateStatus.CheckingClientUpdate;
@@ -126,7 +124,7 @@ public sealed class Updater : ReactiveObject
         // Both content downloading and engine downloading MAY need the manifest.
         // So use a Lazy<Task<T>> to avoid loading it twice.
         var moduleManifest =
-            new Lazy<Task<EngineModuleManifest>>(() => _engineManager.GetEngineModuleManifest(engine, cancel));
+            new Lazy<Task<EngineModuleManifest>>(() => _engineManager.GetEngineModuleManifest(buildInfo.Engine, cancel));
 
         // ReSharper disable once UseAwaitUsing
         using var con = ContentManager.GetSqliteConnection();
@@ -138,7 +136,7 @@ public sealed class Updater : ReactiveObject
 
         await Task.Run(() => { CullOldContentVersions(con); }, CancellationToken.None);
 
-        return await InstallEnginesForVersion(con, versionRowId, engine, cancel);
+        return await InstallEnginesForVersion(con, versionRowId, buildInfo.Engine, cancel);
     }
 
     private async Task<ContentLaunchInfo> InstallContentBundle(
@@ -528,7 +526,7 @@ public sealed class Updater : ReactiveObject
                         FROM ContentEngineDependency
                         WHERE VersionId = @OldVersion AND ModuleName != @Engine", new
                 {
-                    OldVersion = existingVersion.Id, buildInfo.Engine
+                    OldVersion = existingVersion.Id, Engine = buildInfo.Engine,
                 }).ToArray();
 
                 if (oldDependencies.Length > 0)
