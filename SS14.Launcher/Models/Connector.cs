@@ -298,7 +298,7 @@ public class Connector : ReactiveObject
             }
 
             // Launch client.
-            return await LaunchClient(launchInfo, serverBuildInformation?.Engine ?? "Robust", args, cVars);
+            return await LaunchClient(launchInfo, serverBuildInformation?.EngineType ?? "Robust", args, cVars);
         }
         catch (Exception e)
         {

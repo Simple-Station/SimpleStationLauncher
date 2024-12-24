@@ -124,7 +124,7 @@ public sealed class Updater : ReactiveObject
         // Both content downloading and engine downloading MAY need the manifest.
         // So use a Lazy<Task<T>> to avoid loading it twice.
         var moduleManifest =
-            new Lazy<Task<EngineModuleManifest>>(() => _engineManager.GetEngineModuleManifest(buildInfo.Engine, cancel));
+            new Lazy<Task<EngineModuleManifest>>(() => _engineManager.GetEngineModuleManifest(buildInfo.EngineType, cancel));
 
         // ReSharper disable once UseAwaitUsing
         using var con = ContentManager.GetSqliteConnection();
@@ -136,7 +136,7 @@ public sealed class Updater : ReactiveObject
 
         await Task.Run(() => { CullOldContentVersions(con); }, CancellationToken.None);
 
-        return await InstallEnginesForVersion(con, versionRowId, buildInfo.Engine, cancel);
+        return await InstallEnginesForVersion(con, versionRowId, buildInfo.EngineType, cancel);
     }
 
     private async Task<ContentLaunchInfo> InstallContentBundle(
@@ -375,7 +375,7 @@ public sealed class Updater : ReactiveObject
                 "AND ForkId = @ForkId " +
                 "AND (SELECT ModuleVersion FROM ContentEngineDependency ced WHERE ced.VersionId = cv.Id AND ModuleName = @Engine) = @EngineVersion " +
                 "DESC",
-                new { Hash = hash, ForkVersion = buildInfo.Version, buildInfo.ForkId, buildInfo.Engine, buildInfo.EngineVersion });
+                new { Hash = hash, ForkVersion = buildInfo.Version, buildInfo.ForkId, Engine = buildInfo.EngineType, buildInfo.EngineVersion });
         }
         else if (buildInfo.Hash is { } hashHex)
         {
@@ -388,7 +388,7 @@ public sealed class Updater : ReactiveObject
                 "AND ForkId = @ForkId " +
                 "AND (SELECT ModuleVersion FROM ContentEngineDependency ced WHERE ced.VersionId = cv.Id AND ModuleName = @Engine) = @EngineVersion " +
                 "DESC",
-                new { ZipHash = hash, ForkVersion = buildInfo.Version, buildInfo.ForkId, buildInfo.Engine, buildInfo.EngineVersion });
+                new { ZipHash = hash, ForkVersion = buildInfo.Version, buildInfo.ForkId, Engine = buildInfo.EngineType, buildInfo.EngineVersion });
         }
         else
         {
@@ -400,7 +400,7 @@ public sealed class Updater : ReactiveObject
                 "SELECT * FROM ContentVersion cv WHERE ForkId = @ForkId AND ForkVersion = @Version " +
                 "ORDER BY (SELECT ModuleVersion FROM ContentEngineDependency ced WHERE ced.VersionId = cv.Id AND ModuleName = @Engine) = @EngineVersion " +
                 "DESC",
-                new { buildInfo.ForkId, buildInfo.Version, buildInfo.Engine, buildInfo.EngineVersion });
+                new { buildInfo.ForkId, buildInfo.Version, Engine = buildInfo.EngineType, buildInfo.EngineVersion });
         }
 
 
@@ -475,7 +475,7 @@ public sealed class Updater : ReactiveObject
         var curEngineVersion =
             con.ExecuteScalar<string>(
                 "SELECT ModuleVersion FROM ContentEngineDependency WHERE ModuleName = @Engine AND VersionId = @Version",
-                new { Engine = buildInfo.Engine, Version = existingVersion.Id });
+                new { Engine = buildInfo.EngineType, Version = existingVersion.Id });
 
         var changedFork = buildInfo.ForkId != existingVersion.ForkId ||
                           buildInfo.Version != existingVersion.ForkVersion;
@@ -515,7 +515,7 @@ public sealed class Updater : ReactiveObject
                         VALUES (@VersionId, @Engine, @EngineVersion)",
                     new
                     {
-                        Engine = buildInfo.Engine,
+                        Engine = buildInfo.EngineType,
                         EngineVersion = engineVersion,
                         VersionId = versionId
                     });
@@ -526,7 +526,7 @@ public sealed class Updater : ReactiveObject
                         FROM ContentEngineDependency
                         WHERE VersionId = @OldVersion AND ModuleName != @Engine", new
                 {
-                    OldVersion = existingVersion.Id, Engine = buildInfo.Engine,
+                    OldVersion = existingVersion.Id, Engine = buildInfo.EngineType,
                 }).ToArray();
 
                 if (oldDependencies.Length > 0)
@@ -628,7 +628,7 @@ public sealed class Updater : ReactiveObject
 
         // Insert engine dependencies.
 
-        await ResolveContentDependencies(con, versionId, buildInfo.Engine, engineVersion, moduleManifest);
+        await ResolveContentDependencies(con, versionId, buildInfo.EngineType, engineVersion, moduleManifest);
 
         return versionId;
     }
