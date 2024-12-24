@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
@@ -125,6 +126,9 @@ public class ServerListTabViewModel : MainWindowTabViewModel
 
             sortList.Add(server);
         }
+
+        // Deduplicate servers
+        sortList = sortList.Select(s => s.Address).Distinct().Select(a => sortList.First(s => s.Address == a)).ToList();
 
         Filters.ApplyFilters(sortList);
 
