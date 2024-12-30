@@ -45,7 +45,7 @@ public static class ConfigConstants
     public const string AccountRegisterUrl = $"{AccountBaseUrl}Register";
     public const string AccountResendConfirmationUrl = $"{AccountBaseUrl}ResendEmailConfirmation";
     public const string WebsiteUrl = "https://simplestation.org";
-    public const string DownloadUrl = "https://spacestation14.com/about/nightlies/";
+    public const string DownloadUrl = "https://github.com/Simple-Station/SimpleStationLauncher/releases/";
     public const string NewsFeedUrl = "https://spacestation14.com/post/index.xml";
     public const string TranslateUrl = "https://docs.spacestation14.com/en/general-development/contributing-translations.html";
 
