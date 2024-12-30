@@ -69,7 +69,7 @@ public static class CVars
     /// <summary>
     /// Enable multi-account support on release builds.
     /// </summary>
-    public static readonly CVarDef<bool> MultiAccounts = CVarDef.Create("MultiAccounts", false);
+    public static readonly CVarDef<bool> MultiAccounts = CVarDef.Create("MultiAccounts", true);
 
     /// <summary>
     /// Currently selected login in the drop down.
