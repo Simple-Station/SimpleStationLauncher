@@ -90,6 +90,7 @@ public class OptionsTabViewModel : MainWindowTabViewModel
         get => Cfg.GetCVar(CVars.UiScalingX);
         set
         {
+            value = Math.Clamp(value, 0.1, 10);
             Cfg.SetCVar(CVars.UiScalingX, value);
             Cfg.CommitConfig();
         }
@@ -100,6 +101,7 @@ public class OptionsTabViewModel : MainWindowTabViewModel
         get => Cfg.GetCVar(CVars.UiScalingY);
         set
         {
+            value = Math.Clamp(value, 0.1, 10);
             Cfg.SetCVar(CVars.UiScalingY, value);
             Cfg.CommitConfig();
         }
