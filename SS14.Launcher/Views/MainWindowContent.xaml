@@ -103,7 +103,9 @@
                      Text="{loc:Loc main-window-out-of-date-desc}" />
           <DockPanel LastChildFill="False">
             <Button DockPanel.Dock="Right" Content="{loc:Loc main-window-out-of-date-exit}"
-                    Command="{Binding ExitPressed}" />
+                    Command="{Binding ExitPressed}" Classes="OpenLeft" />
+            <Button DockPanel.Dock="Right" Content="{loc:Loc main-window-out-of-date-ignore}"
+                    Command="{Binding IgnorePressed}" Classes="OpenRight" />
             <Button DockPanel.Dock="Left" Content="{loc:Loc main-window-out-of-date-download-manual}"
                     Command="{Binding DownloadPressed}" />
           </DockPanel>

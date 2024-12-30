@@ -149,6 +149,7 @@ main-window-out-of-date-desc-steam =
     This launcher is out of date.
     Please allow Steam to update the game.
 main-window-out-of-date-exit = Exit
+main-window-out-of-date-ignore = Ignore
 main-window-out-of-date-download-manual = Download (manual)
 main-window-early-access-title = Heads up!
 main-window-early-access-desc = Space Station 14 is still very much in alpha. We hope you like what you see, and maybe even stick around, but make sure to keep your expectations modest for the time being.

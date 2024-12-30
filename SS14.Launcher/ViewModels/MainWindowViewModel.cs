@@ -187,6 +187,11 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         Log.Debug("Launcher out of date? {Value}", OutOfDate);
     }
 
+    public void IgnorePressed()
+    {
+        OutOfDate = false;
+    }
+
     public void ExitPressed()
     {
         Control?.Close();
