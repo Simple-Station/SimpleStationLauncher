@@ -124,6 +124,7 @@ public sealed class DataManager : ReactiveObject
     }
 
     public IObservableCache<FavoriteServer, string> FavoriteServers => _favoriteServers;
+    public readonly HashSet<string> ExpandedServers = new();
     public IObservableCache<LoginInfo, Guid> Logins => _logins;
     public IObservableCache<InstalledEngineVersion, string> EngineInstallations => _engineInstallations;
     public IEnumerable<InstalledEngineModule> EngineModules => _modules;
@@ -160,11 +161,41 @@ public sealed class DataManager : ReactiveObject
         _favoriteServers.Remove(server);
     }
 
-    public void RaiseFavoriteServer(FavoriteServer server)
+    /// <summary>
+    ///     Moves a favorite server up or down a specified amount in the list
+    /// </summary>
+    /// <param name="move">How much to move it up or down</param>
+    public void ReorderFavoriteServer(FavoriteServer server, int move)
     {
-        _favoriteServers.Remove(server);
-        server.RaiseTime = DateTimeOffset.UtcNow;
-        _favoriteServers.AddOrUpdate(server);
+        var servers = _favoriteServers.Items.OrderBy(f => f.Position).ToList();
+        var index = servers.IndexOf(server);
+        if (index == -1)
+            throw new ArgumentException("That server is not a favorite");
+
+        if (index + move < 0 || index + move >= servers.Count)
+            return;
+
+        servers[index] = servers[index + move];
+        servers[index + move] = server;
+
+        for (var i = 0; i < servers.Count; i++)
+            servers[i].Position = i;
+
+        _favoriteServers.Edit(inner =>
+        {
+            inner.Clear();
+            inner.AddOrUpdate(servers);
+        });
+
+        CommitConfig();
+    }
+
+    public void EditExpandedServers(string address, bool expanded)
+    {
+        if (expanded)
+            ExpandedServers.Add(address);
+        else
+            ExpandedServers.Remove(address);
     }
 
     public void AddEngineInstallation(InstalledEngineVersion version)
@@ -267,10 +298,26 @@ public sealed class DataManager : ReactiveObject
                 }));
 
         // Favorites
-        _favoriteServers.AddOrUpdate(
-            sqliteConnection.Query<(string addr, string name, DateTimeOffset raiseTime)>(
-                    "SELECT Address,Name,RaiseTime FROM FavoriteServer")
-                .Select(l => new FavoriteServer(l.name, l.addr, l.raiseTime)));
+        // _favoriteServers.AddOrUpdate(
+        //     sqliteConnection.Query<(string addr, string name, int position)>(
+        //             "SELECT Address,Name,Position FROM FavoriteServer")
+        //         .Select(l => new FavoriteServer(l.name, l.addr, l.position)));
+        // The above but assign every duplicate position a new one and sort them
+        var favorites = sqliteConnection.Query<(string addr, string name, int position)>(
+            "SELECT Address,Name,Position FROM FavoriteServer");
+        var positions = new HashSet<int>();
+        List<(string, string, int)> tmp = new();
+        foreach (var (addr, name, position) in favorites)
+        {
+            var pos = position;
+            while (positions.Contains(pos))
+                pos++;
+
+            positions.Add(pos);
+            tmp.Add((addr, name, pos));
+        }
+        _favoriteServers.AddOrUpdate(tmp.OrderBy(s => s.Item3)
+            .Select(s => new FavoriteServer(s.Item2, s.Item1, s.Item3)));
 
         // Engine installations
         _engineInstallations.AddOrUpdate(
@@ -392,17 +439,17 @@ public sealed class DataManager : ReactiveObject
         var data = new
         {
             server.Address,
-            server.RaiseTime,
-            server.Name
+            Position = server.Position,
+            server.Name,
         };
         AddDbCommand(con =>
         {
             con.Execute(reason switch
                 {
-                    ChangeReason.Add => "INSERT INTO FavoriteServer VALUES (@Address, @Name, @RaiseTime)",
-                    ChangeReason.Update => "UPDATE FavoriteServer SET Name = @Name, RaiseTime = @RaiseTime WHERE Address = @Address",
+                    ChangeReason.Add => "INSERT INTO FavoriteServer VALUES (@Address, @Name, @Position)",
+                    ChangeReason.Update => "UPDATE FavoriteServer SET Name = @Name, Position = @Position WHERE Address = @Address",
                     ChangeReason.Remove => "DELETE FROM FavoriteServer WHERE Address = @Address",
-                    _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, null)
+                    _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, null),
                 },
                 data
             );

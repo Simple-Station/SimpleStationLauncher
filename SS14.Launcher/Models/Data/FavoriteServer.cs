@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json.Serialization;
 using ReactiveUI;
 
@@ -7,7 +6,7 @@ namespace SS14.Launcher.Models.Data;
 public sealed class FavoriteServer : ReactiveObject
 {
     private string? _name;
-    private DateTimeOffset _raiseTime;
+    private int _position;
 
     // For serialization.
     public FavoriteServer()
@@ -21,11 +20,11 @@ public sealed class FavoriteServer : ReactiveObject
         Address = address;
     }
 
-    public FavoriteServer(string? name, string address, DateTimeOffset raiseTime)
+    public FavoriteServer(string? name, string address, int position)
     {
         Name = name;
         Address = address;
-        RaiseTime = raiseTime;
+        Position = position;
     }
 
     [JsonPropertyName("name")]
@@ -43,9 +42,9 @@ public sealed class FavoriteServer : ReactiveObject
     /// Defaults to 0, this is fine.
     /// This isn't saved in JSON because the launcher apparently doesn't use JSON for these anymore.
     /// </summary>
-    public DateTimeOffset RaiseTime
+    public int Position
     {
-        get => _raiseTime;
-        set => this.RaiseAndSetIfChanged(ref _raiseTime, value);
+        get => _position;
+        set => this.RaiseAndSetIfChanged(ref _position, value);
     }
 }

@@ -166,10 +166,15 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
     public void FavoriteRaiseButtonPressed()
     {
         if (IsFavorite)
-        {
-            // Usual business, raise priority
-            _cfg.RaiseFavoriteServer(_cfg.FavoriteServers.Lookup(Address).Value);
-        }
+            _cfg.ReorderFavoriteServer(_cfg.FavoriteServers.Lookup(Address).Value, 1);
+
+        _cfg.CommitConfig();
+    }
+
+    public void FavoriteLowerButtonPressed()
+    {
+        if (IsFavorite)
+            _cfg.ReorderFavoriteServer(_cfg.FavoriteServers.Lookup(Address).Value, -1);
 
         _cfg.CommitConfig();
     }

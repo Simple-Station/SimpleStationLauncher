@@ -5,16 +5,27 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.LogicalTree;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Splat;
+using SS14.Launcher.Models.Data;
+using SS14.Launcher.Utility;
+using SS14.Launcher.ViewModels.MainWindowTabs;
 
 namespace SS14.Launcher.Views.MainWindowTabs;
 
 public partial class ServerEntryView : UserControl
 {
+    DataManager _cfg;
+
+
     public ServerEntryView()
     {
         InitializeComponent();
 
+        _cfg = Locator.Current.GetRequiredService<DataManager>();
+
         Links.LayoutUpdated += ApplyStyle;
+        Expando.Expanded += (_, _) =>  UpdateExpanse();
+        Expando.Collapsed += (_, _) => UpdateExpanse();
     }
 
 
@@ -40,6 +51,18 @@ public partial class ServerEntryView : UserControl
 
             control.GetLogicalChildren().OfType<Button>().FirstOrDefault()?.Classes.Add(style);
         }
+    }
+
+    private void UpdateExpanse()
+    {
+        if (DataContext is not ServerEntryViewModel vm
+            || vm.Favorite == null)
+            return;
+
+        if (Expando.IsExpanded)
+            _cfg.ExpandedServers.Add(vm.Favorite.Address);
+        else
+            _cfg.ExpandedServers.Remove(vm.Favorite.Address);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

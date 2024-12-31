@@ -32,7 +32,9 @@ public class HomePageViewModel : MainWindowTabViewModel
 
         _cfg.FavoriteServers
             .Connect()
-            .Select(x => new ServerEntryViewModel(MainWindowViewModel, _statusCache.GetStatusFor(x.Address), x, _statusCache, _cfg) { ViewedInFavoritesPane = true })
+            .Select(x =>
+                new ServerEntryViewModel(MainWindowViewModel, _statusCache.GetStatusFor(x.Address), x, _statusCache, _cfg)
+                    { ViewedInFavoritesPane = true, IsExpanded = _cfg.ExpandedServers.Contains(x.Address) })
             .OnItemAdded(a =>
             {
                 if (IsSelected)
@@ -41,7 +43,7 @@ public class HomePageViewModel : MainWindowTabViewModel
                 }
             })
             .Sort(Comparer<ServerEntryViewModel>.Create((a, b) => {
-                var dc = a.Favorite!.RaiseTime.CompareTo(b.Favorite!.RaiseTime);
+                var dc = a.Favorite!.Position.CompareTo(b.Favorite!.Position);
                 if (dc != 0)
                 {
                     return -dc;

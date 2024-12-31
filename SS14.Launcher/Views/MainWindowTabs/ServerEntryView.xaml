@@ -67,11 +67,15 @@
                     Content="{Binding FavoriteButtonText}"
                     Command="{Binding FavoriteButtonPressed}" />
 
-            <!-- Raise to top button. -->
+            <!-- Order buttons -->
             <Button IsVisible="{Binding ViewedInFavoritesPane}"
-                    Classes="OpenLeft"
+                    Classes="OpenBoth"
                     Content="{loc:Loc server-entry-raise}"
                     Command="{Binding FavoriteRaiseButtonPressed}" />
+            <Button IsVisible="{Binding ViewedInFavoritesPane}"
+                    Classes="OpenLeft"
+                    Content="{loc:Loc server-entry-lower}"
+                    Command="{Binding FavoriteLowerButtonPressed}" />
           </DockPanel>
         </views:RowSideAlignedPanel>
       </DockPanel>
