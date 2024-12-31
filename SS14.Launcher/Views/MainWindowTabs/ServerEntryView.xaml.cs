@@ -14,7 +14,7 @@ namespace SS14.Launcher.Views.MainWindowTabs;
 
 public partial class ServerEntryView : UserControl
 {
-    DataManager _cfg;
+    private readonly DataManager _cfg;
 
 
     public ServerEntryView()

@@ -10,7 +10,8 @@ account-drop-down-add-account = Add account
 
 ## Localization for the "add favorite server" dialog window
 
-add-favorite-window-title = Add Favorite Server
+add-favorite-window-title = Favorite Server
+add-favorite-window-submit-button = Confirm
 add-favorite-window-address-invalid = Address is invalid
 add-favorite-window-label-name = Name:
 add-favorite-window-label-address = Address:
@@ -261,7 +262,7 @@ filters-rp-high-desc = High
 ## Strings for entries in the server list (including home page)
 
 server-entry-connect = Connect
-server-entry-update-name = Update Name
+server-entry-update-info = Edit
 server-entry-add-favorite = Add Favorite
 server-entry-remove-favorite = Remove Favorite
 server-entry-offline = OFFLINE

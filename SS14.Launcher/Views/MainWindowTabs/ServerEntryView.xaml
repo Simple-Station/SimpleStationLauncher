@@ -56,10 +56,10 @@
           </ItemsControl>
 
           <DockPanel Dock="Right">
-            <!-- Update name button -->
+            <!-- Edit server info button -->
             <Button IsVisible="{Binding ViewedInFavoritesPane}"
                     Classes="OpenRight"
-                    Content="{loc:Loc server-entry-update-name}"
+                    Content="{loc:Loc server-entry-update-info}"
                     Command="{Binding UpdateFavoriteInfo}" />
 
             <!-- Order buttons -->

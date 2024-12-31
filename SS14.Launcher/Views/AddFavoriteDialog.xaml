@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:loc="clr-namespace:SS14.Launcher.Localization"
+        xmlns:v="clr-namespace:SS14.Launcher.Views"
         mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="100"
         MinWidth="500" MinHeight="130"
         Width="500" Height="130"
@@ -12,16 +13,18 @@
         Padding="4"
         WindowStartupLocation="CenterOwner">
 
-  <DockPanel LastChildFill="true">
-    <DockPanel DockPanel.Dock="Bottom">
-      <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Name="SubmitButton" Content="Add" />
-      <TextBlock Text="{loc:Loc add-favorite-window-address-invalid}"  VerticalAlignment="Center" Name="TxtInvalid" />
+  <v:ScaledControl>
+    <DockPanel LastChildFill="true">
+      <DockPanel DockPanel.Dock="Bottom">
+        <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Name="SubmitButton" Content="{loc:Loc add-favorite-window-submit-button}" />
+        <TextBlock Text="{loc:Loc add-favorite-window-address-invalid}"  VerticalAlignment="Center" Name="TxtInvalid" />
+      </DockPanel>
+      <Grid Margin="4" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+        <TextBlock VerticalAlignment="Center" Margin="0,0,4,0" Grid.Column="0" Grid.Row="0" Text="{loc:Loc add-favorite-window-label-name}" />
+        <TextBlock VerticalAlignment="Center" Margin="0,0,4,0" Grid.Column="0" Grid.Row="1" Text="{loc:Loc add-favorite-window-label-address}" />
+        <TextBox Grid.Column="1" Grid.Row="0" Name="NameBox" Watermark="{loc:Loc add-favorite-window-example-name}" />
+        <TextBox Grid.Column="1" Grid.Row="1" Name="AddressBox" Watermark="ss14://example.com" />
+      </Grid>
     </DockPanel>
-    <Grid Margin="4" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
-      <TextBlock VerticalAlignment="Center" Margin="0,0,4,0" Grid.Column="0" Grid.Row="0" Text="{loc:Loc add-favorite-window-label-name}" />
-      <TextBlock VerticalAlignment="Center" Margin="0,0,4,0" Grid.Column="0" Grid.Row="1" Text="{loc:Loc add-favorite-window-label-address}" />
-      <TextBox Grid.Column="1" Grid.Row="0" Name="NameBox" Watermark="{loc:Loc add-favorite-window-example-name}" />
-      <TextBox Grid.Column="1" Grid.Row="1" Name="AddressBox" Watermark="ss14://example.com" />
-    </Grid>
-  </DockPanel>
+  </v:ScaledControl>
 </Window>

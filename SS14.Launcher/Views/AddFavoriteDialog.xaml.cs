@@ -9,12 +9,14 @@ public partial class AddFavoriteDialog : Window
     private readonly TextBox _nameBox;
     private readonly TextBox _addressBox;
 
-    public AddFavoriteDialog()
+    public AddFavoriteDialog(string name = "", string address = "")
     {
         InitializeComponent();
 
         _nameBox = NameBox;
+        _nameBox.Text = name;
         _addressBox = AddressBox;
+        _addressBox.Text = address;
 
         SubmitButton.Command = ReactiveCommand.Create(TrySubmit);
 

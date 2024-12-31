@@ -156,6 +156,20 @@ public sealed class DataManager : ReactiveObject
         _favoriteServers.AddOrUpdate(server);
     }
 
+    public void EditFavoriteServer(FavoriteServer server, string address, string name)
+    {
+        if (!_favoriteServers.Lookup(server.Address).HasValue)
+            throw new ArgumentException("That server's address is not a favorite");
+
+        RemoveFavoriteServer(server);
+        if (ExpandedServers.Contains(server.Address))
+        {
+            ExpandedServers.Remove(server.Address);
+            ExpandedServers.Add(address);
+        }
+        AddFavoriteServer(new FavoriteServer(name, address, server.Position));
+    }
+
     public void RemoveFavoriteServer(FavoriteServer server)
     {
         _favoriteServers.Remove(server);

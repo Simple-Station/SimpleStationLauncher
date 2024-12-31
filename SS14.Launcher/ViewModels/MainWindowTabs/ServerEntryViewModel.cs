@@ -1,10 +1,13 @@
 using System;
 using System.ComponentModel;
+using Avalonia.Controls;
+using Avalonia.VisualTree;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using SS14.Launcher.Localization;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.ServerStatus;
+using SS14.Launcher.Views;
 using static SS14.Launcher.Utility.HubUtility;
 
 namespace SS14.Launcher.ViewModels.MainWindowTabs;
@@ -236,13 +239,22 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
         }
     }
 
-    public void UpdateFavoriteInfo()
+    public async void UpdateFavoriteInfo()
     {
-        if (Favorite == null)
+        if (Favorite == null
+            || _windowVm.Control?.GetVisualRoot() is not Window window)
             return;
 
-        Favorite.Name = _cacheData.Name ?? FallbackName;
-        _cfg.EditFavoriteServer(Favorite);
-        _cfg.CommitConfig();
+        var (name, address) = await new AddFavoriteDialog(Favorite.Name ?? "", Favorite.Address).ShowDialog<(string name, string address)>(window);
+
+        try
+        {
+            _cfg.EditFavoriteServer(new(Name, Address), address, name);
+            _cfg.CommitConfig();
+        }
+        catch (ArgumentException)
+        {
+            // Ignored
+        }
     }
 }

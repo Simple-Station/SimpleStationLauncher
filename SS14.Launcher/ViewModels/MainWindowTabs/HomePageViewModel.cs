@@ -37,18 +37,12 @@ public class HomePageViewModel : MainWindowTabViewModel
                     { ViewedInFavoritesPane = true, IsExpanded = _cfg.ExpandedServers.Contains(x.Address) })
             .OnItemAdded(a =>
             {
-                if (IsSelected)
-                {
-                    _statusCache.InitialUpdateStatus(a.CacheData);
-                }
+                if (IsSelected) _statusCache.InitialUpdateStatus(a.CacheData);
             })
-            .Sort(Comparer<ServerEntryViewModel>.Create((a, b) => {
+            .Sort(Comparer<ServerEntryViewModel>.Create((a, b) =>
+            {
                 var dc = a.Favorite!.Position.CompareTo(b.Favorite!.Position);
-                if (dc != 0)
-                {
-                    return -dc;
-                }
-                return string.Compare(a.Name, b.Name, StringComparison.CurrentCultureIgnoreCase);
+                return dc != 0 ? -dc : string.Compare(a.Name, b.Name, StringComparison.CurrentCultureIgnoreCase);
             }))
             .Bind(out var favorites)
             .Subscribe(_ =>
