@@ -8,7 +8,7 @@
              xmlns:mainWindowTabs="clr-namespace:SS14.Launcher.ViewModels.MainWindowTabs"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SS14.Launcher.Views.MainWindowContent">
-  <LayoutTransformControl Name="TransformControl">
+  <v:ScaledControl>
     <Design.DataContext>
       <vm:MainWindowViewModel />
     </Design.DataContext>
@@ -142,5 +142,5 @@
       <TextBlock Text="{Binding Version}" HorizontalAlignment="Right"
                  VerticalAlignment="Bottom" Classes="SubText" Margin="6"/>
     </Panel>
-  </LayoutTransformControl>
+  </v:ScaledControl>
 </UserControl>

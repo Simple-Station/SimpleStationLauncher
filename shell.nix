@@ -7,6 +7,7 @@ in import (builtins.fetchTarball {
 
 let
   dependencies = with pkgs; [
+    util-linux
     dotnetCorePackages.sdk_8_0
     dotnetCorePackages.sdk_6_0
     glfw

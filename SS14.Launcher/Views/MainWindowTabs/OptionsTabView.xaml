@@ -59,9 +59,9 @@
         <Label Content="{loc:Loc tab-options-ui-scaling}" />
         <StackPanel Orientation="Horizontal">
           <Label Content="X:" />
-          <TextBox Text="{Binding UiScalingX}" />
+          <TextBox MinWidth="48" Text="{Binding UiScalingX}" />
           <Label Content="Y:" />
-          <TextBox Text="{Binding UiScalingY}" IsEnabled="{Binding NotUiScalingLock}" />
+          <TextBox MinWidth="48" Text="{Binding UiScalingY}" IsEnabled="{Binding NotUiScalingLock}" />
           <CheckBox Margin="4" Content="{loc:Loc tab-options-ui-scaling-lock}" IsChecked="{Binding UiScalingLock}" />
         </StackPanel>
 

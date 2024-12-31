@@ -44,7 +44,7 @@ public partial class HubSettingsDialog : Window
         _viewModel.Reset();
         if (!Verify())
         {
-            // Directly all hubs from data, something's gone wrong with the database
+            // Directly delete all hubs from data, something's gone wrong with the database
             _viewModel.HardReset();
         }
     }
