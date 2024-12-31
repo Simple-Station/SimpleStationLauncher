@@ -56,8 +56,14 @@
           </ItemsControl>
 
           <DockPanel Dock="Right">
+            <!-- Update name button -->
+            <Button IsVisible="{Binding ViewedInFavoritesPane}"
+                    Classes="OpenRight"
+                    Content="{loc:Loc server-entry-update-name}"
+                    Command="{Binding UpdateFavoriteInfo}" />
+
             <!-- Favorite add/remove button -->
-            <Button Classes="OpenRight"
+            <Button Classes="OpenBoth"
                     Content="{Binding FavoriteButtonText}"
                     Command="{Binding FavoriteButtonPressed}" />
 

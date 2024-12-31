@@ -230,4 +230,14 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
                 break;
         }
     }
+
+    public void UpdateFavoriteInfo()
+    {
+        if (Favorite == null)
+            return;
+
+        Favorite.Name = _cacheData.Name ?? FallbackName;
+        _cfg.EditFavoriteServer(Favorite);
+        _cfg.CommitConfig();
+    }
 }
