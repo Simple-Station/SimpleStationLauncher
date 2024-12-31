@@ -247,6 +247,9 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
 
         var (name, address) = await new AddFavoriteDialog(Favorite.Name ?? "", Favorite.Address).ShowDialog<(string name, string address)>(window);
 
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(address))
+            return;
+
         try
         {
             _cfg.EditFavoriteServer(new(Name, Address), address, name);

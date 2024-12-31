@@ -11,6 +11,7 @@ account-drop-down-add-account = Add account
 ## Localization for the "add favorite server" dialog window
 
 add-favorite-window-title = Favorite Server
+add-favorite-window-fetch-button = Get name from server
 add-favorite-window-submit-button = Confirm
 add-favorite-window-address-invalid = Address is invalid
 add-favorite-window-label-name = Name:

@@ -50,16 +50,16 @@ public sealed class ServerStatusCache : IServerSource
     /// <summary>
     ///     Do the initial status update for a server status. This only acts once.
     /// </summary>
-    public void InitialUpdateStatus(ServerStatusData data)
+    public async Task InitialUpdateStatus(ServerStatusData data)
     {
         var reg = _cachedData[data.Address];
         if (reg.DidInitialStatusUpdate)
             return;
 
-        UpdateStatusFor(reg);
+        await UpdateStatusFor(reg);
     }
 
-    private async void UpdateStatusFor(CacheReg reg)
+    private async Task UpdateStatusFor(CacheReg reg)
     {
         reg.DidInitialStatusUpdate = true;
         await reg.Semaphore.WaitAsync();

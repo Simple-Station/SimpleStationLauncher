@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls;
 using ReactiveUI;
+using SS14.Launcher.Models.ServerStatus;
 
 namespace SS14.Launcher.Views;
 
@@ -18,6 +19,21 @@ public partial class AddFavoriteDialog : Window
         _addressBox = AddressBox;
         _addressBox.Text = address;
 
+        FetchButton.Command = ReactiveCommand.Create(async () =>
+        {
+            var addr = _addressBox.Text;
+            if (DirectConnectDialog.IsAddressValid(addr))
+            {
+                var cache = new ServerStatusCache();
+                await cache.InitialUpdateStatus(cache.GetStatusFor(addr));
+                if (cache.GetStatusFor(addr).Name != null)
+                    _nameBox.Text = cache.GetStatusFor(addr).Name;
+                else
+                    TxtInvalid.IsVisible = true;
+            }
+            else
+                TxtInvalid.IsVisible = true;
+        });
         SubmitButton.Command = ReactiveCommand.Create(TrySubmit);
 
         this.WhenAnyValue(x => x._nameBox.Text)
@@ -36,7 +52,11 @@ public partial class AddFavoriteDialog : Window
 
     private void TrySubmit()
     {
-        Close((_nameBox.Text?.Trim() ?? "", _addressBox.Text?.Trim() ?? ""));
+        if (_nameBox.Text?.Trim() is not { Length: > 0 } name
+            || _addressBox.Text?.Trim() is not { Length: > 0 } address)
+            return;
+
+        Close((name, address));
     }
 
     private void UpdateSubmitValid()

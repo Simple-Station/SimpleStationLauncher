@@ -16,7 +16,8 @@
   <v:ScaledControl>
     <DockPanel LastChildFill="true">
       <DockPanel DockPanel.Dock="Bottom">
-        <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Name="SubmitButton" Content="{loc:Loc add-favorite-window-submit-button}" />
+        <Button DockPanel.Dock="Right" Name="SubmitButton" Classes="OpenLeft" Content="{loc:Loc add-favorite-window-submit-button}" />
+        <Button DockPanel.Dock="Right" Name="FetchButton" Classes="OpenRight" Content="{loc:Loc add-favorite-window-fetch-button}" />
         <TextBlock Text="{loc:Loc add-favorite-window-address-invalid}"  VerticalAlignment="Center" Name="TxtInvalid" />
       </DockPanel>
       <Grid Margin="4" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
