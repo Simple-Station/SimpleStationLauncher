@@ -134,6 +134,7 @@ internal class Program
         return true;
     }
 
+    [STAThread]
     internal static int Main(string[] args)
     {
         if (args.Length < 3)
