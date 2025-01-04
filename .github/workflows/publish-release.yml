@@ -3,7 +3,7 @@ name: Publish Release
 on:
   push:
     tags:
-    - 'v*'
+      - 'v*'
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
         draft: false
-        prerelease: false
+        prerelease: ${{ contains(github.ref, 'pre') }}
 
     # Upload Linux
     - name: Upload Release Asset
