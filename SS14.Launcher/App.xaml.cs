@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Diagnostics;
 using System.IO;
 using Avalonia;
 using Avalonia.Controls;
@@ -118,22 +120,37 @@ public class App : Application
         Log.Information("Registering SS14 protocol handler for Linux");
         foreach (var protocol in protocols)
         {
-            var desktopFile = Path.Combine(Environment.GetFolderPath(UserProfile), ".local", "share", "applications", $"ss14-{protocol}.desktop");
-            if (File.Exists(desktopFile))
-                File.WriteAllText(desktopFile, string.Empty);
+            try
+            {
+                var desktopFile = Path.Combine(Environment.GetFolderPath(UserProfile), ".local", "share",
+                    "applications", $"ss14-{protocol}.desktop");
+                if (File.Exists(desktopFile))
+                    File.WriteAllText(desktopFile, string.Empty);
 
-            using var writer = new StreamWriter(File.OpenWrite(desktopFile));
-            writer.WriteLine("[Desktop Entry]");
-            writer.WriteLine("Type=Application");
-            writer.WriteLine($"Name=SS14 {protocol}");
-            writer.WriteLine($"Exec=\"{Environment.ProcessPath}\" %u");
-            writer.WriteLine("Terminal=false");
-            writer.WriteLine($"MimeType=x-scheme-handler/{protocol};");
-            writer.WriteLine("Categories=Network;");
-            writer.Close();
+                using var writer = new StreamWriter(File.OpenWrite(desktopFile));
+                writer.WriteLine("[Desktop Entry]");
+                writer.WriteLine("Type=Application");
+                writer.WriteLine($"Name=SS14 {protocol}");
+                writer.WriteLine($"Exec=\"{Environment.ProcessPath}\" %u");
+                writer.WriteLine("Terminal=false");
+                writer.WriteLine($"MimeType=x-scheme-handler/{protocol};");
+                writer.WriteLine("Categories=Network;");
+                writer.Close();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Failed to create SS14 protocol handler desktop file for Linux");
+            }
 
-            Start("xdg-mime", $"default ss14-{protocol}.desktop x-scheme-handler/{protocol}");
-            Start("update-desktop-database", "~/.local/share/applications");
+            try
+            {
+                Start("xdg-mime", $"default ss14-{protocol}.desktop x-scheme-handler/{protocol}");
+                Start("update-desktop-database", "~/.local/share/applications");
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Failed to update SS14 protocol handler registry for Linux");
+            }
         }
         #endif
     }
