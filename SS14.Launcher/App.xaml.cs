@@ -7,8 +7,11 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using JetBrains.Annotations;
+using Microsoft.Win32;
 using Serilog;
 using SS14.Launcher.Models.OverrideAssets;
+using static System.Diagnostics.Process;
+using static System.Environment.SpecialFolder;
 
 namespace SS14.Launcher;
 
@@ -44,6 +47,8 @@ public class App : Application
         IconsLoader.Load(this);
 
         _overrideAssets.AssetsChanged += OnAssetsChanged;
+
+        RegisterProtocol();
     }
 
     private void LoadBaseAssets()
@@ -91,6 +96,46 @@ public class App : Application
             AssetType.WindowIcon => new WindowIcon(data),
             _ => throw new ArgumentOutOfRangeException()
         };
+    }
+
+    private void RegisterProtocol()
+    {
+        List<string> protocols = new() { "ss14", "ss14s" };
+
+        #if WINDOWS
+        Log.Information("Registering SS14 protocol handler for Windows");
+        foreach (var protocol in protocols)
+        {
+            var key = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{protocol}");
+            key.SetValue(string.Empty, $"URL: {protocol}");
+            key.SetValue("URL Protocol", string.Empty);
+
+            key = key.CreateSubKey(@"shell\open\command");
+            key.SetValue(string.Empty, $"\"{Environment.ProcessPath}\" \"%1\"");
+            key.Close();
+        }
+        #else // Linux
+        Log.Information("Registering SS14 protocol handler for Linux");
+        foreach (var protocol in protocols)
+        {
+            var desktopFile = Path.Combine(Environment.GetFolderPath(UserProfile), ".local", "share", "applications", $"ss14-{protocol}.desktop");
+            if (File.Exists(desktopFile))
+                File.WriteAllText(desktopFile, string.Empty);
+
+            using var writer = new StreamWriter(File.OpenWrite(desktopFile));
+            writer.WriteLine("[Desktop Entry]");
+            writer.WriteLine("Type=Application");
+            writer.WriteLine($"Name=SS14 {protocol}");
+            writer.WriteLine($"Exec=\"{Environment.ProcessPath}\" %u");
+            writer.WriteLine("Terminal=false");
+            writer.WriteLine($"MimeType=x-scheme-handler/{protocol};");
+            writer.WriteLine("Categories=Network;");
+            writer.Close();
+
+            Start("xdg-mime", $"default ss14-{protocol}.desktop x-scheme-handler/{protocol}");
+            Start("update-desktop-database", "~/.local/share/applications");
+        }
+        #endif
     }
 
     private sealed record AssetDef(string DefaultPath, AssetType Type);
