@@ -122,10 +122,17 @@ public class App : Application
         {
             try
             {
-                var desktopFile = Path.Combine(Environment.GetFolderPath(UserProfile), ".local", "share",
+                // Put it in XDG_DATA_HOME/applications or ~/.local/share/applications
+                var desktopFile = Path.Combine(
+                    Environment.GetEnvironmentVariable("XDG_DATA_HOME")
+                        ?? Path.Combine(Environment.GetFolderPath(UserProfile), ".local", "share"),
                     "applications", $"ss14-{protocol}.desktop");
                 if (File.Exists(desktopFile))
-                    File.WriteAllText(desktopFile, string.Empty);
+                    #if DEBUG
+                        File.WriteAllText(desktopFile, string.Empty);
+                    #else
+                        continue;
+                    #endif
 
                 using var writer = new StreamWriter(File.OpenWrite(desktopFile));
                 writer.WriteLine("[Desktop Entry]");
@@ -136,6 +143,8 @@ public class App : Application
                 writer.WriteLine($"MimeType=x-scheme-handler/{protocol};");
                 writer.WriteLine("Categories=Network;");
                 writer.Close();
+
+                Log.Information($"Created SS14 protocol handler desktop file for Linux at {desktopFile}");
             }
             catch (Exception e)
             {
@@ -146,6 +155,8 @@ public class App : Application
             {
                 Start("xdg-mime", $"default ss14-{protocol}.desktop x-scheme-handler/{protocol}");
                 Start("update-desktop-database", "~/.local/share/applications");
+
+                Log.Information("Updated SS14 protocol handler registry for Linux");
             }
             catch (Exception e)
             {
