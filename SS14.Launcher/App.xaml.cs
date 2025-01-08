@@ -108,7 +108,7 @@ public class App : Application
         Log.Information("Registering SS14 protocol handler for Windows");
         foreach (var protocol in protocols)
         {
-            var key = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{protocol}");
+            var key = Registry.ClassesRoot.CreateSubKey(protocol);
             key.SetValue(string.Empty, $"URL: {protocol}");
             key.SetValue("URL Protocol", string.Empty);
 
