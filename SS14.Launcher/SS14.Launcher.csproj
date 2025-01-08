@@ -93,4 +93,5 @@
     </Content>
   </ItemGroup>
   <Import Project="..\MSBuild\Robust.Trimming.targets" />
+  <Import Project="..\MSBuild\Launcher.DefineConstants.targets" />
 </Project>

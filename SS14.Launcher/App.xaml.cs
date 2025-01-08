@@ -116,7 +116,9 @@ public class App : Application
             key.SetValue(string.Empty, $"\"{Environment.ProcessPath}\" \"%1\"");
             key.Close();
         }
-        #else // Linux
+        #elif MACOS
+        Log.Information("Registration of SS14 protocol handler for MacOS isn't implemented, who uses that anyway?");
+        #elif LINUX
         Log.Information("Registering SS14 protocol handler for Linux");
         foreach (var protocol in protocols)
         {
@@ -131,6 +133,7 @@ public class App : Application
                     #if DEBUG
                         File.WriteAllText(desktopFile, string.Empty);
                     #else
+                        Log.Information($"SS14 protocol handler desktop file for Linux already exists at {desktopFile}, skipping");
                         continue;
                     #endif
 
