@@ -2,6 +2,6 @@
 
 cd "$(dirname "$0")"
 
-./publish_linux.sh
-./publish_osx.sh
-./publish_windows.sh
+TargetOS=Linux ./publish_linux.sh
+TargetOS=MacOS ./publish_osx.sh
+TargetOS=Windows ./publish_windows.sh
