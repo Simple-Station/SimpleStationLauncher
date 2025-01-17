@@ -27,6 +27,21 @@
     <CheckBox DockPanel.Dock="Top" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="4"
               IsChecked="{Binding IsPasswordVisible}" Content="{loc:Loc login-login-show-password}" />
 
+    <!-- Dropdown button that lets you pick between auth servers, plus a custom option -->
+    <ComboBox DockPanel.Dock="Top" MaxWidth="300" Margin="0, 4, 0, 0"
+              ItemsSource="{Binding Servers}"
+              SelectedItem="{Binding Server}"
+              IsEnabled="{Binding !Busy}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate DataType="vml:LoginViewModel">
+          <TextBlock Text="{Binding Server}" />
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+
+    <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0, 4, 0, 0"
+               Text="{loc:Loc login-login-auth-server}" />
+
     <DockPanel DockPanel.Dock="Top" LastChildFill="False" MaxWidth="300" Margin="0 20 0 0">
       <Button DockPanel.Dock="Right" HorizontalAlignment="Center"
               Content="{loc:Loc login-login-button-log-in}" Command="{Binding OnLogInButtonPressed}">

@@ -90,7 +90,7 @@ public class AccountDropDownViewModel : ViewModelBase
 
         if (_loginMgr.ActiveAccount != null)
         {
-            await _authApi.LogoutTokenAsync(_loginMgr.ActiveAccount.LoginInfo.Token.Token);
+            await _authApi.LogoutTokenAsync(_loginMgr.ActiveAccount.LoginInfo.Server, _loginMgr.ActiveAccount.LoginInfo.Token.Token);
             _cfg.RemoveLogin(_loginMgr.ActiveAccount.LoginInfo);
         }
     }

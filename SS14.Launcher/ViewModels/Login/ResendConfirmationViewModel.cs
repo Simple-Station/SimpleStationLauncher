@@ -1,3 +1,4 @@
+using System.Linq;
 using ReactiveUI.Fody.Helpers;
 using SS14.Launcher.Api;
 
@@ -7,6 +8,7 @@ public class ResendConfirmationViewModel : BaseLoginViewModel
 {
     private readonly AuthApi _authApi;
 
+    [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
     [Reactive] public string EditingEmail { get; set; } = "";
 
     private bool _errored;
@@ -25,7 +27,7 @@ public class ResendConfirmationViewModel : BaseLoginViewModel
         try
         {
             BusyText = "Resending email...";
-            var errors = await _authApi.ResendConfirmationAsync(EditingEmail);
+            var errors = await _authApi.ResendConfirmationAsync(Server, EditingEmail);
 
             _errored = errors != null;
 

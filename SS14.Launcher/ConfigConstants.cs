@@ -31,23 +31,78 @@ public static class ConfigConstants
     // Amount of time to wait to let a redialling client properly die
     public const int LauncherCommandsRedialWaitTimeout = 1000;
 
-    public static readonly string AuthUrl = "https://auth.spacestation14.com/";
-    public static readonly Uri[] DefaultHubUrls =
+    // Yes, this is stupidly large, just collapse it if you don't want to see it
+    public class AuthServer(
+        Uri authUrl,
+        Uri accountSite,
+        bool? recommended = null,
+        string authAuthUrl = "api/auth/authenticate",
+        string authRegUrl = "api/auth/register",
+        string authPwResetUrl = "api/auth/resetPassword",
+        string authResendUrl = "api/auth/resendConfirmation",
+        string authPingUrl = "api/auth/ping",
+        string authRefreshUrl = "api/auth/refresh",
+        string authLogoutUrl = "api/auth/logout",
+        string accountManUrl = "Manage",
+        string accountRegUrl = "Register",
+        string accountResendUrl = "ResendEmailConfirmation")
     {
-        new("https://cdn.spacestationmultiverse.com/hub/"),
+        public bool? Recommended { get; } = recommended;
+
+        public Uri AuthUrl { get; } = authUrl;
+        public string AuthAuthUrl { get; } = authAuthUrl;
+        public string AuthRegUrl { get; } = authRegUrl;
+        public string AuthPwResetUrl { get; } = authPwResetUrl;
+        public string AuthResendUrl { get; } = authResendUrl;
+        public string AuthPingUrl { get; } = authPingUrl;
+        public string AuthRefreshUrl { get; } = authRefreshUrl;
+        public string AuthLogoutUrl { get; } = authLogoutUrl;
+        public string AuthAuthFullUrl { get; } = $"{authUrl}{authAuthUrl}";
+        public string AuthRegFullUrl { get; } = $"{authUrl}{authRegUrl}";
+        public string AuthPwResetFullUrl { get; } = $"{authUrl}{authPwResetUrl}";
+        public string AuthResendFullUrl { get; } = $"{authUrl}{authResendUrl}";
+        public string AuthPingFullUrl { get; } = $"{authUrl}{authPingUrl}";
+        public string AuthRefreshFullUrl { get; } = $"{authUrl}{authRefreshUrl}";
+        public string AuthLogoutFullUrl { get; } = $"{authUrl}{authLogoutUrl}";
+
+        public Uri AccountSite { get; } = accountSite;
+        public string AccountManUrl { get; } = accountManUrl;
+        public string AccountRegUrl { get; } = accountRegUrl;
+        public string AccountResendUrl { get; } = accountResendUrl;
+        public string AccountManFullUrl { get; } = $"{accountSite}{accountManUrl}";
+        public string AccountRegFullUrl { get; } = $"{accountSite}{accountRegUrl}";
+        public string AccountResendFullUrl { get; } = $"{accountSite}{accountResendUrl}";
+    }
+    public const string FallbackAuthServer = "Space-Wizards";
+    public static readonly Dictionary<string, AuthServer> AuthUrls = new()
+    {
+        {
+            "SimpleStation",
+            new(new("https://auth.simplestation.org/"), new("https://account.simplestation.org/"), true)
+        },
+        {
+            FallbackAuthServer,
+            new(new("https://auth.spacestation14.com/"), new("https://account.spacestation14.com/"), false)
+        },
+        {
+            "Custom",
+            new (new("https://example.com/"), new("https://example.com/"))
+        },
+    };
+
+    public static readonly Uri[] DefaultHubUrls =
+    [
         new("https://web.networkgamez.com/"),
         new("https://hub.singularity14.co.uk/"),
+        new("https://cdn.spacestationmultiverse.com/hub/"),
         new("https://hub.spacestation14.com/"),
-    };
+    ];
+
     public const string DiscordUrl = "https://discord.gg/49KeKwXc8g/";
-    public const string AccountBaseUrl = "https://account.spacestation14.com/Identity/Account/";
-    public const string AccountManagementUrl = $"{AccountBaseUrl}Manage";
-    public const string AccountRegisterUrl = $"{AccountBaseUrl}Register";
-    public const string AccountResendConfirmationUrl = $"{AccountBaseUrl}ResendEmailConfirmation";
     public const string WebsiteUrl = "https://simplestation.org";
     public const string DownloadUrl = "https://github.com/Simple-Station/SimpleStationLauncher/releases/";
-    public const string NewsFeedUrl = "https://spacestation14.com/post/index.xml";
-    public const string TranslateUrl = "https://docs.spacestation14.com/en/general-development/contributing-translations.html";
+    public const string NewsFeedUrl = "https://spacestation14.com/post/index.xml"; //TODO
+    public const string TranslateUrl = "https://docs.spacestation14.com/en/general-development/contributing-translations.html"; //TODO
 
     public static readonly Dictionary<string, UrlFallbackSet> EngineBuildsUrl = new()
     {
@@ -97,11 +152,4 @@ public static class ConfigConstants
     public static readonly UrlFallbackSet UrlAssetsBase = LauncherDataBaseUrl + "assets/";
 
     public const string FallbackUsername = "JoeGenero";
-
-    static ConfigConstants()
-    {
-        var envVarAuthUrl = Environment.GetEnvironmentVariable("SS14_LAUNCHER_OVERRIDE_AUTH");
-        if (!string.IsNullOrEmpty(envVarAuthUrl))
-            AuthUrl = envVarAuthUrl;
-    }
 }

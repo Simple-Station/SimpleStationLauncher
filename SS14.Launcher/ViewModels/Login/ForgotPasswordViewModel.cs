@@ -30,7 +30,7 @@ public sealed class ForgotPasswordViewModel : BaseLoginViewModel
         try
         {
             BusyText = "Sending email...";
-            var errors = await _authApi.ForgotPasswordAsync(EditingEmail);
+            var errors = await _authApi.ForgotPasswordAsync(ConfigConstants.FallbackAuthServer, EditingEmail);
 
             _errored = errors != null;
 

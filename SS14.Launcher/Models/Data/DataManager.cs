@@ -342,13 +342,15 @@ public sealed class DataManager : ReactiveObject
     {
         // Load logins.
         _logins.AddOrUpdate(
-            sqliteConnection.Query<(Guid id, string name, string token, DateTimeOffset expires)>(
-                    "SELECT UserId, UserName, Token, Expires FROM Login")
+            sqliteConnection.Query<(Guid id, string name, string token, DateTimeOffset expires, string server, string? serverUrl)>(
+                    "SELECT UserId, UserName, Token, Expires, Server, ServerUrl FROM Login")
                 .Select(l => new LoginInfo
                 {
                     UserId = l.id,
                     Username = l.name,
-                    Token = new LoginToken(l.token, l.expires)
+                    Token = new LoginToken(l.token, l.expires),
+                    Server = l.server,
+                    ServerUrl = l.serverUrl,
                 }));
 
         // Favorites
@@ -524,17 +526,19 @@ public sealed class DataManager : ReactiveObject
             login.UserId,
             UserName = login.Username,
             login.Token.Token,
-            Expires = login.Token.ExpireTime
+            Expires = login.Token.ExpireTime,
+            login.Server,
+            login.ServerUrl,
         };
         AddDbCommand(con =>
         {
             con.Execute(reason switch
                 {
-                    ChangeReason.Add => "INSERT INTO Login VALUES (@UserId, @UserName, @Token, @Expires)",
+                    ChangeReason.Add => "INSERT INTO Login VALUES (@UserId, @UserName, @Token, @Expires, @Server, @ServerUrl)",
                     ChangeReason.Update =>
-                        "UPDATE Login SET UserName = @UserName, Token = @Token, Expires = @Expires WHERE UserId = @UserId",
+                        "UPDATE Login SET UserName = @UserName, Token = @Token, Expires = @Expires, Server = @Server, ServerUrl = @ServerUrl WHERE UserId = @UserId",
                     ChangeReason.Remove => "DELETE FROM Login WHERE UserId = @UserId",
-                    _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, null)
+                    _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, null),
                 },
                 data
             );

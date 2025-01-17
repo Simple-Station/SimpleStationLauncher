@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace SS14.Launcher.Models;
@@ -27,6 +28,9 @@ public class ServerAuthInformation
 
     [JsonPropertyName("public_key")]
     public string PublicKey { get; set; } = default!;
+
+    [JsonPropertyName("login_urls")]
+    public List<string>? LoginUrls { get; set; } = null;
 }
 
 public class ServerBuildInformation

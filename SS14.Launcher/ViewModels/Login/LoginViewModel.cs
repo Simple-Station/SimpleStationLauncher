@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using SS14.Launcher.Api;
@@ -16,6 +19,9 @@ public class LoginViewModel : BaseLoginViewModel
     private readonly DataManager _dataManager;
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
+    [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
+    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.ToList();
+    [Reactive] public string? ServerUrl { get; set; }
     [Reactive] public string EditingUsername { get; set; } = "";
     [Reactive] public string EditingPassword { get; set; } = "";
 
@@ -30,8 +36,12 @@ public class LoginViewModel : BaseLoginViewModel
         _loginMgr = loginMgr;
         _dataManager = dataManager;
 
-        this.WhenAnyValue(x => x.EditingUsername, x => x.EditingPassword)
-            .Subscribe(s => { IsInputValid = !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item2); });
+        this.WhenAnyValue(x => x.Server, x => x.EditingUsername, x => x.EditingPassword)
+            .Subscribe(s =>
+            {
+                IsInputValid = !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item2)
+                    && !string.IsNullOrEmpty(s.Item3);
+            });
     }
 
     public async void OnLogInButtonPressed()
@@ -44,7 +54,7 @@ public class LoginViewModel : BaseLoginViewModel
         Busy = true;
         try
         {
-            var request = new AuthApi.AuthenticateRequest(EditingUsername, EditingPassword);
+            var request = new AuthApi.AuthenticateRequest(Server, ServerUrl, EditingUsername, null, EditingPassword);
             var resp = await _authApi.AuthenticateAsync(request);
 
             await DoLogin(this, request, resp, _loginMgr, _authApi);
@@ -79,7 +89,7 @@ public class LoginViewModel : BaseLoginViewModel
                 // This also has the upside of re-available-ing the account
                 // if the user used the main login prompt on an account we already had, but as expired.
 
-                await authApi.LogoutTokenAsync(oldLogin.Value.LoginInfo.Token.Token);
+                await authApi.LogoutTokenAsync(oldLogin.Value.Server, oldLogin.Value.LoginInfo.Token.Token);
                 loginMgr.ActiveAccountId = loginInfo.UserId;
                 loginMgr.UpdateToNewToken(loginMgr.ActiveAccount!, loginInfo.Token);
                 return true;
@@ -101,15 +111,9 @@ public class LoginViewModel : BaseLoginViewModel
         return false;
     }
 
-    public void RegisterPressed()
-    {
-        // Registration is purely via website now, sorry.
-        Helpers.OpenUri(ConfigConstants.AccountRegisterUrl);
-    }
-
-    public void ResendConfirmationPressed()
-    {
-        // Registration is purely via website now, sorry.
-        Helpers.OpenUri(ConfigConstants.AccountResendConfirmationUrl);
-    }
+    // Registration is purely via website for now
+    public void RegisterPressed() =>
+        Helpers.OpenUri(ConfigConstants.AuthUrls[_loginMgr.ActiveAccount?.Server ?? ConfigConstants.FallbackAuthServer].AccountRegFullUrl);
+    public void ResendConfirmationPressed() =>
+        Helpers.OpenUri(ConfigConstants.AuthUrls[_loginMgr.ActiveAccount?.Server ?? ConfigConstants.FallbackAuthServer].AccountResendFullUrl);
 }

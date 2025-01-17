@@ -26,7 +26,7 @@ public sealed class AuthApi
     {
         try
         {
-            var authUrl = ConfigConstants.AuthUrl + "api/auth/authenticate";
+            var authUrl = ConfigConstants.AuthUrls[request.Server ?? ConfigConstants.FallbackAuthServer].AuthAuthFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -38,7 +38,9 @@ public sealed class AuthApi
                 {
                     UserId = respJson.UserId,
                     Token = token,
-                    Username = respJson.Username
+                    Username = respJson.Username,
+                    Server = request.Server ?? ConfigConstants.FallbackAuthServer,
+                    ServerUrl = request.Server,
                 });
             }
 
@@ -73,13 +75,13 @@ public sealed class AuthApi
         }
     }
 
-    public async Task<RegisterResult> RegisterAsync(string username, string email, string password)
+    public async Task<RegisterResult> RegisterAsync(string server, string username, string email, string password)
     {
         try
         {
             var request = new RegisterRequest(username, email, password);
 
-            var authUrl = ConfigConstants.AuthUrl + "api/auth/register";
+            var authUrl = ConfigConstants.AuthUrls[server].AuthRegFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -115,13 +117,13 @@ public sealed class AuthApi
     }
 
     /// <returns>Any errors that occured</returns>
-    public async Task<string[]?> ForgotPasswordAsync(string email)
+    public async Task<string[]?> ForgotPasswordAsync(string server, string email)
     {
         try
         {
             var request = new ResetPasswordRequest(email);
 
-            var authUrl = ConfigConstants.AuthUrl + "api/auth/resetPassword";
+            var authUrl = ConfigConstants.AuthUrls[server].AuthPwResetFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -142,13 +144,13 @@ public sealed class AuthApi
         }
     }
 
-    public async Task<string[]?> ResendConfirmationAsync(string email)
+    public async Task<string[]?> ResendConfirmationAsync(string server, string email)
     {
         try
         {
             var request = new ResendConfirmationRequest(email);
 
-            var authUrl = ConfigConstants.AuthUrl + "api/auth/resendConfirmation";
+            var authUrl = ConfigConstants.AuthUrls[server].AuthResendFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -174,13 +176,13 @@ public sealed class AuthApi
     /// <exception cref="AuthApiException">
     ///     Thrown if an unexpected error occured.
     /// </exception>
-    public async Task<LoginToken?> RefreshTokenAsync(string token)
+    public async Task<LoginToken?> RefreshTokenAsync(string server, string token)
     {
         try
         {
             var request = new RefreshRequest(token);
 
-            var authUrl = ConfigConstants.AuthUrl + "api/auth/refresh";
+            var authUrl = ConfigConstants.AuthUrls[server].AuthRefreshFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -217,13 +219,13 @@ public sealed class AuthApi
         }
     }
 
-    public async Task LogoutTokenAsync(string token)
+    public async Task LogoutTokenAsync(string server, string token)
     {
         try
         {
             var request = new LogoutRequest(token);
 
-            var authUrl = ConfigConstants.AuthUrl + "api/auth/logout";
+            var authUrl = ConfigConstants.AuthUrls[server].AuthLogoutFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -251,11 +253,11 @@ public sealed class AuthApi
     /// <exception cref="AuthApiException">
     ///     Thrown if an unexpected error occured.
     /// </exception>
-    public async Task<bool> CheckTokenAsync(string token)
+    public async Task<bool> CheckTokenAsync(string server, string token)
     {
         try
         {
-            var authUrl = ConfigConstants.AuthUrl + "api/auth/ping";
+            var authUrl = ConfigConstants.AuthUrls[server].AuthPingFullUrl;
 
             using var requestMessage = new HttpRequestMessage(HttpMethod.Get, authUrl);
             requestMessage.Headers.Authorization = new AuthenticationHeaderValue("SS14Auth", token);
@@ -285,18 +287,13 @@ public sealed class AuthApi
         }
     }
 
-    public sealed record AuthenticateRequest(string? Username, Guid? UserId, string Password, string? TfaCode = null)
-    {
-        public AuthenticateRequest(string username, string password) : this(username, null, password)
-        {
-
-        }
-
-        public AuthenticateRequest(Guid userId, string password) : this(null, userId, password)
-        {
-
-        }
-    }
+    public sealed record AuthenticateRequest(
+        string? Server,
+        string? ServerUrl,
+        string? Username,
+        Guid? UserId,
+        string Password,
+        string? TfaCode = null);
 
     public sealed record AuthenticateResponse(string Token, string Username, Guid UserId, DateTimeOffset ExpireTime);
 

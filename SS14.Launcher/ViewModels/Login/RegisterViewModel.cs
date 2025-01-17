@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Mail;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -16,6 +17,7 @@ public class RegisterViewModel : BaseLoginViewModel
     private readonly AuthApi _authApi;
     private readonly LoginManager _loginMgr;
 
+    [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
     [Reactive] public string EditingUsername { get; set; } = "";
     [Reactive] public string EditingPassword { get; set; } = "";
     [Reactive] public string EditingPasswordConfirm { get; set; } = "";
@@ -102,7 +104,7 @@ public class RegisterViewModel : BaseLoginViewModel
         Busy = true;
         try
         {
-            var result = await _authApi.RegisterAsync(EditingUsername, EditingEmail, EditingPassword);
+            var result = await _authApi.RegisterAsync(Server, EditingUsername, EditingEmail, EditingPassword);
             if (!result.IsSuccess)
             {
                 OverlayControl = new AuthErrorsOverlayViewModel(this, "Unable to register", result.Errors);
@@ -114,7 +116,7 @@ public class RegisterViewModel : BaseLoginViewModel
             {
                 BusyText = "Logging in...";
                 // No confirmation needed, log in immediately.
-                var request = new AuthApi.AuthenticateRequest(EditingUsername, EditingPassword);
+                var request = new AuthApi.AuthenticateRequest(Server, null, EditingUsername, null, EditingPassword);
                 var resp = await _authApi.AuthenticateAsync(request);
 
                 await LoginViewModel.DoLogin(this, request, resp, _loginMgr, _authApi);
@@ -125,7 +127,7 @@ public class RegisterViewModel : BaseLoginViewModel
             {
                 Debug.Assert(status == RegisterResponseStatus.RegisteredNeedConfirmation);
 
-                ParentVM.SwitchToRegisterNeedsConfirmation(EditingUsername, EditingPassword);
+                ParentVM.SwitchToRegisterNeedsConfirmation(Server, null, EditingUsername, EditingPassword);
             }
         }
         finally
