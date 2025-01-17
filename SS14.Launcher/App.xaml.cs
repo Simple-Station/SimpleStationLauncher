@@ -166,6 +166,8 @@ public class App : Application
                 Log.Error(e, "Failed to update SS14 protocol handler registry for Linux");
             }
         }
+        #else
+        Log.Warning("Unknown OS, not registering SS14 protocol handler");
         #endif
     }
 
