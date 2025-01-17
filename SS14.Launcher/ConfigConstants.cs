@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SS14.Launcher.Utility;
+using TerraFX.Interop.Windows;
 
 namespace SS14.Launcher;
 
@@ -73,7 +74,10 @@ public static class ConfigConstants
         public string AccountRegFullUrl { get; } = $"{accountSite}{accountRegUrl}";
         public string AccountResendFullUrl { get; } = $"{accountSite}{accountResendUrl}";
     }
+
     public const string FallbackAuthServer = "Space-Wizards";
+    public const string CustomAuthServer = "Custom";
+    public static readonly AuthServer TemplateAuthServer = new(new("https://example.com/"), new("https://example.com/"));
     public static readonly Dictionary<string, AuthServer> AuthUrls = new()
     {
         {
@@ -85,7 +89,7 @@ public static class ConfigConstants
             new(new("https://auth.spacestation14.com/"), new("https://account.spacestation14.com/"), false)
         },
         {
-            "Custom",
+            CustomAuthServer,
             new (new("https://example.com/"), new("https://example.com/"))
         },
     };

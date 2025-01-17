@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -27,6 +28,11 @@ public sealed class AuthApi
         try
         {
             var authUrl = ConfigConstants.AuthUrls[request.Server ?? ConfigConstants.FallbackAuthServer].AuthAuthFullUrl;
+            if (request.Server == ConfigConstants.CustomAuthServer)
+            {
+                authUrl = request.ServerUrl ?? throw new ArgumentException("Custom server selected but no URL provided.");
+                authUrl += ConfigConstants.TemplateAuthServer.AuthAuthUrl;
+            }
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -40,7 +46,7 @@ public sealed class AuthApi
                     Token = token,
                     Username = respJson.Username,
                     Server = request.Server ?? ConfigConstants.FallbackAuthServer,
-                    ServerUrl = request.Server,
+                    ServerUrl = request.ServerUrl,
                 });
             }
 

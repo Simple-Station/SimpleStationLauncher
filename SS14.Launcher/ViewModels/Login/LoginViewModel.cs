@@ -22,6 +22,9 @@ public class LoginViewModel : BaseLoginViewModel
     [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
     [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.ToList();
     [Reactive] public string? ServerUrl { get; set; }
+    [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
+    [Reactive] public bool IsCustom { get; set; } = false;
+
     [Reactive] public string EditingUsername { get; set; } = "";
     [Reactive] public string EditingPassword { get; set; } = "";
 
@@ -41,6 +44,8 @@ public class LoginViewModel : BaseLoginViewModel
             {
                 IsInputValid = !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item2)
                     && !string.IsNullOrEmpty(s.Item3);
+                ServerUrlPlaceholder = ConfigConstants.AuthUrls[Server].AuthUrl.ToString();
+                IsCustom = Server == ConfigConstants.CustomAuthServer;
             });
     }
 
@@ -79,8 +84,10 @@ public class LoginViewModel : BaseLoginViewModel
         if (resp.IsSuccess)
         {
             var loginInfo = resp.LoginInfo;
-            var oldLogin = loginMgr.Logins.Lookup(loginInfo.UserId);
-            if (oldLogin.HasValue)
+            var oldLogin = loginMgr.Logins.KeyValues.FirstOrDefault(a =>
+                a.Key == loginInfo.UserId && a.Value.Server == loginInfo.Server
+                    && a.Value.ServerUrl == loginInfo.ServerUrl).Value;
+            if (oldLogin != null)
             {
                 // Already had this login, apparently.
                 // Thanks user.
@@ -89,7 +96,7 @@ public class LoginViewModel : BaseLoginViewModel
                 // This also has the upside of re-available-ing the account
                 // if the user used the main login prompt on an account we already had, but as expired.
 
-                await authApi.LogoutTokenAsync(oldLogin.Value.Server, oldLogin.Value.LoginInfo.Token.Token);
+                await authApi.LogoutTokenAsync(oldLogin.Server, oldLogin.LoginInfo.Token.Token);
                 loginMgr.ActiveAccountId = loginInfo.UserId;
                 loginMgr.UpdateToNewToken(loginMgr.ActiveAccount!, loginInfo.Token);
                 return true;

@@ -239,10 +239,9 @@ public sealed class DataManager : ReactiveObject
 
     public void AddLogin(LoginInfo login)
     {
-        if (_logins.Lookup(login.UserId).HasValue)
-        {
-            throw new ArgumentException("A login with that UID already exists.");
-        }
+        if (_logins.KeyValues.FirstOrDefault(a =>
+            a.Key == login.UserId && a.Value.Server == login.Server && a.Value.ServerUrl == login.ServerUrl).Value != null)
+            throw new ArgumentException("That login already exists.");
 
         _logins.AddOrUpdate(login);
     }
