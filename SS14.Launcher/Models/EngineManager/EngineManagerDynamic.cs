@@ -87,7 +87,8 @@ public sealed partial class EngineManagerDynamic : IEngineManager
         if (foundVersion.Info.Insecure)
             throw new UpdateException("Specified engine version is insecure!");
 
-        Log.Debug($"Requested engine version was {version}, redirected to {foundVersion.Version}");
+        if (version != foundVersion.Version)
+            Log.Debug($"Requested engine version was {version}, redirected to {foundVersion.Version}");
 
         if (_cfg.EngineInstallations.Lookup(foundVersion.Version).HasValue)
         {

@@ -330,11 +330,11 @@ public class Connector : ReactiveObject
             cVars.Add(("ROBUST_AUTH_TOKEN", account.LoginInfo.Token.Token));
             cVars.Add(("ROBUST_AUTH_USERID", account.LoginInfo.UserId.ToString()));
             cVars.Add(("ROBUST_AUTH_PUBKEY", info.AuthInformation.PublicKey));
-            // cVars.Add(("ROBUST_AUTH_SERVER", ConfigConstants.AuthUrl));
-            cVars.Add(("ROBUST_AUTH_SERVER",
-                ConfigConstants
-                    .AuthUrls[info.AuthInformation.LoginUrls?.FirstOrDefault() ?? ConfigConstants.FallbackAuthServer]
-                    .AuthUrl.ToString()));
+            var authServer = ConfigConstants
+                .AuthUrls[info.AuthInformation.LoginUrls?.FirstOrDefault() ?? ConfigConstants.FallbackAuthServer]
+                .AuthUrl.ToString();
+            cVars.Add(("ROBUST_AUTH_SERVER", authServer));
+            Log.Information($"Launching client with auth server {authServer} and account {account.Username}@{account.Server} ({account.UserId})");
         }
 
         try
@@ -685,7 +685,7 @@ public class Connector : ReactiveObject
         string basePath;
 
 #if FULL_RELEASE
-            const bool release = true;
+        const bool release = true;
 #else
         const bool release = false;
 #endif
@@ -706,7 +706,7 @@ public class Connector : ReactiveObject
         {
             return new ProcessStartInfo
             {
-                FileName = Path.Combine(basePath, "SS14.Loader")
+                FileName = Path.Combine(basePath, "SS14.Loader"),
             };
         }
 
