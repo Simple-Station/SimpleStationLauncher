@@ -325,14 +325,28 @@ public class Connector : ReactiveObject
 
         if (info != null && info.AuthInformation.Mode != AuthMode.Disabled && _loginManager.ActiveAccount != null)
         {
-            var account = _loginManager.ActiveAccount;
+            var account = _loginManager.Logins.Items.FirstOrDefault(l =>
+                info.AuthInformation.LoginUrls?.Contains(LoginManager.GetAuthServerById(l.Server, l.ServerUrl,
+                    LoginManager.TryGetAccountUrl(l.Server, l.ServerUrl)).AuthUrl.ToString()) ?? l.Server == ConfigConstants.FallbackAuthServer);
+            var authServers = info.AuthInformation.LoginUrls?.ToString() ??
+                "(Fallback) " + LoginManager.GetAuthServerById(ConfigConstants.FallbackAuthServer).AuthUrl;
+            if (account == null)
+            {
+                Log.Error("No logged in account found for any of the server's allowed auth providers: {AuthServers}", authServers);
+                return null;
+            }
+            if (account != _loginManager.ActiveAccount)
+            {
+                Log.Warning("Using different account than the active one due to server requiring a different auth provider: {Server}", authServers);
+                _loginManager.ActiveAccount = account;
+            }
+
+            var authServer = LoginManager.GetAuthServerById(account.Server, account.ServerUrl,
+                LoginManager.TryGetAccountUrl(account.Server, account.ServerUrl)).AuthUrl.ToString();
 
             cVars.Add(("ROBUST_AUTH_TOKEN", account.LoginInfo.Token.Token));
             cVars.Add(("ROBUST_AUTH_USERID", account.LoginInfo.UserId.ToString()));
             cVars.Add(("ROBUST_AUTH_PUBKEY", info.AuthInformation.PublicKey));
-            var authServer = ConfigConstants
-                .AuthUrls[info.AuthInformation.LoginUrls?.FirstOrDefault() ?? ConfigConstants.FallbackAuthServer]
-                .AuthUrl.ToString();
             cVars.Add(("ROBUST_AUTH_SERVER", authServer));
             Log.Information($"Launching client with auth server {authServer} and account {account.Username}@{account.Server} ({account.UserId})");
         }
