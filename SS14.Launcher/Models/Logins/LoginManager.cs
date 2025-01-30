@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Threading;
@@ -189,6 +190,20 @@ public sealed class LoginManager : ReactiveObject
             Log.Debug("Token for {login} still valid? {valid}", data.LoginInfo, valid);
             data.SetStatus(valid ? AccountLoginStatus.Available : AccountLoginStatus.Expired);
         }
+    }
+
+    public static ConfigConstants.AuthServer GetAuthServerForAccount(string serverId, string? customAuthUrl = null, string? customAccountSite = null)
+    {
+        var authServer = ConfigConstants.AuthUrls[serverId];
+        if (serverId == ConfigConstants.CustomAuthServer)
+        {
+            if (customAuthUrl == null || customAccountSite == null)
+                throw new ArgumentException("Custom server selected but no custom URLs provided.");
+
+            authServer = new ConfigConstants.AuthServer(new(customAuthUrl), new(customAccountSite));
+        }
+
+        return authServer;
     }
 
     private sealed class ActiveLoginData : LoggedInAccount

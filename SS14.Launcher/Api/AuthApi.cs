@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Serilog;
 using SS14.Launcher.Models;
 using SS14.Launcher.Models.Data;
+using SS14.Launcher.Models.Logins;
 
 namespace SS14.Launcher.Api;
 
@@ -27,12 +28,7 @@ public sealed class AuthApi
     {
         try
         {
-            var authUrl = ConfigConstants.AuthUrls[request.Server ?? ConfigConstants.FallbackAuthServer].AuthAuthFullUrl;
-            if (request.Server == ConfigConstants.CustomAuthServer)
-            {
-                authUrl = request.ServerUrl ?? throw new ArgumentException("Custom server selected but no URL provided.");
-                authUrl += ConfigConstants.TemplateAuthServer.AuthAuthUrl;
-            }
+            var authUrl = LoginManager.GetAuthServerForAccount(request.Server ?? ConfigConstants.FallbackAuthServer, request.ServerUrl).AuthAuthFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -87,7 +83,7 @@ public sealed class AuthApi
         {
             var request = new RegisterRequest(username, email, password);
 
-            var authUrl = ConfigConstants.AuthUrls[server].AuthRegFullUrl;
+            var authUrl = LoginManager.GetAuthServerForAccount(server).AuthRegFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -129,7 +125,7 @@ public sealed class AuthApi
         {
             var request = new ResetPasswordRequest(email);
 
-            var authUrl = ConfigConstants.AuthUrls[server].AuthPwResetFullUrl;
+            var authUrl = LoginManager.GetAuthServerForAccount(server).AuthPwResetFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -156,7 +152,7 @@ public sealed class AuthApi
         {
             var request = new ResendConfirmationRequest(email);
 
-            var authUrl = ConfigConstants.AuthUrls[server].AuthResendFullUrl;
+            var authUrl = LoginManager.GetAuthServerForAccount(server).AuthResendFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -188,7 +184,7 @@ public sealed class AuthApi
         {
             var request = new RefreshRequest(token);
 
-            var authUrl = ConfigConstants.AuthUrls[server].AuthRefreshFullUrl;
+            var authUrl = LoginManager.GetAuthServerForAccount(server).AuthRefreshFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -231,7 +227,7 @@ public sealed class AuthApi
         {
             var request = new LogoutRequest(token);
 
-            var authUrl = ConfigConstants.AuthUrls[server].AuthLogoutFullUrl;
+            var authUrl = LoginManager.GetAuthServerForAccount(server).AuthLogoutFullUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -263,7 +259,7 @@ public sealed class AuthApi
     {
         try
         {
-            var authUrl = ConfigConstants.AuthUrls[server].AuthPingFullUrl;
+            var authUrl = LoginManager.GetAuthServerForAccount(server).AuthPingFullUrl;
 
             using var requestMessage = new HttpRequestMessage(HttpMethod.Get, authUrl);
             requestMessage.Headers.Authorization = new AuthenticationHeaderValue("SS14Auth", token);
