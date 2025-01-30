@@ -68,12 +68,16 @@ public class AccountDropDownViewModel : ViewModelBase
         return l => l != selected;
     }
 
-    public string LoginText => _loginMgr.ActiveAccount?.Username ??
-                               (EnableMultiAccounts ? _loc.GetString("account-drop-down-none-selected") : _loc.GetString("account-drop-down-not-logged-in"));
+    public string LoginText => _loginMgr.ActiveAccount != null
+        ? _loginMgr.ActiveAccount?.Username + "@" + _loginMgr.ActiveAccount?.Server
+        : (EnableMultiAccounts
+            ? _loc.GetString("account-drop-down-none-selected")
+            : _loc.GetString("account-drop-down-not-logged-in"));
 
     public string LogoutText => _cfg.Logins.Count == 1
         ? _loc.GetString("account-drop-down-log-out")
-        : _loc.GetString("account-drop-down-log-out-of", ("name", _loginMgr.ActiveAccount?.Username));
+        : _loc.GetString("account-drop-down-log-out-of",
+            ("name", _loginMgr.ActiveAccount?.Username + "@" + _loginMgr.ActiveAccount?.Server));
 
     public bool AccountSwitchVisible => _cfg.Logins.Count > 1 || _loginMgr.ActiveAccount == null;
     public string AccountSwitchText => _loginMgr.ActiveAccount != null
@@ -126,13 +130,15 @@ public sealed class AvailableAccountViewModel : ViewModelBase
     {
         Account = account;
 
-        this.WhenAnyValue<AvailableAccountViewModel, AccountLoginStatus, string>(p => p.Account.Status, p => p.Account.Username)
+        // (Server) Username (Status)
+        this.WhenAnyValue<AvailableAccountViewModel, AccountLoginStatus, string, string>
+            (p => p.Account.Status, p => p.Account.Username, p => p.Account.Server)
             .Select(p => p.Item1 switch
             {
-                AccountLoginStatus.Available => $"{p.Item2}",
-                AccountLoginStatus.Expired => $"{p.Item2} (!)",
-                _ => $"{p.Item2} (?)"
-            })
+                AccountLoginStatus.Available => string.Empty,
+                AccountLoginStatus.Expired => "(!)",
+                _ => "(?)",
+            } + p.Item2 + "@" + p.Item3)
             .ToPropertyEx(this, x => x.StatusText);
     }
 }
