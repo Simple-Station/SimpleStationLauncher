@@ -77,13 +77,13 @@ public sealed class AuthApi
         }
     }
 
-    public async Task<RegisterResult> RegisterAsync(string server, string username, string email, string password)
+    public async Task<RegisterResult> RegisterAsync(string server, string? serverUrl, string username, string email, string password)
     {
         try
         {
             var request = new RegisterRequest(username, email, password);
 
-            var authUrl = LoginManager.GetAuthServerById(server).AuthRegUrl;
+            var authUrl = LoginManager.GetAuthServerById(server, serverUrl).AuthRegUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -119,13 +119,13 @@ public sealed class AuthApi
     }
 
     /// <returns>Any errors that occured</returns>
-    public async Task<string[]?> ForgotPasswordAsync(string server, string email)
+    public async Task<string[]?> ForgotPasswordAsync(string server, string? serverUrl, string email)
     {
         try
         {
             var request = new ResetPasswordRequest(email);
 
-            var authUrl = LoginManager.GetAuthServerById(server).AuthPwResetUrl;
+            var authUrl = LoginManager.GetAuthServerById(server, serverUrl).AuthPwResetUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -146,13 +146,13 @@ public sealed class AuthApi
         }
     }
 
-    public async Task<string[]?> ResendConfirmationAsync(string server, string email)
+    public async Task<string[]?> ResendConfirmationAsync(string server, string? serverUrl, string email)
     {
         try
         {
             var request = new ResendConfirmationRequest(email);
 
-            var authUrl = LoginManager.GetAuthServerById(server).AuthResendUrl;
+            var authUrl = LoginManager.GetAuthServerById(server, serverUrl).AuthResendUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -178,13 +178,13 @@ public sealed class AuthApi
     /// <exception cref="AuthApiException">
     ///     Thrown if an unexpected error occured.
     /// </exception>
-    public async Task<LoginToken?> RefreshTokenAsync(string server, string token)
+    public async Task<LoginToken?> RefreshTokenAsync(string server, string? serverUrl, string token)
     {
         try
         {
             var request = new RefreshRequest(token);
 
-            var authUrl = LoginManager.GetAuthServerById(server).AuthRefreshUrl;
+            var authUrl = LoginManager.GetAuthServerById(server, serverUrl).AuthRefreshUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -221,13 +221,13 @@ public sealed class AuthApi
         }
     }
 
-    public async Task LogoutTokenAsync(string server, string token)
+    public async Task LogoutTokenAsync(string server, string? serverUrl, string token)
     {
         try
         {
             var request = new LogoutRequest(token);
 
-            var authUrl = LoginManager.GetAuthServerById(server).AuthLogoutUrl;
+            var authUrl = LoginManager.GetAuthServerById(server, serverUrl).AuthLogoutUrl;
 
             using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
 
@@ -255,11 +255,11 @@ public sealed class AuthApi
     /// <exception cref="AuthApiException">
     ///     Thrown if an unexpected error occured.
     /// </exception>
-    public async Task<bool> CheckTokenAsync(string server, string token)
+    public async Task<bool> CheckTokenAsync(string server, string? serverUrl, string token)
     {
         try
         {
-            var authUrl = LoginManager.GetAuthServerById(server).AuthPingUrl;
+            var authUrl = LoginManager.GetAuthServerById(server, serverUrl).AuthPingUrl;
 
             using var requestMessage = new HttpRequestMessage(HttpMethod.Get, authUrl);
             requestMessage.Headers.Authorization = new AuthenticationHeaderValue("SS14Auth", token);

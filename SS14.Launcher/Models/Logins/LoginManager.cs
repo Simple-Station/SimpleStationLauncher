@@ -171,7 +171,7 @@ public sealed class LoginManager : ReactiveObject
             Log.Debug("Refreshing token for {login}", data.LoginInfo);
             // If we need to refresh the token anyways we'll just
             // implicitly do the "is it still valid" with the refresh request.
-            var newTokenHopefully = await _authApi.RefreshTokenAsync(data.Server, data.LoginInfo.Token.Token);
+            var newTokenHopefully = await _authApi.RefreshTokenAsync(data.Server, data.ServerUrl, data.LoginInfo.Token.Token);
             if (newTokenHopefully == null)
             {
                 // Token expired or whatever?
@@ -187,7 +187,7 @@ public sealed class LoginManager : ReactiveObject
         }
         else if (data.Status == AccountLoginStatus.Unsure)
         {
-            var valid = await _authApi.CheckTokenAsync(data.LoginInfo.Server, data.LoginInfo.Token.Token);
+            var valid = await _authApi.CheckTokenAsync(data.LoginInfo.Server, data.LoginInfo.ServerUrl, data.LoginInfo.Token.Token);
             Log.Debug("Token for {login} still valid? {valid}", data.LoginInfo, valid);
             data.SetStatus(valid ? AccountLoginStatus.Available : AccountLoginStatus.Expired);
         }
@@ -198,8 +198,12 @@ public sealed class LoginManager : ReactiveObject
         if (serverId != ConfigConstants.CustomAuthServer)
             return ConfigConstants.AuthUrls[serverId];
 
-        if (customAuthUrl == null || customAccountSite == null)
+        if (customAuthUrl == null)
             throw new ArgumentException("Custom server selected but no custom URLs provided.");
+
+        customAccountSite ??= TryGetAccountUrl(serverId, customAuthUrl);
+        if (customAccountSite == null)
+            throw new ArgumentException("Failed to get account URL for custom server.");
 
         return new ConfigConstants.AuthServer(new(customAuthUrl), new(customAccountSite));
     }

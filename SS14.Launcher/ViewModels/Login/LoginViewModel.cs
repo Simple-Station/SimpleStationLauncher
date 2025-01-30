@@ -97,7 +97,7 @@ public class LoginViewModel : BaseLoginViewModel
                 // This also has the upside of re-available-ing the account
                 // if the user used the main login prompt on an account we already had, but as expired.
 
-                await authApi.LogoutTokenAsync(oldLogin.Server, oldLogin.LoginInfo.Token.Token);
+                await authApi.LogoutTokenAsync(oldLogin.Server, oldLogin.ServerUrl, oldLogin.LoginInfo.Token.Token);
                 loginMgr.ActiveAccountId = loginInfo.UserId;
                 loginMgr.UpdateToNewToken(loginMgr.ActiveAccount!, loginInfo.Token);
                 return true;
@@ -121,7 +121,7 @@ public class LoginViewModel : BaseLoginViewModel
 
     // Registration is purely via website for now
     public void RegisterPressed() =>
-        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl, LoginManager.TryGetAccountUrl(Server, ServerUrl)).AccountRegUrl);
+        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl).AccountRegUrl);
     public void ResendConfirmationPressed() =>
-        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl, LoginManager.TryGetAccountUrl(Server, ServerUrl)).AccountResendUrl);
+        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl).AccountResendUrl);
 }
