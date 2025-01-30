@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using DynamicData;
@@ -192,18 +193,36 @@ public sealed class LoginManager : ReactiveObject
         }
     }
 
-    public static ConfigConstants.AuthServer GetAuthServerForAccount(string serverId, string? customAuthUrl = null, string? customAccountSite = null)
+    public static ConfigConstants.AuthServer GetAuthServerById(string serverId, string? customAuthUrl = null, string? customAccountSite = null)
     {
-        var authServer = ConfigConstants.AuthUrls[serverId];
-        if (serverId == ConfigConstants.CustomAuthServer)
-        {
-            if (customAuthUrl == null || customAccountSite == null)
-                throw new ArgumentException("Custom server selected but no custom URLs provided.");
+        if (serverId != ConfigConstants.CustomAuthServer)
+            return ConfigConstants.AuthUrls[serverId];
 
-            authServer = new ConfigConstants.AuthServer(new(customAuthUrl), new(customAccountSite));
+        if (customAuthUrl == null || customAccountSite == null)
+            throw new ArgumentException("Custom server selected but no custom URLs provided.");
+
+        return new ConfigConstants.AuthServer(new(customAuthUrl), new(customAccountSite));
+    }
+
+    public static string? TryGetAccountUrl(string serverId, string? customAuthUrl = null)
+    {
+        if (serverId != ConfigConstants.CustomAuthServer)
+            return GetAuthServerById(serverId).AccountSite.ToString();
+
+        if (customAuthUrl == null)
+            throw new ArgumentException("Custom server selected but no custom URLs provided.");
+
+        // Make an http request to the custom URL to get the account URL
+        var http = HappyEyeballsHttp.CreateHttpClient();
+        var response = http.GetAsync(customAuthUrl + ConfigConstants.TemplateAuthServer.AuthAccountSitePath).Result;
+        http.Dispose();
+        if (!response.IsSuccessStatusCode)
+        {
+            Log.Error("Failed to get account URL from custom auth server with status {status}", response.StatusCode);
+            return null;
         }
 
-        return authServer;
+        return response.Content.AsJson<AccountSiteResponse>().Result.WebBaseUrl;
     }
 
     private sealed class ActiveLoginData : LoggedInAccount
@@ -222,4 +241,6 @@ public sealed class LoginManager : ReactiveObject
             Log.Debug("Setting status for login {account} to {status}", LoginInfo, status);
         }
     }
+
+    private sealed record AccountSiteResponse(string WebBaseUrl);
 }

@@ -37,42 +37,45 @@ public static class ConfigConstants
         Uri authUrl,
         Uri accountSite,
         bool? recommended = null,
-        string authAuthUrl = "api/auth/authenticate",
-        string authRegUrl = "api/auth/register",
-        string authPwResetUrl = "api/auth/resetPassword",
-        string authResendUrl = "api/auth/resendConfirmation",
-        string authPingUrl = "api/auth/ping",
-        string authRefreshUrl = "api/auth/refresh",
-        string authLogoutUrl = "api/auth/logout",
-        string accountManUrl = "Manage",
-        string accountRegUrl = "Register",
-        string accountResendUrl = "ResendEmailConfirmation")
+        string authAuthPath = "api/auth/authenticate",
+        string authRegPath = "api/auth/register",
+        string authPwResetPath = "api/auth/resetPassword",
+        string authResendPath = "api/auth/resendConfirmation",
+        string authPingPath = "api/auth/ping",
+        string authRefreshPath = "api/auth/refresh",
+        string authLogoutPath = "api/auth/logout",
+        string authAccountSitePath = "api/accountSite",
+        string accountManPath = "Identity/Account/Manage",
+        string accountRegPath = "Identity/Account/Register",
+        string accountResendPath = "Identity/Account/ResendEmailConfirmation")
     {
         public bool? Recommended { get; } = recommended;
 
         public Uri AuthUrl { get; } = authUrl;
-        public string AuthAuthUrl { get; } = authAuthUrl;
-        public string AuthRegUrl { get; } = authRegUrl;
-        public string AuthPwResetUrl { get; } = authPwResetUrl;
-        public string AuthResendUrl { get; } = authResendUrl;
-        public string AuthPingUrl { get; } = authPingUrl;
-        public string AuthRefreshUrl { get; } = authRefreshUrl;
-        public string AuthLogoutUrl { get; } = authLogoutUrl;
-        public string AuthAuthFullUrl { get; } = $"{authUrl}{authAuthUrl}";
-        public string AuthRegFullUrl { get; } = $"{authUrl}{authRegUrl}";
-        public string AuthPwResetFullUrl { get; } = $"{authUrl}{authPwResetUrl}";
-        public string AuthResendFullUrl { get; } = $"{authUrl}{authResendUrl}";
-        public string AuthPingFullUrl { get; } = $"{authUrl}{authPingUrl}";
-        public string AuthRefreshFullUrl { get; } = $"{authUrl}{authRefreshUrl}";
-        public string AuthLogoutFullUrl { get; } = $"{authUrl}{authLogoutUrl}";
+        public string AuthAuthPath { get; } = authAuthPath;
+        public string AuthRegPath { get; } = authRegPath;
+        public string AuthPwResetPath { get; } = authPwResetPath;
+        public string AuthResendPath { get; } = authResendPath;
+        public string AuthPingPath { get; } = authPingPath;
+        public string AuthRefreshPath { get; } = authRefreshPath;
+        public string AuthLogoutPath { get; } = authLogoutPath;
+        public string AuthAccountSitePath { get; } = authAccountSitePath;
+        public string AuthAuthUrl { get; } = $"{authUrl}{authAuthPath}";
+        public string AuthRegUrl { get; } = $"{authUrl}{authRegPath}";
+        public string AuthPwResetUrl { get; } = $"{authUrl}{authPwResetPath}";
+        public string AuthResendUrl { get; } = $"{authUrl}{authResendPath}";
+        public string AuthPingUrl { get; } = $"{authUrl}{authPingPath}";
+        public string AuthRefreshUrl { get; } = $"{authUrl}{authRefreshPath}";
+        public string AuthLogoutUrl { get; } = $"{authUrl}{authLogoutPath}";
+        public string AuthAccountSiteUrl { get; } = $"{authUrl}{authAccountSitePath}";
 
         public Uri AccountSite { get; } = accountSite;
-        public string AccountManUrl { get; } = accountManUrl;
-        public string AccountRegUrl { get; } = accountRegUrl;
-        public string AccountResendUrl { get; } = accountResendUrl;
-        public string AccountManFullUrl { get; } = $"{accountSite}{accountManUrl}";
-        public string AccountRegFullUrl { get; } = $"{accountSite}{accountRegUrl}";
-        public string AccountResendFullUrl { get; } = $"{accountSite}{accountResendUrl}";
+        public string AccountManPath { get; } = accountManPath;
+        public string AccountRegPath { get; } = accountRegPath;
+        public string AccountResendPath { get; } = accountResendPath;
+        public string AccountManUrl { get; } = $"{accountSite}{accountManPath}";
+        public string AccountRegUrl { get; } = $"{accountSite}{accountRegPath}";
+        public string AccountResendUrl { get; } = $"{accountSite}{accountResendPath}";
     }
 
     public const string FallbackAuthServer = "Space-Wizards";

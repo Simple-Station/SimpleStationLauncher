@@ -151,5 +151,5 @@ public class OptionsTabViewModel : MainWindowTabViewModel
     }
 
     public void OpenAccountSettings()
-        => Helpers.OpenUri(LoginManager.GetAuthServerForAccount(_loginMgr.ActiveAccount?.Server ?? ConfigConstants.FallbackAuthServer).AccountManFullUrl);
+        => Helpers.OpenUri(LoginManager.GetAuthServerById(_loginMgr.ActiveAccount?.Server ?? ConfigConstants.FallbackAuthServer).AccountManUrl);
 }

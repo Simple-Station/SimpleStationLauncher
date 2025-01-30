@@ -30,11 +30,12 @@
     <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0, 4, 0, 0"
                Text="{loc:Loc login-login-auth-server}" />
 
-    <!-- Dropdown button that lets you pick between auth servers, with a Custom option that makes an editable text box appear -->
+
+    <!-- Dropdown button that lets you pick between auth servers, with a Custom option that makes 2 editable text boxes appear -->
     <ComboBox DockPanel.Dock="Top" MaxWidth="500" Margin="0, 0, 0, 0"
-              ItemsSource="{Binding Servers}"
-              SelectedItem="{Binding Server}"
-              IsEnabled="{Binding !Busy}">
+      ItemsSource="{Binding Servers}"
+      SelectedItem="{Binding Server}"
+      IsEnabled="{Binding !Busy}">
       <ComboBox.ItemTemplate>
         <DataTemplate DataType="vml:LoginViewModel">
           <TextBlock Text="{Binding Server}" />
@@ -46,6 +47,7 @@
              Watermark="{Binding ServerUrlPlaceholder}"
              Text="{Binding ServerUrl, Mode=TwoWay}"
              IsEnabled="{Binding IsCustom, Mode=OneWay}" />
+
 
     <DockPanel DockPanel.Dock="Top" LastChildFill="False" MaxWidth="500" Margin="0 20 0 0">
       <Button DockPanel.Dock="Right" HorizontalAlignment="Center"

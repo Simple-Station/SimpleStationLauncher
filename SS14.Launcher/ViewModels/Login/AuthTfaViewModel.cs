@@ -75,7 +75,7 @@ public sealed class AuthTfaViewModel : BaseLoginViewModel
     {
         // I don't want to implement recovery code stuff, so if you need them,
         // bloody use them to disable your authenticator app online.
-        Helpers.OpenUri(ConfigConstants.AuthUrls[_request.Server ?? ConfigConstants.FallbackAuthServer].AccountManFullUrl);
+        Helpers.OpenUri(ConfigConstants.AuthUrls[_request.Server ?? ConfigConstants.FallbackAuthServer].AccountManUrl);
     }
 
     public void Cancel()

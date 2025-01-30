@@ -44,7 +44,7 @@ public class LoginViewModel : BaseLoginViewModel
             {
                 IsInputValid = !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item2)
                     && !string.IsNullOrEmpty(s.Item3);
-                ServerUrlPlaceholder = ConfigConstants.AuthUrls[Server].AuthUrl.ToString();
+                ServerUrlPlaceholder = LoginManager.GetAuthServerById(Server).AuthUrl.ToString();
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
             });
     }
@@ -120,7 +120,9 @@ public class LoginViewModel : BaseLoginViewModel
 
     // Registration is purely via website for now
     public void RegisterPressed() =>
-        Helpers.OpenUri(ConfigConstants.AuthUrls[_loginMgr.ActiveAccount?.Server ?? ConfigConstants.FallbackAuthServer].AccountRegFullUrl);
+        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, _loginMgr.ActiveAccount?.ServerUrl,
+            LoginManager.TryGetAccountUrl(Server)).AccountRegUrl);
     public void ResendConfirmationPressed() =>
-        Helpers.OpenUri(ConfigConstants.AuthUrls[_loginMgr.ActiveAccount?.Server ?? ConfigConstants.FallbackAuthServer].AccountResendFullUrl);
+        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, _loginMgr.ActiveAccount?.ServerUrl,
+            LoginManager.TryGetAccountUrl(Server)).AccountResendUrl);
 }
