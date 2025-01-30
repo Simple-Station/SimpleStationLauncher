@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using SS14.Launcher.Api;
@@ -23,7 +22,8 @@ public class LoginViewModel : BaseLoginViewModel
     [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.ToList();
     [Reactive] public string? ServerUrl { get; set; }
     [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
-    [Reactive] public bool IsCustom { get; set; } = false;
+    [Reactive] public bool IsCustom { get; private set; }
+    [Reactive] public bool IsServerPotentiallyValid { get; private set; }
 
     [Reactive] public string EditingUsername { get; set; } = "";
     [Reactive] public string EditingPassword { get; set; } = "";
@@ -39,13 +39,14 @@ public class LoginViewModel : BaseLoginViewModel
         _loginMgr = loginMgr;
         _dataManager = dataManager;
 
-        this.WhenAnyValue(x => x.Server, x => x.EditingUsername, x => x.EditingPassword)
+        this.WhenAnyValue(x => x.Server, x => x.ServerUrl, x => x.EditingUsername, x => x.EditingPassword)
             .Subscribe(s =>
             {
                 IsInputValid = !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item2)
                     && !string.IsNullOrEmpty(s.Item3);
-                ServerUrlPlaceholder = LoginManager.GetAuthServerById(Server).AuthUrl.ToString();
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
+                ServerUrlPlaceholder = LoginManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
+                IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
             });
     }
 
@@ -120,9 +121,7 @@ public class LoginViewModel : BaseLoginViewModel
 
     // Registration is purely via website for now
     public void RegisterPressed() =>
-        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, _loginMgr.ActiveAccount?.ServerUrl,
-            LoginManager.TryGetAccountUrl(Server)).AccountRegUrl);
+        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl, LoginManager.TryGetAccountUrl(Server, ServerUrl)).AccountRegUrl);
     public void ResendConfirmationPressed() =>
-        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, _loginMgr.ActiveAccount?.ServerUrl,
-            LoginManager.TryGetAccountUrl(Server)).AccountResendUrl);
+        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl, LoginManager.TryGetAccountUrl(Server, ServerUrl)).AccountResendUrl);
 }

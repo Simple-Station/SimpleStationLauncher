@@ -214,7 +214,7 @@ public sealed class LoginManager : ReactiveObject
 
         // Make an http request to the custom URL to get the account URL
         var http = HappyEyeballsHttp.CreateHttpClient();
-        var response = http.GetAsync(customAuthUrl + ConfigConstants.TemplateAuthServer.AuthAccountSitePath).Result;
+        var response = http.GetAsync(new Uri(customAuthUrl) + ConfigConstants.TemplateAuthServer.AuthAccountSitePath).Result;
         http.Dispose();
         if (!response.IsSuccessStatusCode)
         {

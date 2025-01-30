@@ -66,11 +66,12 @@
 
     <DockPanel DockPanel.Dock="Top" LastChildFill="False" MaxWidth="500">
         <Button DockPanel.Dock="Left" HorizontalAlignment="Center" Content="{loc:Loc login-login-button-resend}"
-                Command="{Binding ResendConfirmationPressed}" />
+                Command="{Binding ResendConfirmationPressed}"
+                IsEnabled="{Binding IsServerPotentiallyValid}"/>
     </DockPanel>
 
     <Button DockPanel.Dock="Bottom" Classes="BigButton" Margin="0 4" HorizontalAlignment="Center"
             Content="{loc:Loc login-login-button-register}" Command="{Binding RegisterPressed}"
-            IsEnabled="{Binding !Busy}" />
+            IsEnabled="{Binding IsServerPotentiallyValid}" />
   </DockPanel>
 </UserControl>
