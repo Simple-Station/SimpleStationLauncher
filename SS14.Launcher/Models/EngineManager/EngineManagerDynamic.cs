@@ -428,7 +428,7 @@ public sealed partial class EngineManagerDynamic : IEngineManager
 
         var rid = RidUtility.FindBestRid(foundRids);
         if (rid == null)
-            throw new UpdateException($"Unable to find overriden {name} for current platform");
+            throw new UpdateException($"Unable to find overriden {name} for current platform {RidUtility.GuessRid()}, found: {string.Join(", ", foundRids)}");
 
         var path = Path.Combine(dir, $"{name}_{rid}.zip");
         Log.Warning("Using override for {Name}: {Path}", name, path);

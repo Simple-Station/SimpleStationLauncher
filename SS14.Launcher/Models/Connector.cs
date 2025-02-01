@@ -566,6 +566,8 @@ public class Connector : ReactiveObject
             EnvVar("SS14_DISABLE_SIGNING", "true");
 
         EnvVar("SS14_LAUNCHER_PATH", Process.GetCurrentProcess().MainModule!.FileName);
+        EnvVar("SS14_LAUNCHER_DATADIR", "SimpleStation14");
+        EnvVar("SS14_LAUNCHER_APPDATA_NAME", LauncherPaths.GetAppDataName());
 
         // ReSharper disable once ReplaceWithSingleAssignment.False
         var manualPipeLogging = false;
