@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using DynamicData;
@@ -169,7 +171,7 @@ public sealed class LoginManager : ReactiveObject
             Log.Debug("Refreshing token for {login}", data.LoginInfo);
             // If we need to refresh the token anyways we'll just
             // implicitly do the "is it still valid" with the refresh request.
-            var newTokenHopefully = await _authApi.RefreshTokenAsync(data.LoginInfo.Token.Token);
+            var newTokenHopefully = await _authApi.RefreshTokenAsync(data.Server, data.ServerUrl, data.LoginInfo.Token.Token);
             if (newTokenHopefully == null)
             {
                 // Token expired or whatever?
@@ -185,10 +187,46 @@ public sealed class LoginManager : ReactiveObject
         }
         else if (data.Status == AccountLoginStatus.Unsure)
         {
-            var valid = await _authApi.CheckTokenAsync(data.LoginInfo.Token.Token);
+            var valid = await _authApi.CheckTokenAsync(data.LoginInfo.Server, data.LoginInfo.ServerUrl, data.LoginInfo.Token.Token);
             Log.Debug("Token for {login} still valid? {valid}", data.LoginInfo, valid);
             data.SetStatus(valid ? AccountLoginStatus.Available : AccountLoginStatus.Expired);
         }
+    }
+
+    public static ConfigConstants.AuthServer GetAuthServerById(string serverId, string? customAuthUrl = null, string? customAccountSite = null)
+    {
+        if (serverId != ConfigConstants.CustomAuthServer)
+            return ConfigConstants.AuthUrls[serverId];
+
+        if (customAuthUrl == null)
+            throw new ArgumentException("Custom server selected but no custom URLs provided.");
+
+        customAccountSite ??= TryGetAccountUrl(serverId, customAuthUrl);
+        if (customAccountSite == null)
+            throw new ArgumentException("Failed to get account URL for custom server.");
+
+        return new ConfigConstants.AuthServer(new(customAuthUrl), new(customAccountSite));
+    }
+
+    public static string? TryGetAccountUrl(string serverId, string? customAuthUrl = null)
+    {
+        if (serverId != ConfigConstants.CustomAuthServer)
+            return GetAuthServerById(serverId).AccountSite.ToString();
+
+        if (customAuthUrl == null)
+            throw new ArgumentException("Custom server selected but no custom URLs provided.");
+
+        // Make an http request to the custom URL to get the account URL
+        var http = HappyEyeballsHttp.CreateHttpClient();
+        var response = http.GetAsync(new Uri(customAuthUrl) + ConfigConstants.TemplateAuthServer.AuthAccountSitePath).Result;
+        http.Dispose();
+        if (!response.IsSuccessStatusCode)
+        {
+            Log.Error("Failed to get account URL from custom auth server with status {status}", response.StatusCode);
+            return null;
+        }
+
+        return response.Content.AsJson<AccountSiteResponse>().Result.WebBaseUrl;
     }
 
     private sealed class ActiveLoginData : LoggedInAccount
@@ -207,4 +245,6 @@ public sealed class LoginManager : ReactiveObject
             Log.Debug("Setting status for login {account} to {status}", LoginInfo, status);
         }
     }
+
+    private sealed record AccountSiteResponse(string WebBaseUrl);
 }

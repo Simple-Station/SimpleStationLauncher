@@ -97,12 +97,6 @@ public static class LauncherPaths
         return GetUserDataDir();
     }
 
-    private static string GetAppDataName()
-    {
-        var envVar = Environment.GetEnvironmentVariable("SS14_LAUNCHER_APPDATA_NAME");
-        if (!string.IsNullOrEmpty(envVar))
-            return envVar;
-
-        return "launcher";
-    }
+    public static string GetAppDataName()
+        => Environment.GetEnvironmentVariable("SS14_LAUNCHER_APPDATA_NAME") ?? "launcher";
 }
