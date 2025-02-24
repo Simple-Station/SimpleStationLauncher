@@ -53,14 +53,14 @@ public sealed class AuthApi
             Log.Debug("Response for error:\n{response}\n{content}", resp, await resp.Content.ReadAsStringAsync());
             // Unknown error? uh oh.
             return new AuthenticateResult(
-                new[] { "Server returned unknown error" },
+                ["Server returned unknown error"],
                 AuthenticateDenyResponseCode.UnknownError);
         }
         catch (JsonException e)
         {
             Log.Error(e, "JsonException in AuthenticateAsync");
             return new AuthenticateResult(
-                new[] { "Server sent invalid response" },
+                ["Server sent invalid response"],
                 AuthenticateDenyResponseCode.UnknownError);
         }
         catch (HttpRequestException httpE)
@@ -68,7 +68,7 @@ public sealed class AuthApi
             Log.Error(httpE, "HttpRequestException in AuthenticateAsync");
             HttpSelfTest.StartSelfTest();
             return new AuthenticateResult(
-                new[] { $"Connection error to authentication server: {httpE.Message}" },
+                [$"Connection error to authentication server: {httpE.Message}"],
                 AuthenticateDenyResponseCode.UnknownError);
         }
     }
@@ -99,18 +99,18 @@ public sealed class AuthApi
             Log.Error("Server returned unexpected HTTP status code: {responseCode}", resp.StatusCode);
             Log.Debug("Response for error:\n{response}\n{content}", resp, await resp.Content.ReadAsStringAsync());
             // Unknown error? uh oh.
-            return new RegisterResult(new[] { "Server returned unknown error" });
+            return new RegisterResult(["Server returned unknown error"]);
         }
         catch (JsonException e)
         {
             Log.Error(e, "JsonException in RegisterAsync");
-            return new RegisterResult(new[] { "Server sent invalid response" });
+            return new RegisterResult(["Server sent invalid response"]);
         }
         catch (HttpRequestException httpE)
         {
             Log.Error(httpE, "HttpRequestException in RegisterAsync");
             HttpSelfTest.StartSelfTest();
-            return new RegisterResult(new[] { $"Connection error to authentication server: {httpE.Message}" });
+            return new RegisterResult([$"Connection error to authentication server: {httpE.Message}"]);
         }
     }
 
@@ -133,12 +133,12 @@ public sealed class AuthApi
             // Unknown error? uh oh.
             Log.Error("Server returned unexpected HTTP status code: {responseCode}", resp.StatusCode);
             Log.Debug("Response for error:\n{response}\n{content}", resp, await resp.Content.ReadAsStringAsync());
-            return new[] { "Server returned unknown error" };
+            return ["Server returned unknown error"];
         }
         catch (HttpRequestException httpE)
         {
             Log.Error(httpE, "HttpRequestException in ForgotPasswordAsync");
-            return new[] { $"Connection error to authentication server: {httpE.Message}" };
+            return [$"Connection error to authentication server: {httpE.Message}"];
         }
     }
 
@@ -160,13 +160,13 @@ public sealed class AuthApi
             // Unknown error? uh oh.
             Log.Error("Server returned unexpected HTTP status code: {responseCode}", resp.StatusCode);
             Log.Debug("Response for error:\n{response}\n{content}", resp, await resp.Content.ReadAsStringAsync());
-            return new[] { "Server returned unknown error" };
+            return ["Server returned unknown error"];
         }
         catch (HttpRequestException httpE)
         {
             Log.Error(httpE, "HttpRequestException in ResendConfirmationAsync");
             HttpSelfTest.StartSelfTest();
-            return new[] { $"Connection error to authentication server: {httpE.Message}" };
+            return [$"Connection error to authentication server: {httpE.Message}"];
         }
     }
 
