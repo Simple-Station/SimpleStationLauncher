@@ -20,6 +20,10 @@ public class LauncherCommands
     private LauncherMessaging _msgr;
     public readonly Channel<string> CommandChannel;
 
+    /// <summary>
+    /// Constructor for LauncherCommands
+    /// </summary>
+    /// <param name="windowVm">ViewModel of the Main Window</param>
     public LauncherCommands(MainWindowViewModel windowVm)
     {
         _windowVm = windowVm;
@@ -29,12 +33,18 @@ public class LauncherCommands
         CommandChannel = Channel.CreateUnbounded<string>();
     }
 
+    /// <summary>
+    /// Activates Main Window and brings to front.
+    /// </summary>
     private void ActivateWindow()
     {
-        // This may not work, but let's try anyway...
-        // In particular keep in mind:
-        // https://github.com/AvaloniaUI/Avalonia/issues/2398
-        _windowVm.Control?.Activate();
+        var window = _windowVm.Control;
+        if (window != null)
+        {
+            Dispatcher.UIThread.Post(window.Activate);
+            return;
+        }
+        Console.WriteLine($"MainWindowViewModel not activated; window returned null. :: ActivateWindow()");
     }
 
     private async Task Connect(string param)
@@ -75,6 +85,7 @@ public class LauncherCommands
             Log.Warning($"Dropping connect command: Busy connecting to a server");
             return;
         }
+
         // Note that we don't want to activate the window for something we'll requeue again and again.
         ActivateWindow();
         Log.Information($"Connect command: \"{param}\", \"{reason}\"");
@@ -125,41 +136,47 @@ public class LauncherCommands
             }
         }
 
-        if (cmd == PingCommand)
+        switch (cmd)
         {
-            // Yup!
-            ActivateWindow();
-        }
-        else if (cmd == RedialWaitCommand)
-        {
-            // Redialling wait
-            await Task.Delay(ConfigConstants.LauncherCommandsRedialWaitTimeout);
-        }
-        else if (cmd.StartsWith("R"))
-        {
-            // Reason (encoded in UTF-8 and then into hex for safety)
-            _reason = GetUntrustedTextField() ?? "";
-        }
-        else if (cmd.StartsWith("r"))
-        {
-            // Reason (no encoding)
-            _reason = cmd.Substring(1);
-        }
-        else if (cmd.StartsWith("C"))
-        {
-            // Uri (encoded in UTF-8 and then into hex for safety)
-            var uri = GetUntrustedTextField();
-            if (uri != null)
-                await Connect(uri);
-        }
-        else if (cmd.StartsWith("c"))
-        {
-            // Used by the "pass URI as argument" logic, doesn't need to bother with safety measures
-            await Connect(cmd.Substring(1));
-        }
-        else
-        {
-            Log.Error($"Unhandled launcher command: {cmd}");
+            case PingCommand:
+                // Yup!
+                ActivateWindow();
+                break;
+            case RedialWaitCommand:
+                // Redialling wait
+                await Task.Delay(ConfigConstants.LauncherCommandsRedialWaitTimeout);
+                break;
+            default:
+            {
+                if (cmd.StartsWith('R'))
+                {
+                    // Reason (encoded in UTF-8 and then into hex for safety)
+                    _reason = GetUntrustedTextField() ?? "";
+                }
+                else if (cmd.StartsWith('r'))
+                {
+                    // Reason (no encoding)
+                    _reason = cmd.Substring(1);
+                }
+                else if (cmd.StartsWith('C'))
+                {
+                    // Uri (encoded in UTF-8 and then into hex for safety)
+                    var uri = GetUntrustedTextField();
+                    if (uri != null)
+                        await Connect(uri);
+                }
+                else if (cmd.StartsWith('c'))
+                {
+                    // Used by the "pass URI as argument" logic, doesn't need to bother with safety measures
+                    await Connect(cmd.Substring(1));
+                }
+                else
+                {
+                    Log.Error($"Unhandled launcher command: {cmd}");
+                }
+
+                break;
+            }
         }
     }
 
@@ -170,4 +187,3 @@ public class LauncherCommands
     public const string BlankReasonCommand = "r";
     public static string ConstructConnectCommand(Uri uri) => "c" + uri.ToString();
 }
-
