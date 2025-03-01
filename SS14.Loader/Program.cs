@@ -9,7 +9,16 @@ using System.Runtime.Loader;
 using NSec.Cryptography;
 using Robust.LoaderApi;
 
+
 namespace SS14.Loader;
+
+internal enum ExitCode : int
+{
+    Success = 0,
+    InvalidSignature = 1,
+    InvalidFilename = 2,
+    FailedProgramExecution = 3,
+}
 
 internal class Program
 {
@@ -18,6 +27,11 @@ internal class Program
 
     private readonly IFileApi _fileApi;
 
+    /// <summary>
+    /// Main Program class constructor. Loads assembly contexts.
+    /// </summary>
+    /// <param name="robustPath"></param>
+    /// <param name="engineArgs"></param>
     private Program(string robustPath, string[] engineArgs)
     {
         _engineArgs = engineArgs;
@@ -45,9 +59,13 @@ internal class Program
         return IntPtr.Zero;
     }
 
+    /// <summary>
+    /// Runs the program.
+    /// </summary>
+    /// <returns></returns>
     private bool Run()
     {
-        if (!TryOpenAssembly(RobustAssemblyName, out var clientAssembly))
+        if (!TryOpenAssembly(RobustAssemblyName, out Assembly? clientAssembly))
         {
             Console.WriteLine("Unable to locate Robust.Client.dll in engine build!");
             return false;
@@ -80,6 +98,7 @@ internal class Program
         {
             contentApi?.Dispose();
         }
+
         return true;
     }
 
@@ -101,7 +120,7 @@ internal class Program
             return false;
         }
 
-        loader = (ILoaderEntryPoint) Activator.CreateInstance(type)!;
+        loader = (ILoaderEntryPoint)Activator.CreateInstance(type)!;
         return true;
     }
 
@@ -137,10 +156,11 @@ internal class Program
     [STAThread]
     internal static int Main(string[] args)
     {
+        // TEMP: Arguments can be parsed separately for tighter error handling.
         if (args.Length < 3)
         {
             Console.WriteLine("Usage: SS14.Loader <robustPath> <signature> <public key> [engineArg [engineArg...]]");
-            return 1;
+            return (int)ExitCode.InvalidSignature;
         }
 
         var robustPath = args[0];
@@ -167,16 +187,17 @@ internal class Program
 #endif
             {
                 Console.WriteLine("Failed to verify engine signature!");
-                return 2;
+                return (int)ExitCode.InvalidSignature;
             }
         }
 
         var program = new Program(robustPath, args[3..]);
         if (!program.Run())
         {
-            return 3;
+            return (int)ExitCode.FailedProgramExecution;
         }
 
+        // WIP: Remove if not needed.
         /*Console.WriteLine("lsasm dump:");
         foreach (var asmLoadContext in AssemblyLoadContext.All)
         {
@@ -187,6 +208,6 @@ internal class Program
             }
         }*/
 
-        return 0;
+        return (int)ExitCode.Success;
     }
 }

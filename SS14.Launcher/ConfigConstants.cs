@@ -39,7 +39,7 @@ public static class ConfigConstants
         new("https://hub.singularity14.co.uk/"),
         new("https://hub.spacestation14.com/"),
     };
-    public const string DiscordUrl = "https://discord.gg/49KeKwXc8g/";
+    public const string DiscordUrl = "https://discord.gg/Z5PsYHY6fM";
     public const string AccountBaseUrl = "https://account.spacestation14.com/Identity/Account/";
     public const string AccountManagementUrl = $"{AccountBaseUrl}Manage";
     public const string AccountRegisterUrl = $"{AccountBaseUrl}Register";
