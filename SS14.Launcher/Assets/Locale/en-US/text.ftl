@@ -265,8 +265,6 @@ filters-rp-medium = Medium
 filters-rp-medium-desc = Medium
 filters-rp-high = High
 filters-rp-high-desc = High
-filters-rp-adult = Adult
-filters-rp-adult-desc = Adult
 
 ## Strings for entries in the server list (including home page)
 
