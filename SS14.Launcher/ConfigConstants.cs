@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SS14.Launcher.Utility;
+using TerraFX.Interop.Windows;
 
 namespace SS14.Launcher;
 
@@ -31,23 +32,38 @@ public static class ConfigConstants
     // Amount of time to wait to let a redialling client properly die
     public const int LauncherCommandsRedialWaitTimeout = 1000;
 
-    public static readonly string AuthUrl = "https://auth.spacestation14.com/";
-    public static readonly Uri[] DefaultHubUrls =
+    public const string FallbackAuthServer = "Space-Wizards";
+    public const string CustomAuthServer = "Custom";
+    public static readonly AuthServer TemplateAuthServer = new(new("https://example.com/"), new("https://example.com/"));
+    public static readonly Dictionary<string, AuthServer> AuthUrls = new()
     {
-        new("https://cdn.spacestationmultiverse.com/hub/"),
+        {
+            "SimpleStation",
+            new(new("https://auth.simplestation.org/"), new("https://account.simplestation.org/"), true)
+        },
+        {
+            FallbackAuthServer,
+            new(new("https://auth.spacestation14.com/"), new("https://account.spacestation14.com/"), false)
+        },
+        {
+            CustomAuthServer,
+            new (new("https://example.com/"), new("https://example.com/"))
+        },
+    };
+
+    public static readonly Uri[] DefaultHubUrls =
+    [
         new("https://web.networkgamez.com/"),
         new("https://hub.singularity14.co.uk/"),
+        new("https://cdn.spacestationmultiverse.com/hub/"),
         new("https://hub.spacestation14.com/"),
-    };
-    public const string DiscordUrl = "https://discord.gg/Z5PsYHY6fM";
-    public const string AccountBaseUrl = "https://account.spacestation14.com/Identity/Account/";
-    public const string AccountManagementUrl = $"{AccountBaseUrl}Manage";
-    public const string AccountRegisterUrl = $"{AccountBaseUrl}Register";
-    public const string AccountResendConfirmationUrl = $"{AccountBaseUrl}ResendEmailConfirmation";
+    ];
+
+    public const string DiscordUrl = "https://discord.gg/49KeKwXc8g";
     public const string WebsiteUrl = "https://simplestation.org";
     public const string DownloadUrl = "https://github.com/Simple-Station/SimpleStationLauncher/releases/";
-    public const string NewsFeedUrl = "https://spacestation14.com/post/index.xml";
-    public const string TranslateUrl = "https://docs.spacestation14.com/en/general-development/contributing-translations.html";
+    public const string NewsFeedUrl = "https://spacestation14.com/post/index.xml"; //TODO
+    public const string TranslateUrl = "https://docs.spacestation14.com/en/general-development/contributing-translations.html"; //TODO
 
     public static readonly Dictionary<string, UrlFallbackSet> EngineBuildsUrl = new()
     {
@@ -98,10 +114,49 @@ public static class ConfigConstants
 
     public const string FallbackUsername = "JoeGenero";
 
-    static ConfigConstants()
+
+    public class AuthServer(
+        Uri authUrl,
+        Uri accountSite,
+        bool? recommended = null,
+        string authAuthPath = "api/auth/authenticate",
+        string authRegPath = "api/auth/register",
+        string authPwResetPath = "api/auth/resetPassword",
+        string authResendPath = "api/auth/resendConfirmation",
+        string authPingPath = "api/auth/ping",
+        string authRefreshPath = "api/auth/refresh",
+        string authLogoutPath = "api/auth/logout",
+        string authAccountSitePath = "api/accountSite",
+        string accountManPath = "Identity/Account/Manage",
+        string accountRegPath = "Identity/Account/Register",
+        string accountResendPath = "Identity/Account/ResendEmailConfirmation")
     {
-        var envVarAuthUrl = Environment.GetEnvironmentVariable("SS14_LAUNCHER_OVERRIDE_AUTH");
-        if (!string.IsNullOrEmpty(envVarAuthUrl))
-            AuthUrl = envVarAuthUrl;
+        public bool? Recommended { get; } = recommended;
+
+        public Uri AuthUrl { get; } = authUrl;
+        public string AuthAuthPath { get; } = authAuthPath;
+        public string AuthRegPath { get; } = authRegPath;
+        public string AuthPwResetPath { get; } = authPwResetPath;
+        public string AuthResendPath { get; } = authResendPath;
+        public string AuthPingPath { get; } = authPingPath;
+        public string AuthRefreshPath { get; } = authRefreshPath;
+        public string AuthLogoutPath { get; } = authLogoutPath;
+        public string AuthAccountSitePath { get; } = authAccountSitePath;
+        public string AuthAuthUrl { get; } = $"{authUrl}{authAuthPath}";
+        public string AuthRegUrl { get; } = $"{authUrl}{authRegPath}";
+        public string AuthPwResetUrl { get; } = $"{authUrl}{authPwResetPath}";
+        public string AuthResendUrl { get; } = $"{authUrl}{authResendPath}";
+        public string AuthPingUrl { get; } = $"{authUrl}{authPingPath}";
+        public string AuthRefreshUrl { get; } = $"{authUrl}{authRefreshPath}";
+        public string AuthLogoutUrl { get; } = $"{authUrl}{authLogoutPath}";
+        public string AuthAccountSiteUrl { get; } = $"{authUrl}{authAccountSitePath}";
+
+        public Uri AccountSite { get; } = accountSite;
+        public string AccountManPath { get; } = accountManPath;
+        public string AccountRegPath { get; } = accountRegPath;
+        public string AccountResendPath { get; } = accountResendPath;
+        public string AccountManUrl { get; } = $"{accountSite}{accountManPath}";
+        public string AccountRegUrl { get; } = $"{accountSite}{accountRegPath}";
+        public string AccountResendUrl { get; } = $"{accountSite}{accountResendPath}";
     }
 }

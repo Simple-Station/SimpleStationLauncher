@@ -67,9 +67,9 @@ public class MainWindowLoginViewModel : ViewModelBase
         Screen = new ResendConfirmationViewModel(this, _authApi);
     }
 
-    public void SwitchToRegisterNeedsConfirmation(string username, string password)
+    public void SwitchToRegisterNeedsConfirmation(string server, string? serverUrl, string username, string password)
     {
-        Screen = new RegisterNeedsConfirmationViewModel(this, _authApi, username, password, _loginMgr, _cfg);
+        Screen = new RegisterNeedsConfirmationViewModel(this, _authApi, server, serverUrl, username, password, _loginMgr, _cfg);
     }
 
     public bool LogLauncher
