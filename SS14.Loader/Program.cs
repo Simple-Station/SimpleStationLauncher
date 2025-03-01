@@ -160,7 +160,7 @@ internal class Program
         if (args.Length < 3)
         {
             Console.WriteLine("Usage: SS14.Loader <robustPath> <signature> <public key> [engineArg [engineArg...]]");
-            return ExitCode.InvalidSignature;
+            return (int)ExitCode.InvalidSignature;
         }
 
         var robustPath = args[0];
@@ -187,14 +187,14 @@ internal class Program
 #endif
             {
                 Console.WriteLine("Failed to verify engine signature!");
-                return ExitCode.InvalidSignature;
+                return (int)ExitCode.InvalidSignature;
             }
         }
 
         var program = new Program(robustPath, args[3..]);
         if (!program.Run())
         {
-            return ExitCode.FailedProgramExecution;
+            return (int)ExitCode.FailedProgramExecution;
         }
 
         // WIP: Remove if not needed.
@@ -208,6 +208,6 @@ internal class Program
             }
         }*/
 
-        return ExitCode.Success;
+        return (int)ExitCode.Success;
     }
 }
