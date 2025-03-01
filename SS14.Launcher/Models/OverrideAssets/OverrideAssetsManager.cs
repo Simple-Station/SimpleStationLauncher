@@ -114,7 +114,7 @@ public sealed class OverrideAssetsManager
     private async Task UpdateAssetsBody(CancellationToken cancel)
     {
         await _infoManager.LoadTask.ConfigureAwait(false);
-        if (_infoManager.Model == null)
+        if (_infoManager.Model?.OverrideAssets == null)
         {
             // Error. oh well
             Log.Verbose("Not updating override assets due to error fetching info");

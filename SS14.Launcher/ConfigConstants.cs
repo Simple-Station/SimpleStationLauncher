@@ -59,7 +59,7 @@ public static class ConfigConstants
         new("https://hub.spacestation14.com/"),
     ];
 
-    public const string DiscordUrl = "https://discord.gg/49KeKwXc8g/";
+    public const string DiscordUrl = "https://discord.gg/49KeKwXc8g";
     public const string WebsiteUrl = "https://simplestation.org";
     public const string DownloadUrl = "https://github.com/Simple-Station/SimpleStationLauncher/releases/";
     public const string NewsFeedUrl = "https://spacestation14.com/post/index.xml"; //TODO

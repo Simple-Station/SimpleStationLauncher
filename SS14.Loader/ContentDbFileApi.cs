@@ -21,7 +21,7 @@ internal sealed class ContentDbFileApi : IFileApi, IDisposable
 {
     private readonly Dictionary<string, (long id, int length, ContentCompressionScheme compr)> _files = new();
     private readonly SemaphoreSlim _dbConnectionsSemaphore;
-    private readonly ConcurrentBag<ConPoolEntry> _dbConnections = new();
+    private readonly ConcurrentBag<ConPoolEntry> _dbConnections = [];
     private readonly int _connectionPoolSize;
 
     public unsafe ContentDbFileApi(string contentDbPath, long version)
