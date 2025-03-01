@@ -12,7 +12,7 @@ using Robust.LoaderApi;
 
 namespace SS14.Loader;
 
-internal enum ExitCode
+internal enum ExitCode : int
 {
     Success = 0,
     InvalidSignature = 1,
