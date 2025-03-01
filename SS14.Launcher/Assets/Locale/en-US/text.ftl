@@ -146,7 +146,7 @@ login-confirmation-busy = Logging in…
 
 ## Strings for the general main window layout of the launcher
 
-main-window-title = SimpleStation14 Launcher
+main-window-title = Space Station: Beyond Launcher
 main-window-header-link-discord = Discord
 main-window-header-link-website = Website
 main-window-out-of-date = Launcher out of date
@@ -265,6 +265,8 @@ filters-rp-medium = Medium
 filters-rp-medium-desc = Medium
 filters-rp-high = High
 filters-rp-high-desc = High
+filters-rp-adult = Adult
+filters-rp-adult-desc = Adult
 
 ## Strings for entries in the server list (including home page)
 

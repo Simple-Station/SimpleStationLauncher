@@ -13,7 +13,6 @@
   <DockPanel>
     <!-- Account info -->
 
-
     <!-- Favorites -->
     <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="4, 0, 4, 2">
       <TextBlock DockPanel.Dock="Left" Text="{loc:Loc tab-home-favorite-servers}" Classes="NanoHeadingMedium" />
