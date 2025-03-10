@@ -72,9 +72,19 @@ public sealed class ServerListCache : ReactiveObject, IServerSource
             var allSucceeded = true;
 
             // Queue requests
-            foreach (var hub in _dataManager.Hubs.OrderBy(h => h.Priority))
+            if(_dataManager.Hubs.Any()) // if user has custom hubs, fetch the servers
             {
-                requests.Add((_hubApi.GetServers(hub.Address, cancel), hub.Address));
+                foreach (var hub in _dataManager.Hubs.OrderBy(h => h.Priority))
+                {
+                    requests.Add((_hubApi.GetServers(hub.Address, cancel), hub.Address));
+                }
+            }
+            else // otherwise fetch the servers from the default hubs
+            {
+                foreach (var hub in ConfigConstants.DefaultHubUrls)
+                {
+                    requests.Add((_hubApi.GetServers(hub, cancel), hub));
+                }
             }
 
             // Await all requests
