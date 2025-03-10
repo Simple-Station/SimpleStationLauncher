@@ -33,26 +33,17 @@
   soundfont-fluid,
   # Path to set ROBUST_SOUNDFONT_OVERRIDE to, essentially the default soundfont used.
   soundfont-path ? "${soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2",
-}:
 
-let
-  version = "0.28.0";
-  pname = "space-station-14-launcher";
-in
+  version ? "development",
+  source ? ../.,
+}:
 buildDotnetModule rec {
-  inherit pname;
+  pname = "simple-station-launcher";
 
   # Workaround to prevent buildDotnetModule from overriding assembly versions.
   name = "${pname}-${version}";
 
-  # A bit redundant but I don't trust this package to be maintained by anyone else.
-  src = fetchFromGitHub {
-    owner = "space-wizards";
-    repo = "SS14.Launcher";
-    rev = "v${version}";
-    hash = "sha256-mBFTXwnxijXAP6i7DNQ/3bujualysCGjDDjmhe15s4I=";
-    fetchSubmodules = true;
-  };
+  src = source;
 
   buildType = "Release";
   selfContainedBuild = false;
@@ -68,8 +59,7 @@ buildDotnetModule rec {
     inherit version;
   };
 
-  # SDK 6.0 required for Robust.LoaderApi
-  dotnet-sdk = with dotnetCorePackages; combinePackages [ sdk_8_0 sdk_6_0 ];
+  dotnet-sdk = dotnetCorePackages.sdk_8_0;
   dotnet-runtime = dotnetCorePackages.runtime_8_0;
 
   dotnetFlags = [
@@ -78,7 +68,11 @@ buildDotnetModule rec {
     "-nologo"
   ];
 
-  nativeBuildInputs = [ wrapGAppsHook iconConvTools copyDesktopItems ];
+  nativeBuildInputs = [
+    wrapGAppsHook
+    iconConvTools
+    copyDesktopItems
+  ];
 
   runtimeDeps = [
     # Required by the game.
@@ -130,10 +124,10 @@ buildDotnetModule rec {
   ];
 
   postInstall = ''
-    mkdir -p $out/lib/space-station-14-launcher/loader
-    cp -r SS14.Loader/bin/${buildType}/*/*/* $out/lib/space-station-14-launcher/loader/
+    mkdir -p $out/lib/${pname}/loader
+    cp -r SS14.Loader/bin/${buildType}/*/*/* $out/lib/${pname}/loader/
 
-    icoFileToHiColorTheme SS14.Launcher/Assets/icon.ico space-station-14-launcher $out
+    icoFileToHiColorTheme SS14.Launcher/Assets/icon.ico ${pname} $out
   '';
 
   dontWrapGApps = true;
@@ -146,8 +140,11 @@ buildDotnetModule rec {
     description = "Launcher for Simple Station 14, a 2D RPG about disasters in space.";
     homepage = "https://simplestation.org";
     license = licenses.mit;
-    maintainers = [ maintainers.zumorica ];
-    platforms = [ "x86_64-linux" ];
+    maintainers = [ ];
+    platforms = [
+      "x86_64-linux"
+      "aarch64-linux"
+    ];
     mainProgram = "SS14.Launcher";
   };
 }
