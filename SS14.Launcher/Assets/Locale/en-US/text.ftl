@@ -129,6 +129,7 @@ login-login-title = Log in
 login-login-username-watermark = Username or email
 login-login-password-watermark = Password
 login-login-show-password = Show Password
+login-login-auth-server = Account Provider
 login-login-button-log-in = Log in
 login-login-button-forgot = Forgot your password?
 login-login-button-resend = Resend email confirmation
