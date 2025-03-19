@@ -91,6 +91,8 @@ public class ServerListTabViewModel : MainWindowTabViewModel
                     break;
             }
         };
+
+        _loc.LanguageSwitched += () => Filters.UpdatePresentFilters(_serverListCache.AllServers);
     }
 
     private void FiltersOnFiltersUpdated()
