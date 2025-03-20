@@ -137,7 +137,7 @@ buildDotnetModule rec {
   '';
 
   meta = with lib; {
-    description = "Launcher for Simple Station 14, a 2D RPG about disasters in space.";
+    description = "Launcher for Space Station 14 that offers OOTB access to more servers, a 2D RPG about disasters in space.";
     homepage = "https://simplestation.org";
     license = licenses.mit;
     maintainers = [ ];
