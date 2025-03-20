@@ -2,7 +2,6 @@
   lib,
   buildDotnetModule,
   dotnetCorePackages,
-  fetchFromGitHub,
   wrapGAppsHook,
   iconConvTools,
   copyDesktopItems,
@@ -38,7 +37,7 @@
   source ? ../.,
 }:
 buildDotnetModule rec {
-  pname = "simple-station-launcher";
+  pname = "space-station-beyond";
 
   # Workaround to prevent buildDotnetModule from overriding assembly versions.
   name = "${pname}-${version}";
@@ -59,8 +58,9 @@ buildDotnetModule rec {
     inherit version;
   };
 
-  dotnet-sdk = dotnetCorePackages.sdk_8_0;
-  dotnet-runtime = dotnetCorePackages.runtime_8_0;
+  # A Robust Loader component uses sdk_8_0
+  dotnet-sdk = with dotnetCorePackages; combinePackages [ sdk_9_0 sdk_8_0 ];
+  dotnet-runtime = dotnetCorePackages.runtime_9_0;
 
   dotnetFlags = [
     "-p:FullRelease=true"
@@ -107,7 +107,7 @@ buildDotnetModule rec {
     # TODO: Figure out dependencies for CEF support.
   ];
 
-  makeWrapperArgs = [ ''--set ROBUST_SOUNDFONT_OVERRIDE "${soundfont-path}"'' ];
+  makeWrapperArgs = [ ''--set ROBUST_SOUNDFONT_OVERRIDE ${soundfont-path}'' ];
 
   executables = [ "SS14.Launcher" ];
 
@@ -116,7 +116,7 @@ buildDotnetModule rec {
       name = pname;
       exec = meta.mainProgram;
       icon = pname;
-      desktopName = "SimpleStation14 Launcher";
+      desktopName = "Space Station: Beyond";
       comment = meta.description;
       categories = [ "Game" ];
       startupWMClass = meta.mainProgram;

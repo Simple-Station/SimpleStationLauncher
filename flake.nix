@@ -14,14 +14,15 @@
     rec {
       packages = forAllSystems (pkgs: {
         default = packages.${pkgs.system}.simple-station-launcher-development;
+        # Build via nix build -L 'git+file://PATH?submodules=1'
         simple-station-launcher-development = pkgs.callPackage ./nix/package.nix { };
         simple-station-launcher = pkgs.callPackage ./nix/package.nix {
-          version = "v1.2.1";
+          version = "1.3.1";
           source = pkgs.fetchFromGitHub {
             owner = "Simple-Station";
             repo = "SimpleStationLauncher";
-            tag = "v1.2.1";
-            hash = "sha256-hu6KO7GzktdCaiBGdCtR5QIkNRERtSP01z3Jr+Fwkl4=";
+            tag = "v1.3.1";
+            hash = "sha256-ekSq0xjgOq+OCrYpzLXihxPT3RpRil/o1Eia9JCp5HQ=";
             fetchSubmodules = true;
           };
         };
