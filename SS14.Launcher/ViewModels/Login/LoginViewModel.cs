@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -16,6 +18,13 @@ public class LoginViewModel : BaseLoginViewModel
     private readonly DataManager _dataManager;
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
+    [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
+    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.ToList();
+    [Reactive] public string? ServerUrl { get; set; }
+    [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
+    [Reactive] public bool IsCustom { get; private set; }
+    [Reactive] public bool IsServerPotentiallyValid { get; private set; }
+
     [Reactive] public string EditingUsername { get; set; } = "";
     [Reactive] public string EditingPassword { get; set; } = "";
 
@@ -30,8 +39,15 @@ public class LoginViewModel : BaseLoginViewModel
         _loginMgr = loginMgr;
         _dataManager = dataManager;
 
-        this.WhenAnyValue(x => x.EditingUsername, x => x.EditingPassword)
-            .Subscribe(s => { IsInputValid = !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item2); });
+        this.WhenAnyValue(x => x.Server, x => x.ServerUrl, x => x.EditingUsername, x => x.EditingPassword)
+            .Subscribe(s =>
+            {
+                IsInputValid = !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item2)
+                    && !string.IsNullOrEmpty(s.Item3);
+                IsCustom = Server == ConfigConstants.CustomAuthServer;
+                ServerUrlPlaceholder = LoginManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
+                IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
+            });
     }
 
     public async void OnLogInButtonPressed()
@@ -44,7 +60,7 @@ public class LoginViewModel : BaseLoginViewModel
         Busy = true;
         try
         {
-            var request = new AuthApi.AuthenticateRequest(EditingUsername, EditingPassword);
+            var request = new AuthApi.AuthenticateRequest(Server, ServerUrl, EditingUsername, null, EditingPassword);
             var resp = await _authApi.AuthenticateAsync(request);
 
             await DoLogin(this, request, resp, _loginMgr, _authApi);
@@ -69,8 +85,10 @@ public class LoginViewModel : BaseLoginViewModel
         if (resp.IsSuccess)
         {
             var loginInfo = resp.LoginInfo;
-            var oldLogin = loginMgr.Logins.Lookup(loginInfo.UserId);
-            if (oldLogin.HasValue)
+            var oldLogin = loginMgr.Logins.KeyValues.FirstOrDefault(a =>
+                a.Key == loginInfo.UserId && a.Value.Server == loginInfo.Server
+                    && a.Value.ServerUrl == loginInfo.ServerUrl).Value;
+            if (oldLogin != null)
             {
                 // Already had this login, apparently.
                 // Thanks user.
@@ -79,7 +97,7 @@ public class LoginViewModel : BaseLoginViewModel
                 // This also has the upside of re-available-ing the account
                 // if the user used the main login prompt on an account we already had, but as expired.
 
-                await authApi.LogoutTokenAsync(oldLogin.Value.LoginInfo.Token.Token);
+                await authApi.LogoutTokenAsync(oldLogin.Server, oldLogin.ServerUrl, oldLogin.LoginInfo.Token.Token);
                 loginMgr.ActiveAccountId = loginInfo.UserId;
                 loginMgr.UpdateToNewToken(loginMgr.ActiveAccount!, loginInfo.Token);
                 return true;
@@ -101,15 +119,9 @@ public class LoginViewModel : BaseLoginViewModel
         return false;
     }
 
-    public void RegisterPressed()
-    {
-        // Registration is purely via website now, sorry.
-        Helpers.OpenUri(ConfigConstants.AccountRegisterUrl);
-    }
-
-    public void ResendConfirmationPressed()
-    {
-        // Registration is purely via website now, sorry.
-        Helpers.OpenUri(ConfigConstants.AccountResendConfirmationUrl);
-    }
+    // Registration is purely via website for now
+    public void RegisterPressed() =>
+        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl).AccountRegUrl);
+    public void ResendConfirmationPressed() =>
+        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl).AccountResendUrl);
 }

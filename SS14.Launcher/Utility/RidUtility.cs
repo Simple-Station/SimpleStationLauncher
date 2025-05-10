@@ -58,7 +58,7 @@ public static class RidUtility
         return null;
     }
 
-    private static string GuessRid()
+    public static string GuessRid()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {

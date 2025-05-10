@@ -5,6 +5,7 @@ using SS14.Launcher.Localization;
 using SS14.Launcher.Models.ContentManagement;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.EngineManager;
+using SS14.Launcher.Models.Logins;
 using SS14.Launcher.Utility;
 
 namespace SS14.Launcher.ViewModels.MainWindowTabs;
@@ -14,12 +15,14 @@ public class OptionsTabViewModel : MainWindowTabViewModel
     public DataManager Cfg { get; }
     private readonly IEngineManager _engineManager;
     private readonly ContentManager _contentManager;
+    private readonly LoginManager _loginMgr;
 
     public LanguageSelectorViewModel Language { get; } = new();
 
     public OptionsTabViewModel()
     {
         Cfg = Locator.Current.GetRequiredService<DataManager>();
+        _loginMgr = Locator.Current.GetRequiredService<LoginManager>();
         _engineManager = Locator.Current.GetRequiredService<IEngineManager>();
         _contentManager = Locator.Current.GetRequiredService<ContentManager>();
 
@@ -149,6 +152,9 @@ public class OptionsTabViewModel : MainWindowTabViewModel
 
     public void OpenAccountSettings()
     {
-        Helpers.OpenUri(ConfigConstants.AccountManagementUrl);
+        if (_loginMgr.ActiveAccount is not { } account
+            || LoginManager.TryGetAccountUrl(account.Server, account.ServerUrl) is not { } url)
+            return;
+        Helpers.OpenUri(LoginManager.GetAuthServerById(account.Server, account.ServerUrl, url).AccountManUrl);
     }
 }
