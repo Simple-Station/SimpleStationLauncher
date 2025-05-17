@@ -21,10 +21,6 @@ hub-settings-button-reset-tooltip = Resetar para configurações padrões
 login-expired-title = Login expirado
 # Strings for the "forgot password" view on login
 login-forgot-message = Se você esqueceu sua senha, você pode informar o endereço de e-mail associado a sua conta aqui para receber o link de reset.
-# Strings for the general main window layout of the launcher
-main-window-early-access-title = Preste atenção!
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 ainda está em alpha. Esperamos que você goste do que ver, e até fique conosco por um tempo, mas garanta que suas expectativas para o jogo sejam moderadas por enquanto.
 # Strings for the drop-down window to manage your active account
 account-drop-down-none-selected = Nenhuma conta selecionada
 # Strings for the drop-down window to manage your active account
@@ -211,8 +207,6 @@ main-window-out-of-date-desc-steam =
 main-window-out-of-date-exit = Sair
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = Baixar (manual)'
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Entendido!
 # Strings for the general main window layout of the launcher
 main-window-busy-checking-update = Procurando por atualizações do launcher…
 # Strings for the general main window layout of the launcher

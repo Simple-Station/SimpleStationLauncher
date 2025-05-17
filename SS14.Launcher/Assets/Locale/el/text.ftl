@@ -231,10 +231,6 @@ region-the-moon = Το φεγγάρι
 region-north-america-central = Βόρεια Αμερική Κεντρική
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-exit = Έξοδος
-# Strings for the general main window layout of the launcher
-main-window-early-access-title = Προσοχή!
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Κατάλαβα!
 # Long region names for server tag filters (shown in tooltip)
 region-africa-central = Κεντρική Αφρική
 # Long region names for server tag filters (shown in tooltip)
@@ -459,8 +455,6 @@ tab-news-pulling-news = Γίνετε ανάκτηση των ειδήσεων…
 tab-news-title = Ειδήσεις
 # Strings for the "options" tab
 tab-options-log-client = Log Παιχνίδι
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Το Space Station 14 βρίσκεται ακόμα σε στάδιο άλφα. Ελπίζουμε να σας αρέσει αυτό που βλέπετε, και ίσως να μείνετε μαζί μας, αλλά φροντίστε να διατηρήσετε τις προσδοκίες σας μέτριες προς το παρόν.
 # Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Αφήστε το αρχείο για να τρέξει το παιχνίδι
 # Short region names for server tag filters (shown in filter check box)

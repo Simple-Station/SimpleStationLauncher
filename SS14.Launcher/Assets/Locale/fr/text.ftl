@@ -168,10 +168,6 @@ main-window-out-of-date-exit = Quitter
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = Télécharger (manuelle)
 # Strings for the general main window layout of the launcher
-main-window-early-access-title = Attention !
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Compris !
-# Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Lâchez pour lancer le jeu
 # Localization for the "add favorite server" dialog window
 add-favorite-window-address-invalid = Adresse invalide
@@ -197,8 +193,6 @@ login-error-invalid-credentials = Informations de connexion invalides
 login-error-account-2fa-invalid = Code d'authentification à deux facteurs invalide
 # Strings for the "register confirmation" view on login
 login-confirmation-confirmation-message = Veuillez ouvrir votre courrier électronique pour vérifier votre compte. Une fois votre compte vérifié, cliquez sur le bouton ci-dessous pour vous connecter.
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 est toujours en version alpha. On espère que vous apprécierez le jeu dans son état actuel, peut-être même que vous resterez, mais gardez des attentes modestes pour l'instant.
 # Error messages for login
 login-error-account-account-locked = Ce compte a été verrouillé. Contactez-nous si vous pensez qu'il s'agit d'une erreur.
 # Strings for the "login expired" view on login

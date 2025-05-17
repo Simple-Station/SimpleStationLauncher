@@ -3,7 +3,6 @@ main-window-out-of-date-desc-steam =
     このランチャーは古いものです。
     Steamによるアップデートを許可してください。
 login-confirmation-busy = ログイン中…
-main-window-early-access-desc = Space Station 14はまだアルファ版です。私たちは、あなたが見るものを気に入り、そしてもしかしたら近くにいてくれることを願っていますが、当分の間あなたの期待は控えめにしておいてください。
 login-expired-button-forgot-password = パスワードをお忘れですか？
 login-forgot-message = パスワードをお忘れの場合は、アカウントに関連付けられたメールアドレスをここに入力するとリセットリンクを受け取ることができます。
 main-window-busy-checking-update = ランチャーのアップデートを確認中…
@@ -106,8 +105,6 @@ main-window-out-of-date-desc =
     私たちのウェブサイトから新しいバージョンをダウンロードしてください。
 main-window-out-of-date-exit = 出口
 main-window-out-of-date-download-manual = ダウンロード（マニュアル）
-main-window-early-access-title = 注目！
-main-window-early-access-accept = 了解した！
 main-window-drag-drop-prompt = 落としてゲームを動かす
 main-window-busy-checking-login-status = ログインステータスの再読み込み…
 main-window-busy-checking-account-status = 口座状況の確認

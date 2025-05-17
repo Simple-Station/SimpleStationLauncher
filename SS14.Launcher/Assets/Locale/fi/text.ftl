@@ -137,10 +137,6 @@ login-forgot-busy-sending = Lähetetään sähköpostia…
 main-window-header-link-discord = Discord
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-exit = Poistu
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Selvä!
-# Strings for the general main window layout of the launcher
-main-window-early-access-title = Huomio!
 # Long region names for server tag filters (shown in tooltip)
 region-africa-central = Keski-Afrikka
 # Long region names for server tag filters (shown in tooltip)
@@ -425,8 +421,6 @@ tab-options-hub-settings = Keskusasetukset
 connecting-update-status-loading-content-bundle = Ladataan sisältöpakettia…
 # Strings for the "login" view on login
 login-login-button-resend = Lähetä sähköpostivahvistus uudelleen
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 on vielä vahvasti alpha-vaiheessa. Toivottavasti pidät näkemästäsi ja jäät seuraamme, mutta muista pitää odotuksesi kohtuullisina toistaiseksi.
 # Strings for entries in the server list (including home page)
 server-entry-connect = Yhdistä
 # Strings for the "options" tab

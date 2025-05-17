@@ -44,8 +44,6 @@ region-short-north-america-central = Centrala N.Am.
 filters-player-count-hide-full-desc = Fulla servrar visas inte
 # Strings for the "forgot password" view on login
 login-forgot-error = Fel
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 är fortfarande i alfastadiet. Vi hoppas att du gillar det du ser, kanske till och med blir kvar, men tänk på att hålla förväntningarna rimliga för nävarande.
 # Long region names for server tag filters (shown in tooltip)
 region-africa-central = Centralafrika
 # Strings for the "servers" tab
@@ -238,10 +236,6 @@ main-window-out-of-date-desc-steam =
 main-window-out-of-date-exit = Stäng
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = Ladda ner (manuellt)
-# Strings for the general main window layout of the launcher
-main-window-early-access-title = Observera!
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Uppfattat!
 # Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Släpp för att starta spelet
 # Strings for the general main window layout of the launcher
