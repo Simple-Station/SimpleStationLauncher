@@ -331,6 +331,7 @@ tab-options-verbose-launcher-logging = Verbose Launcher Logging
 tab-options-verbose-launcher-logging-desc = For when the developers are *very* stumped with your problem. (requires launcher restart)
 tab-options-ui-scaling = UI Scale
 tab-options-ui-scaling-lock = Lock X and Y together
+tab-options-ui-scaling-save = Save
 tab-options-seasonal-branding = Seasonal Branding
 tab-options-seasonal-branding-desc = Whatever temporally relevant icons and logos we can come up with.
 tab-options-disable-signing = Disable Engine Signature Checks

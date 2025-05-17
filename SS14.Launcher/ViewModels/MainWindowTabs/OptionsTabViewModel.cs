@@ -27,6 +27,8 @@ public class OptionsTabViewModel : MainWindowTabViewModel
         _contentManager = Locator.Current.GetRequiredService<ContentManager>();
 
         DisableIncompatibleMacOS = OperatingSystem.IsMacOS();
+        _uiScalingX = Cfg.GetCVar(CVars.UiScalingX);
+        _uiScalingY = Cfg.GetCVar(CVars.UiScalingY);
     }
     public bool DisableIncompatibleMacOS { get; }
 
@@ -88,26 +90,18 @@ public class OptionsTabViewModel : MainWindowTabViewModel
         }
     }
 
+    private double _uiScalingX;
     public double UiScalingX
     {
-        get => Cfg.GetCVar(CVars.UiScalingX);
-        set
-        {
-            value = Math.Clamp(value, 0.1, 10);
-            Cfg.SetCVar(CVars.UiScalingX, value);
-            Cfg.CommitConfig();
-        }
+        get => _uiScalingX;
+        set => _uiScalingX = Math.Clamp(value, 0.1, 10);
     }
 
+    private double _uiScalingY;
     public double UiScalingY
     {
-        get => Cfg.GetCVar(CVars.UiScalingY);
-        set
-        {
-            value = Math.Clamp(value, 0.1, 10);
-            Cfg.SetCVar(CVars.UiScalingY, value);
-            Cfg.CommitConfig();
-        }
+        get => _uiScalingY;
+        set => _uiScalingY = Math.Clamp(value, 0.1, 10);
     }
 
     public bool NotUiScalingLock => !UiScalingLock;
