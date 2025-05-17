@@ -42,8 +42,9 @@ public class LoginViewModel : BaseLoginViewModel
         this.WhenAnyValue(x => x.Server, x => x.ServerUrl, x => x.EditingUsername, x => x.EditingPassword)
             .Subscribe(s =>
             {
-                IsInputValid = !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item2)
-                    && !string.IsNullOrEmpty(s.Item3);
+                IsInputValid = s.Item1 == ConfigConstants.CustomAuthServer
+                    ? !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item3)
+                    : !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item3);
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
                 ServerUrlPlaceholder = LoginManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
