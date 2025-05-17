@@ -334,6 +334,11 @@ public sealed class DataManager : ReactiveObject
             SetCVar(CVars.Fingerprint, Guid.NewGuid().ToString());
         }
 
+        // If we don't have any hubs, add the defaults
+        if (Hubs.Count == 0)
+            foreach (var hub in ConfigConstants.DefaultHubUrls)
+                Hubs.Add(new Hub(hub, Hubs.Count));
+
         CommitConfig();
     }
 
