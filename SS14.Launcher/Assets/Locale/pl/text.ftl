@@ -100,8 +100,6 @@ connecting-cancel = Anuluj
 login-error-unknown = Nieznany błąd
 # Strings for the "login expired" view on login
 login-expired-button-forgot-password = Nie pamiętasz swojego hasła?
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Dobra!
 # For the language selection menu.
 # Used for contents of each language button.
 language-selector-language = { $languageName } ({ $englishName })
@@ -120,8 +118,6 @@ region-middle-east = Bliski Wschód
 region-africa-north = Afryka Północna
 # Short region names for server tag filters (shown in filter check box)
 region-short-oceania = Oceania
-# Strings for the general main window layout of the launcher
-main-window-early-access-title = Uwaga!
 # Strings for the general main window layout of the launcher
 main-window-header-link-discord = Discord
 # Strings for the "register confirmation" view on login
@@ -427,8 +423,6 @@ main-window-out-of-date-desc-steam =
 login-login-button-resend = Ponownie wyślij potwierdzenie e-mail
 # Strings for the "login" view on login
 login-login-error-title = Nie można się zalogować
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 wciąż znajduje się w fazie alfa. Mamy nadzieję, że spodoba Ci się to, co zobaczysz, a może nawet zostaniesz na dłużej, ale pamiętaj, by na ten moment mieć skromne oczekiwania.
 # Strings for the general main window layout of the launcher
 main-window-out-of-date = Nieaktualny program uruchamiający
 # Strings for the general main window layout of the launcher

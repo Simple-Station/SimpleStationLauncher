@@ -16,8 +16,6 @@ login-2fa-button-cancel = ala
 login-confirmation-button-cancel = ala
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-exit = weka
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = pona a!
 # Strings for the "home" tab
 tab-home-title = tomo
 # Strings for the "connecting" menu that appears when connecting to a server.

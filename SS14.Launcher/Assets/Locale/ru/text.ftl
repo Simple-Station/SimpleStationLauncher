@@ -45,8 +45,6 @@ login-login-button-resend = Отправить ещё раз e-mail подтве
 main-window-out-of-date-desc =
     Данный лаунчер устарел.
     Пожалуйста, скачайте новую версию с нашего веб-сайта.
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 всё еще в стадии альфа-версии. Мы надеемся, вам нравится, что вы видите, и, возможно, вы даже останетесь здесь, однако постарайтесь пока что придержать свои скромные ожидания.
 # Long region names for server tag filters (shown in tooltip)
 region-north-america-east = Северная Америка - Восток
 # Strings for the "servers" tab
@@ -230,10 +228,6 @@ main-window-out-of-date-desc-steam =
 main-window-out-of-date-exit = Выйти
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = Скачать (вручную)
-# Strings for the general main window layout of the launcher
-main-window-early-access-title = Внимание!
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Понятно!
 # Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Отпустите для запуска игры
 # Strings for the general main window layout of the launcher

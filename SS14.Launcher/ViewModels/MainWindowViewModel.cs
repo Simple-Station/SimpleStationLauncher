@@ -133,7 +133,6 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         tab.Selected();
     }
 
-    public ICVarEntry<bool> HasDismissedEarlyAccessWarning => Cfg.GetCVarEntry(CVars.HasDismissedEarlyAccessWarning);
     public string Version => $"v{LauncherVersion.Version}";
 
     public async void OnWindowInitialized()
@@ -200,12 +199,6 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
     public void DownloadPressed()
     {
         Helpers.OpenUri(new Uri(ConfigConstants.DownloadUrl));
-    }
-
-    public void DismissEarlyAccessPressed()
-    {
-        Cfg.SetCVar(CVars.HasDismissedEarlyAccessWarning, true);
-        Cfg.CommitConfig();
     }
 
     public void SelectTabServers()

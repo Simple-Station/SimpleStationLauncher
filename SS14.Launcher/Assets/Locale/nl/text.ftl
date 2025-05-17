@@ -218,10 +218,6 @@ main-window-out-of-date-exit = Sluit launcher
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = Download (manueel)
 # Strings for the general main window layout of the launcher
-main-window-early-access-title = Opmerking!
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 is nog steeds een alpha. We hopen dat het spel nu al leuk is en dat je hier blijft, maar zorg dat je verwachtingen niet te hoog liggen.
-# Strings for the general main window layout of the launcher
 main-window-busy-checking-update = Controleren op launcher-update…
 # Strings for the general main window layout of the launcher
 main-window-busy-checking-login-status = Login status controleren…
@@ -381,8 +377,6 @@ filters-rp-high-desc = Hoog
 server-entry-connect = Verbind
 # Strings for entries in the server list (including home page)
 server-entry-add-favorite = Voeg favoriet toe
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Ik snap het!
 # Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Laat vallen om spel te starten
 # Long region names for server tag filters (shown in tooltip)

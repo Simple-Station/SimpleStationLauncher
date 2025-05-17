@@ -183,10 +183,6 @@ main-window-out-of-date-exit = 退出
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = 下载（手动）
 # Strings for the general main window layout of the launcher
-main-window-early-access-title = 注意！
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = 了解！
-# Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = 放开以启动游戏
 # Strings for the general main window layout of the launcher
 main-window-busy-checking-update = 正在检查启动器更新…
@@ -489,8 +485,6 @@ login-forgot-error = 错误
 login-login-button-resend = 重新发送确认邮件
 # Strings for the "register confirmation" view on login
 login-confirmation-confirmation-message = 请检查你的邮箱来确认你的账户。在确认你的账户之后，请按下按键来登录。
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = 14号空间站目前仍处于Alpha阶段。我们希望你能喜欢所见内容，甚至与我们多待一会，不过现在还请确保把你的期待保持在谨慎水平。
 # Strings for the general main window layout of the launcher
 main-window-error-unknown = 发生未知错误
 # Long region names for server tag filters (shown in tooltip)

@@ -21,13 +21,6 @@ public static class CVars
     public static readonly CVarDef<bool> CompatMode = CVarDef.Create("CompatMode", false);
 
     /// <summary>
-    /// On first launch, the launcher tells you that SS14 is EARLY ACCESS.
-    /// This stores whether they dismissed that, though people will insist on pretending it defaults to true.
-    /// </summary>
-    public static readonly CVarDef<bool> HasDismissedEarlyAccessWarning
-        = CVarDef.Create("HasDismissedEarlyAccessWarning", false);
-
-    /// <summary>
     /// Disable checking engine build signatures when launching game.
     /// Only enable if you know what you're doing.
     /// </summary>

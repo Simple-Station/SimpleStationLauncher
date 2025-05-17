@@ -170,10 +170,6 @@ main-window-out-of-date-desc-steam =
 main-window-out-of-date-exit = Zavřít
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = Stáhnout (manuálně)
-# Strings for the general main window layout of the launcher
-main-window-early-access-title = Pozor!
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Rozumím!
 # Localization for the "add favorite server" dialog window
 add-favorite-window-title = Přidat k oblíbeným serverům
 # Strings for the "connecting" menu that appears when connecting to a server.
@@ -182,8 +178,6 @@ connecting-title-content-bundle = Načítání…
 connecting-update-status-committing-download = Synchronizace na úložišti…
 # Strings for the "register confirmation" view on login
 login-confirmation-button-confirm = Účet mám potvrzený
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 je stále v alfa verzi. Doufáme, že se vám hra líbí, a že s nám i dále zůstanete. Prosíme udržujte svá očekávání momentálně skromné.
 # Strings for the "connecting" menu that appears when connecting to a server.
 connecting-update-status-verifying = Verifikace integrity stažených souborů…
 # Strings for the "connecting" menu that appears when connecting to a server.
