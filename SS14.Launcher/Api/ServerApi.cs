@@ -31,14 +31,15 @@ public static class ServerApi
     {
         // @formatter:off
 
-        // Base tag definitions.
+        // Base tag definitions
         public const string TagEighteenPlus = "18+";
+        public const string TagMinAge       = "minage:";
         public const string TagRegion       = "region:";
         public const string TagLanguage     = "lang:";
         public const string TagRolePlay     = "rp:";
         public const string TagNoTagInfer   = "no_tag_infer";
 
-        // Region tags.
+        // Region tags
         public const string RegionAfricaCentral       = "af_c";
         public const string RegionAfricaNorth         = "af_n";
         public const string RegionAfricaSouth         = "af_s";
@@ -61,7 +62,7 @@ public static class ServerApi
         public const string RegionSouthAmericaSouth   = "am_s_s";
         public const string RegionSouthAmericaWest    = "am_s_w";
 
-        // RolePlay level tags.
+        // RolePlay level tags
         public const string RolePlayNone   = "none";
         public const string RolePlayLow    = "low";
         public const string RolePlayMedium = "med";

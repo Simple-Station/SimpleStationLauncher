@@ -58,6 +58,29 @@
         </Grid>
       </Expander.Header>
       <DockPanel Margin="4">
+        <ItemsControl DockPanel.Dock="Top" Margin="4, 0, 4, 4"
+          ItemsSource="{Binding ShownTags}"
+          IsVisible="{Binding CacheData.Tags.Length}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border
+                Background="#272939"
+                BorderBrush="#575B7F"
+                BorderThickness="2"
+                Margin="0,0,4,0"
+                CornerRadius="16"
+                Padding="6,2">
+                <TextBlock Text="{Binding}" />
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <TextBlock DockPanel.Dock="Top"
           Name="Description" Margin="4,0,4,4"
           Text="{Binding Description}"

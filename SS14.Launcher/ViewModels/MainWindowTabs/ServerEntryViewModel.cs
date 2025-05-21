@@ -1,9 +1,12 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.VisualTree;
+using DynamicData;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using SS14.Launcher.Api;
 using SS14.Launcher.Localization;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.ServerStatus;
@@ -154,6 +157,13 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
     }
 
     public ServerStatusData CacheData => _cacheData;
+
+    public object ShownTags => _cacheData.Tags.Where(t => t != ServerApi.Tags.TagNoTagInfer)
+        .Select(t =>
+        {
+            var sp = t.Split(':');
+            return _loc.GetString($"tag-base-{sp[0]}") + (t.Contains(':') ? $": {_loc.GetString($"tag-{sp[0]}-{sp[1]}")}" : "");
+        });
 
     public string? FetchedFrom
     {

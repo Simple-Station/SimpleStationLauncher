@@ -262,6 +262,66 @@ filters-player-count-maximum-desc = Servers with more players will not be shown
 filters-unspecified-desc = Unspecified
 filters-unspecified = Unspecified
 
+## Better strings for the server tags
+tag-base-18 = 18+
+tag-base-minage = Min Age
+tag-base-region = Region
+tag-base-lang = Language
+tag-base-rp = RP Level
+
+tag-region-af_c = Central Africa
+tag-region-af_n = North Africa
+tag-region-af_s = South Africa
+tag-region-ata = Antarctica
+tag-region-as_e = East Asia
+tag-region-as_n = North Asia
+tag-region-as_se = South East Asia
+tag-region-am_c = Central America
+tag-region-eu_e = East Europe
+tag-region-eu_w = West Europe
+tag-region-grl = Greenland
+tag-region-ind = India
+tag-region-me = Middle East
+tag-region-luna = The Moon
+tag-region-am_n_c = Central North America
+tag-region-am_n_e = East North America
+tag-region-am_n_w = West North America
+tag-region-oce = Oceania
+tag-region-am_s_e = East South America
+tag-region-am_s_s = South South America
+tag-region-am_s_w = West South America
+
+tag-lang-cs = Chinese Simplified
+tag-lang-de = German
+tag-lang-el = Greek
+tag-lang-en = English
+tag-lang-es = Spanish
+tag-lang-et = Estonian
+tag-lang-fi = Finnish
+tag-lang-fil = Filipino
+tag-lang-fr = French
+tag-lang-he = Hebrew
+tag-lang-id = Indonesian
+tag-lang-it = Italian
+tag-lang-ja = Japanese
+tag-lang-nl = Dutch
+tag-lang-pl = Polish
+tag-lang-pt = Portuguese
+tag-lang-pt_br = Portuguese (Brazil)
+tag-lang-pt_pt = Portuguese (Portugal)
+tag-lang-ru = Russian
+tag-lang-sv = Swedish
+tag-lang-th = Thai
+tag-lang-tok = Toki Pona
+tag-lang-tr = Turkish
+tag-lang-uk = Ukrainian
+tag-lang-zh_Hans = Chinese (Simplified)
+
+tag-rp-none = None
+tag-rp-low = Low
+tag-rp-med = Medium
+tag-rp-high = High
+
 ## Server roleplay levels for the filters menu
 
 filters-rp-none = None
