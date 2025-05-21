@@ -57,7 +57,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         var tabs = new List<MainWindowTabViewModel>();
         tabs.Add(HomeTab);
         tabs.Add(ServersTab);
-        tabs.Add(NewsTab);
+        // tabs.Add(NewsTab); //TODO: Make our own news site
         tabs.Add(OptionsTab);
 #if DEVELOPMENT
         tabs.Add(new DevelopmentTabViewModel());
