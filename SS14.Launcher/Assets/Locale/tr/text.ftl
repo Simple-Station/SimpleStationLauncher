@@ -95,8 +95,6 @@ login-error-invalid-credentials = Geçersiz giriş bilgileri
 hub-settings-explanation = Burada yeni sunucular almak için sunucu merkezi ekleyebilirsiniz. Sadece güvendiğiniz merkezleri eklemelisiniz, çünkü merkezler sahte sunucular içerebilir. Sunucu merkezlerinin sırası önemlidir, eğer iki merkez aynı sunucuyu listeliyorsa daha önemli olan merkez (listede daha üstte olan) ilk gösterilicektir.
 # Short region names for server tag filters (shown in filter check box)
 region-short-antarctica = Antarktika
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 hala alphadadır. Umarız gördüklerini sever, belki de burada kalırsın. Ama şu süreçte beklentilerini düşürmeni rica ederiz.
 # Strings for the "servers" tab
 filters = Filtreler ({ $filteredServers } / { $totalServers })
 # Strings for entries in the server list (including home page)
@@ -383,13 +381,9 @@ main-window-out-of-date-desc-steam =
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-exit = Çıkış
 # Strings for the general main window layout of the launcher
-main-window-early-access-accept = Tamamdır!
-# Strings for the general main window layout of the launcher
 main-window-busy-checking-update = Launcher için güncellemeler kontrol ediliyor…
 # Strings for the general main window layout of the launcher
 main-window-error-connecting-auth-server = Kimlik doğrulama sunucusuna bağlanırken hata oluştu
-# Strings for the general main window layout of the launcher
-main-window-early-access-title = Dikkat et!
 # Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Oyunu başlatmak için dropla
 # Long region names for server tag filters (shown in tooltip)

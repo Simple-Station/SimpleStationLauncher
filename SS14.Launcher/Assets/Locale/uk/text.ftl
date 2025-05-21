@@ -265,12 +265,6 @@ main-window-out-of-date-exit = Вийти
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = Завантажити (вручну)
 # Strings for the general main window layout of the launcher
-main-window-early-access-title = Стережися!
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 все ще перебуває на стадії альфа-версії. Ми сподіваємося, що вам сподобається те, що ви побачите, і, можливо, ви навіть залишитеся тут, але не забувайте поки що зберігати свої очікування скромними.
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Зрозуміло!
-# Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Відпустіть для запуску гри
 # Strings for the general main window layout of the launcher
 main-window-busy-checking-update = Перевірка оновлення лаунчера…

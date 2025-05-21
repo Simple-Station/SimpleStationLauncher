@@ -229,12 +229,6 @@ main-window-out-of-date-exit = Salir
 # Strings for the general main window layout of the launcher
 main-window-out-of-date-download-manual = Descargar (manual)
 # Strings for the general main window layout of the launcher
-main-window-early-access-title = Aviso!
-# Strings for the general main window layout of the launcher
-main-window-early-access-desc = Space Station 14 todavia esta en alfa. Espero que te guste lo que ves, incluso puede quedarse, pero asegurese de mantener sus expectaciones modestas por el momento.
-# Strings for the general main window layout of the launcher
-main-window-early-access-accept = Entiendo!
-# Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Suelte para lanzar el juego
 # Strings for the general main window layout of the launcher
 main-window-busy-checking-update = Checkeando por actualizaciones del launcher…

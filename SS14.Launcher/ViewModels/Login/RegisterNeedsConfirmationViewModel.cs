@@ -16,6 +16,8 @@ public class RegisterNeedsConfirmationViewModel : BaseLoginViewModel
     private readonly AuthApi _authApi;
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
+    private readonly string _loginServer;
+    private readonly string? _loginServerUrl;
     private readonly string _loginUsername;
     private readonly string _loginPassword;
     private readonly LoginManager _loginMgr;
@@ -41,12 +43,14 @@ public class RegisterNeedsConfirmationViewModel : BaseLoginViewModel
 
     public RegisterNeedsConfirmationViewModel(
         MainWindowLoginViewModel parentVm,
-        AuthApi authApi, string username, string password, LoginManager loginMgr, DataManager dataManager)
+        AuthApi authApi, string server, string? serverUrl, string username, string password, LoginManager loginMgr, DataManager dataManager)
         : base(parentVm)
     {
         BusyText = _loc.GetString("login-confirmation-busy");
         _authApi = authApi;
 
+        _loginServer = server;
+        _loginServerUrl = serverUrl;
         _loginUsername = username;
         _loginPassword = password;
         _loginMgr = loginMgr;
@@ -81,7 +85,7 @@ public class RegisterNeedsConfirmationViewModel : BaseLoginViewModel
 
         try
         {
-            var request = new AuthApi.AuthenticateRequest(_loginUsername, _loginPassword);
+            var request = new AuthApi.AuthenticateRequest(_loginServer, _loginServerUrl, _loginUsername, null, _loginPassword);
             var resp = await _authApi.AuthenticateAsync(request);
 
             await LoginViewModel.DoLogin(this, request, resp, _loginMgr, _authApi);

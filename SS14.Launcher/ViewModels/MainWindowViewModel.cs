@@ -35,6 +35,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
 
     public DataManager Cfg => _cfg;
     [Reactive] public bool OutOfDate { get; private set; }
+    [Reactive] public LauncherInfoManager.CustomInfo CustomInfo { get; set; } = LauncherInfoManager.CustomInfo.None;
 
     public HomePageViewModel HomeTab { get; }
     public ServerListTabViewModel ServersTab { get; }
@@ -57,7 +58,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         var tabs = new List<MainWindowTabViewModel>();
         tabs.Add(HomeTab);
         tabs.Add(ServersTab);
-        tabs.Add(NewsTab);
+        // tabs.Add(NewsTab); //TODO: Make our own news site
         tabs.Add(OptionsTab);
 #if DEVELOPMENT
         tabs.Add(new DevelopmentTabViewModel());
@@ -133,7 +134,6 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         tab.Selected();
     }
 
-    public ICVarEntry<bool> HasDismissedEarlyAccessWarning => Cfg.GetCVarEntry(CVars.HasDismissedEarlyAccessWarning);
     public string Version => $"v{LauncherVersion.Version}";
 
     public async void OnWindowInitialized()
@@ -171,20 +171,23 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
     private async Task CheckLauncherUpdate()
     {
         // await Task.Delay(1000);
-        if (!ConfigConstants.DoVersionCheck)
-            return;
-
         await _infoManager.LoadTask;
-        if (_infoManager.Model == null)
+        if (ConfigConstants.DoVersionCheck)
         {
-            // Error while loading.
-            Log.Warning("Unable to check for launcher update due to error, assuming up-to-date.");
-            OutOfDate = false;
-            return;
+            if (_infoManager.Model == null)
+            {
+                // Error while loading.
+                Log.Warning("Unable to check for launcher update due to error, assuming up-to-date.");
+                OutOfDate = false;
+                return;
+            }
+
+            OutOfDate = Array.IndexOf(_infoManager.Model.AllowedVersions, ConfigConstants.CurrentLauncherVersion) == -1;
+            Log.Debug("Launcher out of date? {Value}", OutOfDate);
         }
 
-        OutOfDate = Array.IndexOf(_infoManager.Model.AllowedVersions, ConfigConstants.CurrentLauncherVersion) == -1;
-        Log.Debug("Launcher out of date? {Value}", OutOfDate);
+        // Check if we have a custom message
+        CustomInfo = _infoManager.Model?.CustomInfo != null ? _infoManager.Model.CustomInfo : LauncherInfoManager.CustomInfo.None;
     }
 
     public void IgnorePressed()
@@ -202,10 +205,14 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         Helpers.OpenUri(new Uri(ConfigConstants.DownloadUrl));
     }
 
-    public void DismissEarlyAccessPressed()
+    public void IgnoreCustomInfo()
     {
-        Cfg.SetCVar(CVars.HasDismissedEarlyAccessWarning, true);
-        Cfg.CommitConfig();
+        CustomInfo = LauncherInfoManager.CustomInfo.None;
+    }
+
+    public void OpenCustomInfoLink()
+    {
+        Helpers.OpenUri(new Uri(CustomInfo.Link));
     }
 
     public void SelectTabServers()

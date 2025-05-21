@@ -64,6 +64,7 @@
           <TextBox MinWidth="48" Text="{Binding UiScalingY}" IsEnabled="{Binding NotUiScalingLock}" />
           <CheckBox Margin="4" Content="{loc:Loc tab-options-ui-scaling-lock}" IsChecked="{Binding UiScalingLock}" />
         </StackPanel>
+        <Button Content="{loc:Loc tab-options-ui-scaling-save}" Click="ApplyUiScaling" HorizontalAlignment="Left" />
 
         <CheckBox VerticalAlignment="Center" Margin="4" IsChecked="{Binding OverrideAssets}" Content="{loc:Loc tab-options-seasonal-branding}" />
         <TextBlock VerticalAlignment="Center" TextWrapping="Wrap"

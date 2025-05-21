@@ -25,7 +25,15 @@ connecting-title-connecting = Connecting…
 connecting-title-content-bundle = Loading…
 connecting-cancel = Cancel
 connecting-status-none = Starting connection…
-connecting-status-update-error = There was an error while downloading server content. Please ask on Discord for support if the problem persists.
+connecting-status-update-error =
+    There was an error while downloading server content. If this persists try some of the following:
+    - Try connecting to another game server to see if the problem persists.
+    - Try disabling or enabling software such as VPNs, if you have any.
+
+    If you are still having issues, first try contacting the server you are attempting to join before asking for support on the Official Space Station 14 Discord or Forums.
+
+    Technical error: { $err }
+connecting-status-update-error-unknown = Unknown
 connecting-status-updating = Updating: { $status }
 connecting-status-connecting = Fetching connection info from server…
 connecting-status-connection-failed = Failed to connect to server!
@@ -129,6 +137,7 @@ login-login-title = Log in
 login-login-username-watermark = Username or email
 login-login-password-watermark = Password
 login-login-show-password = Show Password
+login-login-auth-server = Account Provider
 login-login-button-log-in = Log in
 login-login-button-forgot = Forgot your password?
 login-login-button-resend = Resend email confirmation
@@ -159,9 +168,6 @@ main-window-out-of-date-desc-steam =
 main-window-out-of-date-exit = Exit
 main-window-out-of-date-ignore = Ignore
 main-window-out-of-date-download-manual = Download (manual)
-main-window-early-access-title = Heads up!
-main-window-early-access-desc = Space Station 14 is still very much in alpha. We hope you like what you see, and maybe even stick around, but make sure to keep your expectations modest for the time being.
-main-window-early-access-accept = Got it!
 main-window-drag-drop-prompt = Drop to run game
 main-window-busy-checking-update = Checking for launcher update…
 main-window-busy-checking-login-status = Refreshing login status…
@@ -225,8 +231,9 @@ filters = Filters ({ $filteredServers } / { $totalServers })
 tab-servers-search-watermark = Search For Servers…
 tab-servers-table-players = Players
 tab-servers-table-name = Server Name
-tab-servers-list-status-error = There was an error fetching the master server lists.
-tab-servers-list-status-partial-error = Failed to fetch some or all server lists. Ensure your hub configuration is correct.
+tab-servers-table-round-time = Time
+tab-servers-list-status-error = There was an error fetching the master server lists. Maybe try refreshing?
+tab-servers-list-status-partial-error = Failed to fetch some of the server lists. Ensure your hub configuration is correct and try refreshing.
 tab-servers-list-status-updating-master = Fetching master server list…
 tab-servers-list-status-none-filtered = No servers match your search or filter settings.
 tab-servers-list-status-none = There are no public servers. Ensure your hub configuration is correct.
@@ -255,6 +262,66 @@ filters-player-count-maximum-desc = Servers with more players will not be shown
 filters-unspecified-desc = Unspecified
 filters-unspecified = Unspecified
 
+## Better strings for the server tags
+tag-base-18 = 18+
+tag-base-minage = Min Age
+tag-base-region = Region
+tag-base-lang = Language
+tag-base-rp = RP Level
+
+tag-region-af_c = Central Africa
+tag-region-af_n = North Africa
+tag-region-af_s = South Africa
+tag-region-ata = Antarctica
+tag-region-as_e = East Asia
+tag-region-as_n = North Asia
+tag-region-as_se = South East Asia
+tag-region-am_c = Central America
+tag-region-eu_e = East Europe
+tag-region-eu_w = West Europe
+tag-region-grl = Greenland
+tag-region-ind = India
+tag-region-me = Middle East
+tag-region-luna = The Moon
+tag-region-am_n_c = Central North America
+tag-region-am_n_e = East North America
+tag-region-am_n_w = West North America
+tag-region-oce = Oceania
+tag-region-am_s_e = East South America
+tag-region-am_s_s = South South America
+tag-region-am_s_w = West South America
+
+tag-lang-cs = Chinese Simplified
+tag-lang-de = German
+tag-lang-el = Greek
+tag-lang-en = English
+tag-lang-es = Spanish
+tag-lang-et = Estonian
+tag-lang-fi = Finnish
+tag-lang-fil = Filipino
+tag-lang-fr = French
+tag-lang-he = Hebrew
+tag-lang-id = Indonesian
+tag-lang-it = Italian
+tag-lang-ja = Japanese
+tag-lang-nl = Dutch
+tag-lang-pl = Polish
+tag-lang-pt = Portuguese
+tag-lang-pt_br = Portuguese (Brazil)
+tag-lang-pt_pt = Portuguese (Portugal)
+tag-lang-ru = Russian
+tag-lang-sv = Swedish
+tag-lang-th = Thai
+tag-lang-tok = Toki Pona
+tag-lang-tr = Turkish
+tag-lang-uk = Ukrainian
+tag-lang-zh_Hans = Chinese (Simplified)
+
+tag-rp-none = None
+tag-rp-low = Low
+tag-rp-med = Medium
+tag-rp-high = High
+
 ## Server roleplay levels for the filters menu
 
 filters-rp-none = None
@@ -278,11 +345,16 @@ server-entry-player-count =
         [0] ∞
        *[1] { $max }
     }
+server-entry-round-time = { $hours ->
+ [0] { $mins }M
+*[1] { $hours }H { $mins }M
+}
 server-entry-fetching = Fetching…
 server-entry-description-offline = Unable to contact server
 server-entry-description-fetching = Fetching server status…
 server-entry-description-error = Error while fetching server description
 server-entry-description-none = No server description provided
+server-entry-status-lobby = Lobby
 server-fetched-from-hub = Fetched from { $hub }
 server-entry-raise = Raise
 server-entry-lower = Lower
@@ -333,6 +405,7 @@ tab-options-verbose-launcher-logging = Verbose Launcher Logging
 tab-options-verbose-launcher-logging-desc = For when the developers are *very* stumped with your problem. (requires launcher restart)
 tab-options-ui-scaling = UI Scale
 tab-options-ui-scaling-lock = Lock X and Y together
+tab-options-ui-scaling-save = Save
 tab-options-seasonal-branding = Seasonal Branding
 tab-options-seasonal-branding-desc = Whatever temporally relevant icons and logos we can come up with.
 tab-options-disable-signing = Disable Engine Signature Checks
