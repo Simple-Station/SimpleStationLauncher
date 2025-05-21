@@ -21,6 +21,7 @@
             <ColumnDefinition Width="*" /> <!-- Server Name -->
             <ColumnDefinition SharedSizeGroup="TimeCol" MinWidth="80" Width="Auto" />
             <ColumnDefinition SharedSizeGroup="StatusCol" MinWidth="80" Width="Auto" />
+            <ColumnDefinition SharedSizeGroup="PingCol" MinWidth="80" Width="Auto" />
             <ColumnDefinition SharedSizeGroup="ConnectCol" Width="Auto" />
           </Grid.ColumnDefinitions>
 
@@ -50,7 +51,11 @@
             <TextBlock DockPanel.Dock="Right" Classes="Numeric" Text="{Binding PlayerCountString}" />
           </Border>
 
-          <Border Grid.Column="3" Classes="GridCell">
+          <Border Grid.Column="3" Classes="GridCell" IsVisible="{Binding PingString,Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock DockPanel.Dock="Right" Classes="Numeric" Text="{Binding PingString}" />
+          </Border>
+
+          <Border Grid.Column="4" Classes="GridCell">
             <Button IsEnabled="{Binding IsOnline}" DockPanel.Dock="Right"
               Content="{loc:Loc server-entry-connect}"
               Command="{Binding ConnectPressed}" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
@@ -126,7 +127,7 @@ public sealed class ServerListCache : ReactiveObject, IServerSource
             _allServers.AddItems(entries.Select(entry =>
             {
                 var statusData = new ServerStatusData(entry.Address, entry.HubAddress);
-                ServerStatusCache.ApplyStatus(statusData, entry.StatusData);
+                ServerStatusCache.UpdateStatusFor(statusData, new HttpClient(), CancellationToken.None);
                 return statusData;
             }));
 

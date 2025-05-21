@@ -117,6 +117,11 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
             ? _loc.GetString("server-entry-status-lobby")
             : "";
 
+    public string PingString =>
+        _cacheData.Status == ServerStatusCode.Online
+            ? _loc.GetString("server-entry-ping", ("ping", _cacheData.Ping ?? -1))
+            : string.Empty;
+
     public string Description
     {
         get

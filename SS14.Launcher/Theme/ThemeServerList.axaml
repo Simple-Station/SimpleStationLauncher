@@ -50,6 +50,7 @@
               <ColumnDefinition Width="*" /> <!-- Server Name -->
               <ColumnDefinition SharedSizeGroup="TimeCol" MinWidth="80" Width="Auto" />
               <ColumnDefinition SharedSizeGroup="StatusCol" MinWidth="80" Width="Auto" />
+              <ColumnDefinition SharedSizeGroup="PingCol" MinWidth="80" Width="Auto" />
               <ColumnDefinition SharedSizeGroup="ConnectCol" Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -61,6 +62,9 @@
             </Border>
             <Border Grid.Column="2" Classes="GridCell">
               <TextBlock Text="{loc:Loc tab-servers-table-players}" Classes="SubText Center" />
+            </Border>
+            <Border Grid.Column="3" Classes="GridCell">
+              <TextBlock Text="{loc:Loc tab-servers-table-ping}" Classes="SubText Center" />
             </Border>
             <Border Grid.Column="3" Classes="GridCell">
               <TextBlock Text="" Classes="SubText Center" />

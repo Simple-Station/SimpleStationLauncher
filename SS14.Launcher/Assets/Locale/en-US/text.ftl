@@ -232,6 +232,7 @@ tab-servers-search-watermark = Search For Servers…
 tab-servers-table-players = Players
 tab-servers-table-name = Server Name
 tab-servers-table-round-time = Time
+tab-servers-table-ping = Latency
 tab-servers-list-status-error = There was an error fetching the master server lists. Maybe try refreshing?
 tab-servers-list-status-partial-error = Failed to fetch some of the server lists. Ensure your hub configuration is correct and try refreshing.
 tab-servers-list-status-updating-master = Fetching master server list…
@@ -295,6 +296,10 @@ server-entry-description-fetching = Fetching server status…
 server-entry-description-error = Error while fetching server description
 server-entry-description-none = No server description provided
 server-entry-status-lobby = Lobby
+server-entry-ping = { $ping ->
+    [-1] ???
+    *[1] { $ping }
+}ms
 server-fetched-from-hub = Fetched from { $hub }
 server-entry-raise = Raise
 server-entry-lower = Lower

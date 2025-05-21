@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -93,6 +94,7 @@ public sealed class ServerStatusCache : IServerSource
             try
             {
                 // await Task.Delay(Random.Shared.Next(150, 5000), cancel);
+                var stopwatch = Stopwatch.StartNew();
 
                 using (var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(cancel))
                 {
@@ -102,6 +104,8 @@ public sealed class ServerStatusCache : IServerSource
                              ?? throw new InvalidDataException();
                 }
 
+                stopwatch.Stop();
+                data.Ping = (int?) stopwatch.ElapsedMilliseconds;
                 cancel.ThrowIfCancellationRequested();
             }
             catch (Exception e) when (e is JsonException or HttpRequestException or InvalidDataException or IOException
