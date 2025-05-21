@@ -68,9 +68,20 @@ public sealed class LauncherInfoManager(HttpClient httpClient)
         return _messages[_messageRandom.Next(_messages.Length)];
     }
 
+    public sealed class CustomInfo
+    {
+        public string Message { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string LinkText { get; set; } = "Open Link";
+        public string Link { get; set; } = string.Empty;
+
+        public static readonly CustomInfo None = new();
+    }
+
     public sealed record LauncherInfoModel(
         Dictionary<string, string[]> Messages,
         string[] AllowedVersions,
+        CustomInfo CustomInfo,
         Dictionary<string, string?> OverrideAssets
     );
 }

@@ -112,6 +112,22 @@
         </StackPanel>
       </ContentControl>
 
+      <ContentControl Classes="OverlayBox" IsVisible="{Binding CustomInfo.Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <StackPanel Orientation="Vertical">
+          <TextBlock HorizontalAlignment="Center" Classes="NanoHeadingMedium" TextWrapping="Wrap"
+                     Text="{Binding CustomInfo.Message}" />
+          <TextBlock Margin="0, 10" TextAlignment="Center" TextWrapping="Wrap"
+                     Text="{Binding CustomInfo.Description}" />
+          <DockPanel LastChildFill="False">
+            <Button DockPanel.Dock="Left" Content="{loc:Loc login-errors-button-ok}"
+                    Command="{Binding IgnoreCustomInfo}" Classes="OpenRight" />
+            <Button DockPanel.Dock="Left" Content="{Binding CustomInfo.LinkText}"
+                    Command="{Binding OpenCustomInfoLink}" Classes="OpenLeft"
+                    IsVisible="{Binding CustomInfo.Link, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </DockPanel>
+        </StackPanel>
+      </ContentControl>
+
       <!-- Yes I realize the absurdity of having literally 5 of these error overlay controls defined get off my back. -->
 
       <!--
