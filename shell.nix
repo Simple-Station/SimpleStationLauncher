@@ -54,7 +54,7 @@ let
     nuget-to-nix
   ];
 in pkgs.mkShell {
-  name = "space-station-14-devshell";
+  name = "space-station-beyond-devshell";
   buildInputs = [ pkgs.gtk3 ];
   packages = dependencies;
   shellHook = ''
