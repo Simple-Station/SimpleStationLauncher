@@ -17,12 +17,12 @@
         # Build via nix build -L 'git+file://PATH?submodules=1'
         simple-station-launcher-development = pkgs.callPackage ./nix/package.nix { };
         simple-station-launcher = pkgs.callPackage ./nix/package.nix {
-          version = "1.3.1";
+          version = "3.0.0";
           source = pkgs.fetchFromGitHub {
             owner = "Simple-Station";
             repo = "SimpleStationLauncher";
-            tag = "v1.3.1";
-            hash = "sha256-ekSq0xjgOq+OCrYpzLXihxPT3RpRil/o1Eia9JCp5HQ=";
+            tag = "v3.0.0";
+            hash = "sha256-Qyr1otFKKY7wOCQucDT59dyk/PmqyKTKuwPEAU7mcR4=";
             fetchSubmodules = true;
           };
         };

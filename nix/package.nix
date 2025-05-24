@@ -52,7 +52,7 @@ buildDotnetModule rec {
     "SS14.Launcher/SS14.Launcher.csproj"
   ];
 
-  nugetDeps = ./deps.nix;
+  nugetDeps = ./deps.json;
 
   passthru = {
     inherit version;
@@ -60,7 +60,7 @@ buildDotnetModule rec {
 
   # A Robust Loader component uses sdk_8_0
   dotnet-sdk = with dotnetCorePackages; combinePackages [ sdk_9_0 sdk_8_0 ];
-  dotnet-runtime = dotnetCorePackages.runtime_9_0;
+  dotnet-runtime = with dotnetCorePackages; combinePackages [ runtime_9_0 runtime_8_0 ];
 
   dotnetFlags = [
     "-p:FullRelease=true"
@@ -137,7 +137,7 @@ buildDotnetModule rec {
   '';
 
   meta = with lib; {
-    description = "Launcher for Space Station 14 that offers OOTB access to more servers, a 2D RPG about disasters in space.";
+    description = "Launcher for Space Station 14 that offers OOTB access to more game and authentication servers, a 2D RPG about disasters in space.";
     homepage = "https://simplestation.org";
     license = licenses.mit;
     maintainers = [ ];
