@@ -1,8 +1,11 @@
 # SimpleStationLauncher (Space Station: Beyond)
 
-The SimpleStation launcher used to connect to SS14 servers and manage their info.
+## [Direct Download (GitHub)](https://github.com/Simple-Station/SimpleStationLauncher/releases/latest) | [Steam (not yet public)](https://store.steampowered.com/app/3731580/Space_Station_Beyond/) | [Website](https://simplestation.org) | [Discord](https://discord.gg/49KeKwXc8g)
 
-Differences from the Space Wizards' launcher:
+**Note:** Do not copy your launcher data from your Space Wizards launcher install, as it may make this launcher unable to launch due to incompatible data.
+
+## Differences from the Space Wizards' launcher
+
 - UI Scaling
 - More default hubs
   - Default hubs are removable
@@ -16,8 +19,8 @@ Differences from the Space Wizards' launcher:
 - Supports launching from the web (`ss14`/`ss14s` protocols) on Windows and Linux, nobody uses Mac ;)
 - A lot more funny loading screen messages
 
-# Development
+## Development
 
 Useful environment variables for development:
-- `SS14_LAUNCHER_DATADIR=SimpleStation14` to change the directory the launcher stores all data in. This can be useful to avoid breaking your "normal" SS14 launcher data while developing something.
-- `SS14_LAUNCHER_APPDATA_NAME=launcher` to change the user data directories the launcher stores its data in. This can be useful to avoid breaking your "normal" SS14 launcher data while developing something.
+- `SS14_LAUNCHER_DATADIR=SimpleStation14` to change the directory the launcher stores all configs/logs/content in.
+- `SS14_LAUNCHER_APPDATA_NAME=launcher` to change the directory within DATADIR that the launcher stores launcher configs and content in.
