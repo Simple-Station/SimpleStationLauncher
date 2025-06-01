@@ -165,6 +165,9 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
             return _loc.GetString($"tag-base-{sp[0]}") + (t.Contains(':') ? $": {_loc.GetString($"tag-{sp[0]}-{sp[1]}")}" : "");
         });
 
+    public object ShownAuths => _cacheData.Auths;
+    public bool ShowAuths => _cacheData.Auths.Length > 0;
+
     public string? FetchedFrom
     {
         get

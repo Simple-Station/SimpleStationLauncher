@@ -37,7 +37,9 @@ public class HomePageViewModel : MainWindowTabViewModel
                     { ViewedInFavoritesPane = true, IsExpanded = _cfg.ExpandedServers.Contains(x.Address) })
             .OnItemAdded(a =>
             {
+                #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 if (IsSelected) _statusCache.InitialUpdateStatus(a.CacheData);
+                #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             })
             .Sort(Comparer<ServerEntryViewModel>.Create((a, b) =>
             {
@@ -114,7 +116,7 @@ public class HomePageViewModel : MainWindowTabViewModel
     {
         foreach (var favorite in Favorites)
         {
-            _statusCache.InitialUpdateStatus(favorite.CacheData);
+            _ = _statusCache.InitialUpdateStatus(favorite.CacheData);
         }
         _serverListCache.RequestInitialUpdate();
     }

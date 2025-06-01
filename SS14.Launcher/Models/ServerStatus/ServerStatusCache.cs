@@ -149,6 +149,7 @@ public sealed class ServerStatusCache : IServerSource
         var inferredTags = ServerTagInfer.InferTags(status);
 
         data.Tags = baseTags.Concat(inferredTags).ToArray();
+        data.Auths = status.AuthMethods ?? [ConfigConstants.FallbackAuthServer];
     }
 
     public static async void UpdateInfoForCore(ServerStatusData data, Func<CancellationToken, Task<ServerInfo?>> fetch)
@@ -214,7 +215,7 @@ public sealed class ServerStatusCache : IServerSource
             datum.Data.Links = null;
             datum.Data.Description = null;
 
-            UpdateStatusFor(datum);
+            _ = UpdateStatusFor(datum);
         }
     }
 

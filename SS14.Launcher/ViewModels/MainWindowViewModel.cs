@@ -173,6 +173,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         // await Task.Delay(1000);
         await _infoManager.LoadTask;
         if (ConfigConstants.DoVersionCheck)
+        #pragma warning disable CS0162 // Unreachable code detected
         {
             if (_infoManager.Model == null)
             {
@@ -185,6 +186,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
             OutOfDate = Array.IndexOf(_infoManager.Model.AllowedVersions, ConfigConstants.CurrentLauncherVersion) == -1;
             Log.Debug("Launcher out of date? {Value}", OutOfDate);
         }
+        #pragma warning restore CS0162 // Unreachable code detected
 
         // Check if we have a custom message
         CustomInfo = _infoManager.Model?.CustomInfo != null ? _infoManager.Model.CustomInfo : LauncherInfoManager.CustomInfo.None;
