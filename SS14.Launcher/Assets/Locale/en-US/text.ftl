@@ -66,7 +66,7 @@ connecting-privacy-policy-decline = Decline (disconnect)
 direct-connect-title = Direct Connect…
 direct-connect-text = Enter server address to connect:
 direct-connect-connect = Connect
-direct-connect-address-invalid = Address is invali
+direct-connect-address-invalid = Address is invalid
 
 ## Strings for the "select account" dialog window.
 select-account-dialog-title = Select Account
