@@ -68,6 +68,14 @@ direct-connect-text = Enter server address to connect:
 direct-connect-connect = Connect
 direct-connect-address-invalid = Address is invalid
 
+## Strings for the "select account" dialog window.
+select-account-dialog-title = Select Account
+select-account-dialog-header = Select Account
+select-account-dialog-description = Your currently selected account is not allowed to connect to this server, pick another one using an allowed authentication provider to join.
+select-account-dialog-error =
+    You do not have any accounts logged in that can connect to this server.
+    Click this button to close the dialog.
+
 ## Strings for the "hub settings" dialog window.
 
 hub-settings-title = Hub Settings
@@ -355,6 +363,8 @@ server-entry-description-fetching = Fetching server status…
 server-entry-description-error = Error while fetching server description
 server-entry-description-none = No server description provided
 server-entry-status-lobby = Lobby
+server-entry-tags = Tags:
+server-entry-allowed-auths = Allowed Auth Providers:
 server-fetched-from-hub = Fetched from { $hub }
 server-entry-raise = Raise
 server-entry-lower = Lower

@@ -58,28 +58,59 @@
         </Grid>
       </Expander.Header>
       <DockPanel Margin="4">
-        <ItemsControl DockPanel.Dock="Top" Margin="4, 0, 4, 4"
-          ItemsSource="{Binding ShownTags}"
-          IsVisible="{Binding CacheData.Tags.Length}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <WrapPanel Orientation="Horizontal" />
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <Border
-                Background="#272939"
-                BorderBrush="#575B7F"
-                BorderThickness="2"
-                Margin="0,0,4,0"
-                CornerRadius="16"
-                Padding="6,2">
-                <TextBlock Text="{Binding}" />
-              </Border>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <!-- Tags -->
+        <DockPanel Dock="Top">
+          <TextBlock Text="{loc:Loc server-entry-tags}" FontSize="12" />
+          <ItemsControl Margin="4, 0, 4, 4"
+            ItemsSource="{Binding ShownTags}"
+            IsVisible="{Binding CacheData.Tags.Length}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border
+                  Background="#272939"
+                  BorderBrush="#575B7F"
+                  BorderThickness="1"
+                  Margin="0,0,4,0"
+                  CornerRadius="16"
+                  Padding="3,0">
+                  <TextBlock Text="{Binding}" FontSize="10" />
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </DockPanel>
+
+        <!-- Auth Methods -->
+        <DockPanel Dock="Top">
+          <TextBlock Text="{loc:Loc server-entry-allowed-auths}" FontSize="12" />
+          <ItemsControl Margin="4, 0, 4, 4"
+            ItemsSource="{Binding ShownAuths}"
+            IsVisible="{Binding ShowAuths}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border
+                  Background="#272939"
+                  BorderBrush="#575B7F"
+                  BorderThickness="1"
+                  Margin="0, 0, 4, 0"
+                  CornerRadius="16"
+                  Padding="3, 0">
+                  <TextBlock Text="{Binding}" FontSize="10" />
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </DockPanel>
 
         <TextBlock DockPanel.Dock="Top"
           Name="Description" Margin="4,0,4,4"
@@ -128,7 +159,11 @@
                     Command="{Binding FavoriteLowerButtonPressed}" />
 
             <!-- Favorite add/remove button -->
-            <Button Classes="OpenLeft"
+            <Button IsVisible="{Binding ViewedInFavoritesPane}"
+                    Classes="OpenLeft"
+                    Content="{Binding FavoriteButtonText}"
+                    Command="{Binding FavoriteButtonPressed}" />
+            <Button IsVisible="{Binding !ViewedInFavoritesPane}"
                     Content="{Binding FavoriteButtonText}"
                     Command="{Binding FavoriteButtonPressed}" />
           </DockPanel>

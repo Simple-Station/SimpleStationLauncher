@@ -11,6 +11,7 @@ using ReactiveUI.Fody.Helpers;
 using Splat;
 using SS14.Launcher.Localization;
 using SS14.Launcher.Models.Data;
+using SS14.Launcher.Models.Logins;
 using SS14.Launcher.Models.ServerStatus;
 using SS14.Launcher.Utility;
 using SS14.Launcher.Views;
@@ -33,11 +34,13 @@ public class HomePageViewModel : MainWindowTabViewModel
         _cfg.FavoriteServers
             .Connect()
             .Select(x =>
-                new ServerEntryViewModel(MainWindowViewModel, _statusCache.GetStatusFor(x.Address), x, _statusCache, _cfg)
+                new ServerEntryViewModel(MainWindowViewModel, _statusCache.GetStatusFor(x.Address), x, _statusCache, _cfg, Locator.Current.GetRequiredService<LoginManager>())
                     { ViewedInFavoritesPane = true, IsExpanded = _cfg.ExpandedServers.Contains(x.Address) })
             .OnItemAdded(a =>
             {
+                #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 if (IsSelected) _statusCache.InitialUpdateStatus(a.CacheData);
+                #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             })
             .Sort(Comparer<ServerEntryViewModel>.Create((a, b) =>
             {
@@ -114,7 +117,7 @@ public class HomePageViewModel : MainWindowTabViewModel
     {
         foreach (var favorite in Favorites)
         {
-            _statusCache.InitialUpdateStatus(favorite.CacheData);
+            _ = _statusCache.InitialUpdateStatus(favorite.CacheData);
         }
         _serverListCache.RequestInitialUpdate();
     }

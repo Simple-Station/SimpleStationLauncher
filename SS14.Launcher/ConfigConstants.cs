@@ -33,6 +33,7 @@ public static class ConfigConstants
     public const int LauncherCommandsRedialWaitTimeout = 1000;
 
     public const string FallbackAuthServer = "Space-Wizards";
+    public const string GuestAuthServer = "guest";
     public const string CustomAuthServer = "Custom";
     public static readonly AuthServer TemplateAuthServer = new(new("https://example.com/"), new("https://example.com/"));
     public static readonly Dictionary<string, AuthServer> AuthUrls = new()

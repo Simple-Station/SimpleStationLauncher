@@ -17,6 +17,7 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
     private ServerStatusInfoCode _statusInfo = ServerStatusInfoCode.NotFetched;
     private ServerInfoLink[]? _links;
     private string[] _tags = Array.Empty<string>();
+    private string[] _auths = Array.Empty<string>();
 
     public ServerStatusData(string address)
     {
@@ -101,6 +102,12 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
     {
         get => _tags;
         set => SetProperty(ref _tags, value);
+    }
+
+    public string[] Auths
+    {
+        get => _auths;
+        set => SetProperty(ref _auths, value);
     }
 
     public CancellationTokenSource? InfoCancel;
