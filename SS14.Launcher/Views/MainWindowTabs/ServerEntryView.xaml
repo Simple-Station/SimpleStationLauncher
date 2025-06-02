@@ -60,7 +60,7 @@
       <DockPanel Margin="4">
         <!-- Tags -->
         <DockPanel Dock="Top">
-          <TextBlock VerticalAlignment="Center" Text="{loc:Loc server-entry-tags}" FontSize="12" />
+          <TextBlock Text="{loc:Loc server-entry-tags}" FontSize="12" />
           <ItemsControl Margin="4, 0, 4, 4"
             ItemsSource="{Binding ShownTags}"
             IsVisible="{Binding CacheData.Tags.Length}">
@@ -77,7 +77,7 @@
                   BorderThickness="1"
                   Margin="0,0,4,0"
                   CornerRadius="16"
-                  Padding="4,1">
+                  Padding="3,0">
                   <TextBlock Text="{Binding}" FontSize="10" />
                 </Border>
               </DataTemplate>
@@ -87,7 +87,7 @@
 
         <!-- Auth Methods -->
         <DockPanel Dock="Top">
-          <TextBlock VerticalAlignment="Center" Text="{loc:Loc server-entry-allowed-auths}" FontSize="12" />
+          <TextBlock Text="{loc:Loc server-entry-allowed-auths}" FontSize="12" />
           <ItemsControl Margin="4, 0, 4, 4"
             ItemsSource="{Binding ShownAuths}"
             IsVisible="{Binding ShowAuths}">
@@ -104,7 +104,7 @@
                   BorderThickness="1"
                   Margin="0, 0, 4, 0"
                   CornerRadius="16"
-                  Padding="4, 1">
+                  Padding="3, 0">
                   <TextBlock Text="{Binding}" FontSize="10" />
                 </Border>
               </DataTemplate>
