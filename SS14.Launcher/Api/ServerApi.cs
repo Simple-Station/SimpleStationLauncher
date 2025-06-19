@@ -15,7 +15,8 @@ public static class ServerApi
         int SoftMaxPlayerCount,
         [property: JsonPropertyName("round_start_time")] string? RoundStartTime,
         [property: JsonPropertyName("run_level")] GameRunLevel? RunLevel,
-        [property: JsonPropertyName("tags")] string[]? Tags);
+        [property: JsonPropertyName("tags")] string[]? Tags,
+        [property: JsonPropertyName("auth_methods")] string[]? AuthMethods);
 
     public enum GameRunLevel
     {

@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:SS14.Launcher.Localization"
+        xmlns:v="clr-namespace:SS14.Launcher.Views"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="150"
+        MinWidth="600" MinHeight="150"
+        Width="600" Height="150"
+        x:Class="SS14.Launcher.Views.SelectAccountDialog"
+        Icon="{DynamicResource WindowIcon}"
+        Title="{loc:Loc select-account-dialog-title}"
+        Padding="4"
+        WindowStartupLocation="CenterOwner">
+
+  <v:ScaledControl>
+    <DockPanel>
+      <TextBlock DockPanel.Dock="Top" Classes="NanoHeading" Text="{loc:Loc select-account-dialog-header}" />
+      <TextBlock DockPanel.Dock="Top" Text="{loc:Loc select-account-dialog-description}" TextWrapping="Wrap" />
+      <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Accounts, RelativeSource={RelativeSource AncestorType=Window}}" IsVisible="{Binding !Error, RelativeSource={RelativeSource AncestorType=Window}}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Button Content="{Binding LoginInfo.DisplayName}"
+              Command="{Binding Confirm, RelativeSource={RelativeSource AncestorType=Window}}"
+              CommandParameter="{Binding}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Button DockPanel.Dock="Top" Content="{loc:Loc select-account-dialog-error}"
+        Command="{Binding Confirm, RelativeSource={RelativeSource AncestorType=Window}}"
+        CommandParameter="{Binding SelectedAccount, RelativeSource={RelativeSource AncestorType=Window}}"
+        IsVisible="{Binding Error, RelativeSource={RelativeSource AncestorType=Window}}" />
+    </DockPanel>
+  </v:ScaledControl>
+</Window>

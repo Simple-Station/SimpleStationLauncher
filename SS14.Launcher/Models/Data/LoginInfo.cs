@@ -10,6 +10,7 @@ public class LoginInfo : ReactiveObject
     [Reactive] public string? ServerUrl { get; set; }
     [Reactive] public Guid UserId { get; set; }
     [Reactive] public string Username { get; set; } = default!;
+    public string DisplayName => $"{Username}@{Server}";
     [Reactive] public LoginToken Token { get; set; }
 
     public override string ToString()

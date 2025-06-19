@@ -7,6 +7,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
 using SS14.Launcher.Localization;
+using SS14.Launcher.Models.Logins;
 using SS14.Launcher.Models.ServerStatus;
 using SS14.Launcher.Utility;
 
@@ -136,7 +137,7 @@ public class ServerListTabViewModel : MainWindowTabViewModel
         SearchedServers.Clear();
         foreach (var server in sortList)
         {
-            var vm = new ServerEntryViewModel(_windowVm, server, _serverListCache, _windowVm.Cfg);
+            var vm = new ServerEntryViewModel(_windowVm, server, _serverListCache, _windowVm.Cfg, Locator.Current.GetRequiredService<LoginManager>());
             SearchedServers.Add(vm);
         }
 

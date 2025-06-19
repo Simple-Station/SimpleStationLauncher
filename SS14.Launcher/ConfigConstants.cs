@@ -7,7 +7,7 @@ namespace SS14.Launcher;
 
 public static class ConfigConstants
 {
-    public const string CurrentLauncherVersion = "3.0.0";
+    public const string CurrentLauncherVersion = "3.1.0";
     #if RELEASE
     public const bool DoVersionCheck = true;
     #else
@@ -33,6 +33,7 @@ public static class ConfigConstants
     public const int LauncherCommandsRedialWaitTimeout = 1000;
 
     public const string FallbackAuthServer = "Space-Wizards";
+    public const string GuestAuthServer = "guest";
     public const string CustomAuthServer = "Custom";
     public static readonly AuthServer TemplateAuthServer = new(new("https://example.com/"), new("https://example.com/"));
     public static readonly Dictionary<string, AuthServer> AuthUrls = new()
