@@ -107,6 +107,7 @@ buildDotnetModule rec {
     # TODO: Figure out dependencies for CEF support.
   ];
 
+  # Adapted from SS14.Launcher commit 02441df by Carlen White <WhiterSuburban@gmail.com>
   makeWrapperArgs = [ ''--set ROBUST_SOUNDFONT_OVERRIDE ${soundfont-path}'' ];
 
   executables = [ "SS14.Launcher" ];
