@@ -6,9 +6,11 @@ in import (builtins.fetchTarball {
 }) { }) }:
 
 let
+  dotnet = with pkgs.dotnetCorePackages; combinePackages [ sdk_9_0 sdk_8_0 ];
   dependencies = with pkgs; [
     util-linux
-    dotnetCorePackages.sdk_9_0
+    dotnet
+    dotnetPackages.Nuget
     glfw
     SDL2
     libGL
@@ -47,9 +49,12 @@ let
     at-spi2-core
     cups
     fontconfig
+    # Nix Stuff
+    nuget-to-json
+    nuget-to-nix
   ];
 in pkgs.mkShell {
-  name = "space-station-14-devshell";
+  name = "space-station-beyond-devshell";
   buildInputs = [ pkgs.gtk3 ];
   packages = dependencies;
   shellHook = ''
@@ -57,7 +62,7 @@ in pkgs.mkShell {
     export ROBUST_SOUNDFONT_OVERRIDE=${pkgs.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2
     export XDG_DATA_DIRS=$GSETTINGS_SCHEMAS_PATH
     export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath dependencies}
-    export DOTNET_ROOT=${pkgs.dotnetCorePackages.sdk_9_0}
+    export DOTNET_ROOT=${dotnet}
     export PATH="$PATH:/home/$(whoami)/.dotnet/tools"
   '';
 }
