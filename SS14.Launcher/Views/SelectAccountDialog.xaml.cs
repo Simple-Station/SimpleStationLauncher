@@ -17,7 +17,7 @@ public partial class SelectAccountDialog : Window
         InitializeComponent();
 
         Accounts = loginManager.Logins.KeyValues
-            .Where(x => authMethods.Contains(x.Value.Server))
+            .Where(x => authMethods.FirstOrDefault(m => m == ConfigConstants.AuthUrls[x.Value.Server].AuthUrl.AbsoluteUri) != null)
             .Select(x => x.Value);
         Error = !Accounts.Any();
     }
