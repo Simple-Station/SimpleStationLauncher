@@ -348,6 +348,7 @@ public class Connector : ReactiveObject
             cVars.Add(("ROBUST_AUTH_USERID", account.LoginInfo.UserId.ToString()));
             cVars.Add(("ROBUST_AUTH_PUBKEY", info.AuthInformation.PublicKey));
             cVars.Add(("ROBUST_AUTH_SERVER", authServer));
+            cVars.Add(("ROBUST_AUTH_SERVERS", $"unset@{authServer}"));
             Log.Information($"Launching client with auth server {authServer} and account {account.Username}@{account.Server} ({account.UserId})");
         }
 
