@@ -68,8 +68,8 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
 
     public void ConnectPressed()
     {
-        // If there is only one supported auth method that matches the active account, connect
-        if (_cacheData.Auths.Length <= 1 && _cacheData.Auths.Contains(_loginManager.ActiveAccount?.Server))
+        // If we have an active account that matches the allowed auths, connect
+        if (_cacheData.Auths.Contains(_loginManager.ActiveAccount?.ServerUrl))
         {
             ConnectingViewModel.StartConnect(_windowVm, Address);
             return;
