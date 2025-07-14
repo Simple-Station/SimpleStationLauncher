@@ -86,6 +86,7 @@ public class LoginViewModel : BaseLoginViewModel
         if (resp.IsSuccess)
         {
             var loginInfo = resp.LoginInfo;
+            loginInfo.ServerUrl ??= ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer].AuthUrl.AbsoluteUri;
             var oldLogin = loginMgr.Logins.KeyValues.FirstOrDefault(a =>
                 a.Key == loginInfo.UserId && a.Value.Server == loginInfo.Server
                     && a.Value.ServerUrl == loginInfo.ServerUrl).Value;
