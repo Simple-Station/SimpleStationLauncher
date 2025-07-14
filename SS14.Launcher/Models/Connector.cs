@@ -332,12 +332,12 @@ public class Connector : ReactiveObject
                 "(Fallback) " + LoginManager.GetAuthServerById(ConfigConstants.FallbackAuthServer).AuthUrl;
             if (account == null)
             {
-                Log.Error("No logged in account found for any of the server's allowed auth providers: {AuthServers}", authServers);
+                Log.Error("No logged in account found for any of the server's allowed auth providers: {AuthServers}", string.Join(", ", authServers));
                 return null;
             }
             if (account != _loginManager.ActiveAccount)
             {
-                Log.Warning("Using different account than the active one due to server requiring a different auth provider: {Server}", authServers);
+                Log.Warning("Using different account than the active one due to server requiring a different auth provider: {Server}", string.Join(", ", authServers));
                 _loginManager.ActiveAccount = account;
             }
 
