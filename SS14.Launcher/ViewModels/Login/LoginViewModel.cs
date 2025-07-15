@@ -8,6 +8,7 @@ using SS14.Launcher.Api;
 using SS14.Launcher.Localization;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.Logins;
+using Serilog;
 
 namespace SS14.Launcher.ViewModels.Login;
 
@@ -87,6 +88,7 @@ public class LoginViewModel : BaseLoginViewModel
         {
             var loginInfo = resp.LoginInfo;
             loginInfo.ServerUrl ??= ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer].AuthUrl.AbsoluteUri;
+            Log.Information($"Login successful for user {loginInfo.UserId} on server {loginInfo.Server} at {loginInfo.ServerUrl}");
             var oldLogin = loginMgr.Logins.KeyValues.FirstOrDefault(a =>
                 a.Key == loginInfo.UserId && a.Value.Server == loginInfo.Server
                     && a.Value.ServerUrl == loginInfo.ServerUrl).Value;

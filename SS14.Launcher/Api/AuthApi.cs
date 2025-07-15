@@ -28,9 +28,9 @@ public sealed class AuthApi
     {
         try
         {
-            var authUrl = LoginManager.GetAuthServerById(request.Server ?? ConfigConstants.FallbackAuthServer, request.ServerUrl).AuthAuthUrl;
+            var authUrl = LoginManager.GetAuthServerById(request.Server ?? ConfigConstants.FallbackAuthServer, request.ServerUrl);
 
-            using var resp = await _httpClient.PostAsJsonAsync(authUrl, request);
+            using var resp = await _httpClient.PostAsJsonAsync(authUrl.AuthAuthUrl, request);
 
             if (resp.IsSuccessStatusCode)
             {
@@ -42,7 +42,7 @@ public sealed class AuthApi
                     Token = token,
                     Username = respJson.Username,
                     Server = request.Server ?? ConfigConstants.FallbackAuthServer,
-                    ServerUrl = request.ServerUrl,
+                    ServerUrl = authUrl.AuthUrl.AbsoluteUri,
                 });
             }
 
