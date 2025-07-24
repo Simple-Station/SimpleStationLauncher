@@ -89,6 +89,11 @@ public static class CVars
     /// </summary>
     public static readonly CVarDef<bool> UiScalingLock = CVarDef.Create("UiScalingLock", true);
 
+     /// <summary>
+    /// If a download gets interrupted, keep the files for a week.
+    /// </summary>
+    public static readonly CVarDef<int> InterruptibleDownloadKeepHours = CVarDef.Create("InterruptibleDownloadKeepHours", 7 * 24);
+
     /// <summary>
     /// Whether to display override assets (trans rights).
     /// </summary>
