@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -598,12 +599,17 @@ public partial class Connector : ReactiveObject
         startInfo.UseShellExecute = false;
         startInfo.ArgumentList.AddRange(extraArgs);
 
-        /*
-        foreach (var arg in startInfo.ArgumentList)
+        var commandBuilder = new StringBuilder();
+        commandBuilder.Append(startInfo.FileName);
+
+        for (var i = 0; i < startInfo.ArgumentList.Count; i++)
         {
-            Log.Debug("arg: {Arg}", arg);
+            var arg = startInfo.ArgumentList[i];
+
+            commandBuilder.Append($" [{i}] {arg}");
         }
-        */
+
+        Log.Debug("Launch command: {LaunchCommand}", commandBuilder.ToString());
 
         var process = Process.Start(startInfo);
 
@@ -763,11 +769,31 @@ public partial class Connector : ReactiveObject
 
                 await xattr.WaitForExitAsync();
 
-                return new ProcessStartInfo
+                var startInfo = new ProcessStartInfo
                 {
                     FileName = "open",
-                    ArgumentList = {appPath, "--args"},
+                    ArgumentList = { appPath },
                 };
+
+                if (RuntimeInformation.OSArchitecture != Architecture.X64)
+                {
+                    // Intel macs may be running unsupported macOS versions without open --arch.
+                    // So don't add it. It's not necessary anyways.
+
+                    // Versions before Sonoma also don't have it.
+                    // If you're on one of those... uhh.. Why are you running an outdated OS?
+                    // But don't add --arch so that people on an outdated OS can still use native Apple Silicon.
+                    if (OperatingSystem.IsMacOSVersionAtLeast(14))
+                    {
+                        startInfo.ArgumentList.Add("--arch");
+                        startInfo.ArgumentList.Add(
+                            RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "arm64" : "x86_64");
+                    }
+                }
+
+                startInfo.ArgumentList.Add("--args");
+
+                return startInfo;
             }
             else
             {
