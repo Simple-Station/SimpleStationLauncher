@@ -78,6 +78,8 @@ public sealed class UrlFallbackSet(ImmutableArray<string> urls)
             cancel
         ).ConfigureAwait(false);
 
+        response.EnsureSuccessStatusCode();
+
         return response;
     }
 
