@@ -37,6 +37,7 @@ public static class LauncherPaths
     {
         { "Robust", PathPublicKey },
         { "Multiverse", Path.Combine(DirLauncherInstall, "signing_key_Multiverse") },
+        { "Supermatter", Path.Combine(DirLauncherInstall, "signing_key_Supermatter") },
     };
     public static readonly string PathContentDb = Path.Combine(DirLocalData, "content.db");
     public static readonly string PathOverrideAssetsDb = Path.Combine(DirLocalData, "override_assets.db");

@@ -81,6 +81,12 @@ public static class ConfigConstants
                 "https://cdn.spacestationmultiverse.com/ssmv-engine-manifest",
             ])
         },
+        {
+            "Supermatter",
+            new UrlFallbackSet([
+                "https://cdn.simplestation.org/supermatter/manifest.json",
+            ])
+        },
     };
 
     public static readonly Dictionary<string, UrlFallbackSet> EngineModulesUrl = new()
