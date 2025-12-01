@@ -54,7 +54,6 @@ public static class ConfigConstants
 
     public static readonly Uri[] DefaultHubUrls =
     [
-        new("https://web.networkgamez.com/"),
         new("https://hub.singularity14.co.uk/"),
         new("https://cdn.spacestationmultiverse.com/hub/"),
         new("https://hub.spacestation14.com/"),
