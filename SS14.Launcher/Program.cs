@@ -214,8 +214,8 @@ internal static class Program
         var locator = Locator.CurrentMutable;
 
         var http = HappyEyeballsHttp.CreateHttpClient();
-        http.DefaultRequestHeaders.UserAgent.Add(
-            new ProductInfoHeaderValue(LauncherVersion.Name, LauncherVersion.Version?.ToString()));
+        // http.DefaultRequestHeaders.UserAgent.Add(
+        //     new ProductInfoHeaderValue(LauncherVersion.Name, LauncherVersion.Version?.ToString()));
         http.DefaultRequestHeaders.Add("SS14-Launcher-Fingerprint", cfg.Fingerprint.ToString());
         Locator.CurrentMutable.RegisterConstant(http);
 
