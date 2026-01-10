@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>SS14L</string>
+    <key>CFBundleDisplayName</key>
+    <string>SimpleStation14 Launcher</string>
+    <key>CFBundleExecutable</key>
+    <string>SS14</string>
+    <!--
+    Just a note about this icon.
+    MacOS seems REALLY iffy about this and even when the file is correct,
+    it can take forever before it decides to actually update it and display it.
+    TL;DR Apple is stupid.
+    -->
+    <key>CFBundleIconFile</key>
+    <string>ss14</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.simplestation14.launcher</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.15</string>
+</dict>
+</plist>
