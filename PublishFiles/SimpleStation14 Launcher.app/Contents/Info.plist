@@ -16,14 +16,5 @@
     -->
     <key>CFBundleIconFile</key>
     <string>ss14</string>
-
-    <key>CFBundleIdentifier</key>
-    <string>com.simplestation14.launcher</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>10.15</string>
 </dict>
 </plist>
