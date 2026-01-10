@@ -14,7 +14,7 @@ dotnet publish SS14.Loader/SS14.Loader.csproj -c Release --no-self-contained -r 
 # Create intermediate directories.
 mkdir -p bin/publish/macOS
 
-cp -r "PublishFiles/SimpleStation14 Launcher.app" bin/publish/macOS
+cp -r "PublishFiles/SimpleStation14 Launcher.app" bin/publish/macOS/
 
 mkdir -p "bin/publish/macOS/SimpleStation14 Launcher.app/Contents/Resources/dotnet/"
 mkdir -p "bin/publish/macOS/SimpleStation14 Launcher.app/Contents/Resources/bin/"
