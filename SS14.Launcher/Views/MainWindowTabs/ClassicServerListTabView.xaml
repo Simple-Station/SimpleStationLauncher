@@ -12,7 +12,14 @@
     </Design.DataContext>
     
     <DockPanel Background="{DynamicResource ThemeBackgroundBrush}"> 
-        <TextBlock DockPanel.Dock="Top" Text="{loc:Loc tab-servers-classic-desc}" Margin="10" HorizontalAlignment="Center" Foreground="{DynamicResource ThemeSubTextBrush}"/>
+        <DockPanel DockPanel.Dock="Top" Margin="4 4 4 0" Height="32" LastChildFill="False">
+            <TextBox DockPanel.Dock="Right" Text="{Binding SearchString, Mode=TwoWay}"
+                     Watermark="{loc:Loc tab-servers-search-watermark}"
+                     UseFloatingWatermark="False"
+                     Width="200"
+                     Margin="0 0 8 0" />
+            <TextBlock DockPanel.Dock="Left" Text="{loc:Loc tab-servers-classic-desc}" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource ThemeSubTextBrush}"/>
+        </DockPanel>
         <ScrollViewer>
             <ItemsControl ItemsSource="{Binding AllServers}">
                 <ItemsControl.ItemTemplate>
