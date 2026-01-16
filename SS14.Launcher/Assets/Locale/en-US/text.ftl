@@ -234,6 +234,8 @@ region-short-south-america-west = SA West
 ## Strings for the "servers" tab
 
 tab-servers-title = Servers
+tab-servers-classic-title = Classic Servers
+tab-servers-classic-desc = All servers listed here connect via the BYOND client.
 tab-servers-refresh = Refresh
 filters = Filters ({ $filteredServers } / { $totalServers })
 tab-servers-search-watermark = Search For Servers…

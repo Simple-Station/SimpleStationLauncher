@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mainWindowTabs="clr-namespace:SS14.Launcher.ViewModels.MainWindowTabs"
+             xmlns:mainWindowTabsViews="clr-namespace:SS14.Launcher.Views.MainWindowTabs"
+             xmlns:loc="clr-namespace:SS14.Launcher.Localization"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SS14.Launcher.Views.MainWindowTabs.ClassicServerListTabView">
+    <Design.DataContext>
+        <mainWindowTabs:ClassicServerListTabViewModel />
+    </Design.DataContext>
+    
+    <DockPanel Background="{DynamicResource ThemeBackgroundBrush}"> 
+        <TextBlock DockPanel.Dock="Top" Text="{loc:Loc tab-servers-classic-desc}" Margin="10" HorizontalAlignment="Center" Foreground="{DynamicResource ThemeSubTextBrush}"/>
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding AllServers}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                         <mainWindowTabsViews:ClassicServerEntryView />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

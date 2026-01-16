@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mainWindowTabs="clr-namespace:SS14.Launcher.ViewModels.MainWindowTabs"
+             xmlns:loc="clr-namespace:SS14.Launcher.Localization"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50"
+             x:Class="SS14.Launcher.Views.MainWindowTabs.ClassicServerEntryView">
+    <Design.DataContext>
+        <mainWindowTabs:ClassicServerEntryViewModel />
+    </Design.DataContext>
+
+    <Border Padding="4" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ThemeBorderLowBrush}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" MinWidth="100" />
+                <ColumnDefinition Width="Auto" MinWidth="80" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Name and Status -->
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="5">
+                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14" />
+                <TextBlock Text="{Binding Status}" FontSize="12" Foreground="{DynamicResource ThemeSubTextBrush}" TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+
+            <!-- Player Count -->
+             <TextBlock Grid.Column="2" Text="{Binding PlayerCount}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10"/>
+
+            <!-- Connect Button -->
+            <Button Grid.Column="3" Content="{loc:Loc server-entry-connect}" Command="{Binding ConnectCommand}" Margin="5"/>
+        </Grid>
+    </Border>
+</UserControl>

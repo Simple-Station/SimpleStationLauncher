@@ -234,6 +234,7 @@ internal static class Program
         locator.RegisterConstant(authApi);
         locator.RegisterConstant(hubApi);
         locator.RegisterConstant(new ServerListCache());
+        locator.RegisterConstant(new ClassicServerListCache());
         locator.RegisterConstant(loginManager);
         locator.RegisterConstant(overrideAssets);
         locator.RegisterConstant(launcherInfo);
