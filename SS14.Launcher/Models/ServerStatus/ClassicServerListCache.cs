@@ -76,7 +76,7 @@ public sealed class ClassicServerListCache
                 {
                     // Name might be missing, try to extract from status or use URL
                     var name = currentName ?? ExtractNameFromStatus(currentStatus) ?? "Unknown Server";
-                    list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus) ?? ""));
+                    list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus, name) ?? ""));
                 }
                 
                 // Reset for new server
@@ -138,7 +138,7 @@ public sealed class ClassicServerListCache
         if (inServerBlock && currentUrl != null)
         {
             var name = currentName ?? ExtractNameFromStatus(currentStatus) ?? "Unknown Server";
-            list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus) ?? ""));
+            list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus, name) ?? ""));
         }
 
         return list;
@@ -153,17 +153,37 @@ public sealed class ClassicServerListCache
         {
             var raw = match.Groups[1].Value;
              // Remove nested tags if any
-             return System.Text.RegularExpressions.Regex.Replace(raw, "<.*?>", String.Empty);
+             var clean = System.Text.RegularExpressions.Regex.Replace(raw, "<.*?>", String.Empty);
+             return System.Net.WebUtility.HtmlDecode(clean);
         }
         return null; 
     }
 
-    private string? CleanStatus(string? status)
+    private string? CleanStatus(string? status, string? nameToRemove)
     {
         if (string.IsNullOrEmpty(status)) return null;
-        // Replace <br> with newlines, remove other tags
-        var s = status.Replace("<br>", "\n").Replace("<br/>", "\n");
-        return System.Text.RegularExpressions.Regex.Replace(s, "<.*?>", String.Empty).Trim();
+        
+        var s = status.Replace("<br>", "\n").Replace("<br/>", "\n").Replace("<br />", "\n");
+        // Remove tags
+        s = System.Text.RegularExpressions.Regex.Replace(s, "<.*?>", String.Empty);
+        
+        // Decode HTML
+        s = System.Net.WebUtility.HtmlDecode(s);
+        
+        if (nameToRemove != null && s.StartsWith(nameToRemove))
+        {
+            s = s.Substring(nameToRemove.Length);
+        }
+
+        // Clean artifacts
+        char[] trims = { ' ', '\t', '\n', '\r', ']', ')', '-', '—', ':' };
+        s = s.TrimStart(trims).Trim();
+
+        // Reduce multiple newlines
+        s = System.Text.RegularExpressions.Regex.Replace(s, @"\n\s+", "\n");
+        s = System.Text.RegularExpressions.Regex.Replace(s, @"\n{3,}", "\n\n");
+
+        return s;
     }
 
     private string ParseStringValue(string line)
@@ -174,6 +194,19 @@ public sealed class ClassicServerListCache
         var lastIdx = line.LastIndexOf('"');
         if (lastIdx <= idx) return string.Empty;
 
-        return line.Substring(idx + 1, lastIdx - idx - 1);
+        // Extract content inside quotes
+        var inner = line.Substring(idx + 1, lastIdx - idx - 1);
+        
+        // Unescape BYOND/C string escapes
+        // \" -> "
+        // \n -> newline
+        // \\ -> \
+        // The most critical one is \n showing up as literal \n in UI.
+        
+        // Simple manual unescape for common sequences
+        return inner.Replace("\\\"", "\"")
+                    .Replace("\\n", "\n")
+                    .Replace("\\\\", "\\")
+                    .Replace("\\t", "\t");
     }
 }
