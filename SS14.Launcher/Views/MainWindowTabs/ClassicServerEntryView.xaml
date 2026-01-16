@@ -10,26 +10,41 @@
         <mainWindowTabs:ClassicServerEntryViewModel />
     </Design.DataContext>
 
-    <Border Padding="4" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ThemeBorderLowBrush}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" MinWidth="100" />
-                <ColumnDefinition Width="Auto" MinWidth="80" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+    <Panel>
+        <Expander Name="Expando" Classes="NoPad" IsExpanded="{Binding IsExpanded}">
+            <Expander.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" /> <!-- Server Name -->
+                        <ColumnDefinition SharedSizeGroup="TimeCol" MinWidth="80" Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="PlayerCol" MinWidth="80" Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="ConnectCol" Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            <!-- Name and Status -->
-            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="5">
-                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14" />
-                <TextBlock Text="{Binding Status}" FontSize="12" Foreground="{DynamicResource ThemeSubTextBrush}" TextTrimming="CharacterEllipsis"/>
-            </StackPanel>
+                    <Border Grid.Column="0" Classes="GridCell">
+                        <TextBlock VerticalAlignment="Center"
+                          Text="{Binding Name}" TextTrimming="CharacterEllipsis"
+                          HorizontalAlignment="Left" />
+                    </Border>
 
-            <!-- Player Count -->
-             <TextBlock Grid.Column="2" Text="{Binding PlayerCount}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10"/>
+                    <Border Grid.Column="1" Classes="GridCell">
+                        <!-- Round Time placeholder -->
+                        <TextBlock Text="--" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
 
-            <!-- Connect Button -->
-            <Button Grid.Column="3" Content="{loc:Loc server-entry-connect}" Command="{Binding ConnectCommand}" Margin="5"/>
-        </Grid>
-    </Border>
+                    <Border Grid.Column="2" Classes="GridCell">
+                        <TextBlock Classes="Numeric" Text="{Binding PlayerCount}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <Border Grid.Column="3" Classes="GridCell">
+                        <Button Content="{loc:Loc server-entry-connect}"
+                          Command="{Binding ConnectCommand}" />
+                    </Border>
+                </Grid>
+            </Expander.Header>
+            <DockPanel Margin="10">
+                <TextBlock Text="{Binding Status}" TextWrapping="Wrap" />
+            </DockPanel>
+        </Expander>
+    </Panel>
 </UserControl>

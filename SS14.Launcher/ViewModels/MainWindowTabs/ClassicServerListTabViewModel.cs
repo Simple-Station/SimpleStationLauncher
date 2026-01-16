@@ -30,10 +30,12 @@ public class ClassicServerListTabViewModel : MainWindowTabViewModel
     }
 
     public ObservableCollection<ClassicServerEntryViewModel> AllServers { get; } = new();
+    public ReactiveCommand<System.Reactive.Unit, System.Reactive.Unit> RefreshPressed { get; }
 
     public ClassicServerListTabViewModel()
     {
         _cache = Locator.Current.GetRequiredService<ClassicServerListCache>();
+        RefreshPressed = ReactiveCommand.CreateFromTask(_cache.Refresh);
         
         // Initial populate if any
         UpdateList();

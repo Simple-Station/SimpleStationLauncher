@@ -11,15 +11,47 @@
         <mainWindowTabs:ClassicServerListTabViewModel />
     </Design.DataContext>
     
-    <DockPanel Background="{DynamicResource ThemeBackgroundBrush}"> 
-        <DockPanel DockPanel.Dock="Top" Margin="4 4 4 0" Height="32" LastChildFill="False">
-            <TextBox DockPanel.Dock="Right" Text="{Binding SearchString, Mode=TwoWay}"
+    <DockPanel Background="{DynamicResource ThemeBackgroundBrush}" Grid.IsSharedSizeScope="True">
+        <!-- Bottom: Search and Refresh -->
+        <DockPanel DockPanel.Dock="Bottom" Margin="4 0 4 4" Height="32" LastChildFill="True">
+            <Button DockPanel.Dock="Right" 
+                    Command="{Binding RefreshPressed}"
+                    Margin="4 0 0 0" 
+                    Content="{loc:Loc tab-servers-refresh}">
+            </Button>
+            <TextBox Text="{Binding SearchString, Mode=TwoWay}"
                      Watermark="{loc:Loc tab-servers-search-watermark}"
                      UseFloatingWatermark="False"
-                     Width="200"
-                     Margin="0 0 8 0" />
-            <TextBlock DockPanel.Dock="Left" Text="{loc:Loc tab-servers-classic-desc}" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource ThemeSubTextBrush}"/>
+                     Margin="4 0 0 0" />
         </DockPanel>
+
+        <!-- Top: Header Grid -->
+        <Grid DockPanel.Dock="Top" Margin="24 0 24 0" Height="32">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32" /> <!-- Expander arrow space -->
+                <ColumnDefinition Width="*" /> <!-- Name -->
+                <ColumnDefinition SharedSizeGroup="TimeCol" MinWidth="80" Width="Auto" />
+                <ColumnDefinition SharedSizeGroup="PlayerCol" MinWidth="80" Width="Auto" />
+                <ColumnDefinition SharedSizeGroup="ConnectCol" Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="1" Classes="GridCell">
+                <TextBlock Text="{loc:Loc tab-servers-table-name}" Classes="SubText" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Column="2" Classes="GridCell">
+                <TextBlock Text="{loc:Loc tab-servers-table-round-time}" Classes="SubText Center" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+            <Border Grid.Column="3" Classes="GridCell">
+                <TextBlock Text="{loc:Loc tab-servers-table-players}" Classes="SubText Center" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+            <Border Grid.Column="4" Classes="GridCell">
+                <TextBlock Text="" Classes="SubText Center" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+        </Grid>
+
+        <Panel DockPanel.Dock="Top" Classes="ScrollViewerSep" />
+
+        <!-- Center: Server List -->
         <ScrollViewer>
             <ItemsControl ItemsSource="{Binding AllServers}">
                 <ItemsControl.ItemTemplate>

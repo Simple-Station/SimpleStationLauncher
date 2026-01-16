@@ -18,6 +18,13 @@ public class ClassicServerEntryViewModel : ViewModelBase
     public string PlayerCount => _server.PlayerCount.ToString();
     public string Status => _server.Status;
 
+    private bool _isExpanded;
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set => this.RaiseAndSetIfChanged(ref _isExpanded, value);
+    }
+
     public ReactiveCommand<System.Reactive.Unit, System.Reactive.Unit> ConnectCommand { get; }
 
     public ClassicServerEntryViewModel(ClassicServerStatusData server)
