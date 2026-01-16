@@ -52,14 +52,16 @@
         <Panel DockPanel.Dock="Top" Classes="ScrollViewerSep" />
 
         <!-- Center: Server List -->
-        <ScrollViewer>
-            <ItemsControl ItemsSource="{Binding AllServers}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                         <mainWindowTabsViews:ClassicServerEntryView />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <Panel Background="#1e1e22">
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding AllServers}" Classes="ServerList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                             <mainWindowTabsViews:ClassicServerEntryView />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Panel>
     </DockPanel>
 </UserControl>
