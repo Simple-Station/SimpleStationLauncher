@@ -17,6 +17,7 @@ public class ClassicServerEntryViewModel : ViewModelBase
     public string Address => _server.Address;
     public string PlayerCount => _server.PlayerCount.ToString();
     public string Status => _server.Status;
+    public string RoundTime => _server.RoundTime;
 
     private bool _isExpanded;
     public bool IsExpanded

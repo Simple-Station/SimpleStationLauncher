@@ -76,7 +76,8 @@ public sealed class ClassicServerListCache
                 {
                     // Name might be missing, try to extract from status or use URL
                     var name = currentName ?? ExtractNameFromStatus(currentStatus) ?? "Unknown Server";
-                    list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus, name) ?? ""));
+                    var roundTime = ExtractRoundTimeFromStatus(currentStatus);
+                    list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus, name) ?? "", roundTime ?? "In-Lobby"));
                 }
                 
                 // Reset for new server
@@ -138,10 +139,24 @@ public sealed class ClassicServerListCache
         if (inServerBlock && currentUrl != null)
         {
             var name = currentName ?? ExtractNameFromStatus(currentStatus) ?? "Unknown Server";
-            list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus, name) ?? ""));
+            var roundTime = ExtractRoundTimeFromStatus(currentStatus);
+            list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus, name) ?? "", roundTime ?? "In-Lobby"));
         }
 
         return list;
+    }
+
+    private string? ExtractRoundTimeFromStatus(string? status)
+    {
+        if (string.IsNullOrEmpty(status)) return null;
+        
+        // Try to match "Round time: <b>00:07</b>" or similar
+        var match = System.Text.RegularExpressions.Regex.Match(status, @"Round\s+time:\s+(?:<b>)?(\d{1,2}:\d{2})(?:</b>)?", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        if (match.Success)
+        {
+            return match.Groups[1].Value;
+        }
+        return null;
     }
 
     private string? ExtractNameFromStatus(string? status)

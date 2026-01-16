@@ -28,8 +28,8 @@
                     </Border>
 
                     <Border Grid.Column="1" Classes="GridCell">
-                        <!-- Round Time placeholder -->
-                        <TextBlock Text="--" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <!-- Round Time -->
+                        <TextBlock Text="{Binding RoundTime}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
 
                     <Border Grid.Column="2" Classes="GridCell">
