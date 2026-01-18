@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using ReactiveUI;
 using Splat;
+using SS14.Launcher.Localization;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Utility;
 using SS14.Launcher.ViewModels.MainWindowTabs;
@@ -48,8 +49,11 @@ public partial class OptionsTabView : UserControl
 
     public async void ClearServerContentPressed(object? _1, RoutedEventArgs _2)
     {
-        Data.ClearServerContent();
-        await ClearServerContentButton.DisplayDoneMessage();
+        var blocked = !await ((OptionsTabViewModel)DataContext!).ClearServerContent();
+        var locMgr = Locator.Current.GetService<LocalizationManager>()!;
+
+        await ClearServerContentButton.DisplayDoneMessage(
+            blocked ? locMgr.GetString("tab-options-clear-content-close-client") : null);
     }
 
     private async void OpenHubSettings(object? sender, RoutedEventArgs args)
