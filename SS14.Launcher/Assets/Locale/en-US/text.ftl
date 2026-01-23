@@ -234,8 +234,10 @@ region-short-south-america-west = SA West
 ## Strings for the "servers" tab
 
 tab-servers-title = Servers
-tab-servers-classic-title = Classic Servers
-tab-servers-classic-desc = All servers listed here connect via the BYOND client.
+tab-servers-byond-title = BYOND Servers
+tab-servers-byond-error-msg = BYOND not installed or found
+tab-servers-byond-error-desc = To connect to BYOND servers, please install BYOND from https://www.byond.com/download/ and ensure it is set as the default program for handling byond:// links.
+tab-servers-byond-error-link-text = Download BYOND
 tab-servers-refresh = Refresh
 filters = Filters ({ $filteredServers } / { $totalServers })
 tab-servers-search-watermark = Search For Servers…

@@ -29,8 +29,6 @@ public sealed class ClassicServerListCache
         try
         {
             var response = await _http.GetStringAsync("http://www.byond.com/games/exadv1/spacestation13?format=text");
-            // Log.Information("BYOND Response: {Response}", response);
-            await File.WriteAllTextAsync("byond_dump.txt", response);
             var servers = ParseByondResponse(response);
 
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
@@ -79,7 +77,7 @@ public sealed class ClassicServerListCache
                     var roundTime = ExtractRoundTimeFromStatus(currentStatus);
                     list.Add(new ClassicServerStatusData(name, currentUrl, currentPlayers, CleanStatus(currentStatus, name) ?? "", roundTime ?? "In-Lobby"));
                 }
-                
+
                 // Reset for new server
                 inServerBlock = true;
                 currentName = null;
@@ -149,7 +147,7 @@ public sealed class ClassicServerListCache
     private string? ExtractRoundTimeFromStatus(string? status)
     {
         if (string.IsNullOrEmpty(status)) return null;
-        
+
         // Try to match "Round time: <b>00:07</b>" or similar
         var match = System.Text.RegularExpressions.Regex.Match(status, @"Round\s+time:\s+(?:<b>)?(\d{1,2}:\d{2})(?:</b>)?", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         if (match.Success)
@@ -171,20 +169,20 @@ public sealed class ClassicServerListCache
              var clean = System.Text.RegularExpressions.Regex.Replace(raw, "<.*?>", String.Empty);
              return System.Net.WebUtility.HtmlDecode(clean);
         }
-        return null; 
+        return null;
     }
 
     private string? CleanStatus(string? status, string? nameToRemove)
     {
         if (string.IsNullOrEmpty(status)) return null;
-        
+
         var s = status.Replace("<br>", "\n").Replace("<br/>", "\n").Replace("<br />", "\n");
         // Remove tags
         s = System.Text.RegularExpressions.Regex.Replace(s, "<.*?>", String.Empty);
-        
+
         // Decode HTML
         s = System.Net.WebUtility.HtmlDecode(s);
-        
+
         if (nameToRemove != null && s.StartsWith(nameToRemove))
         {
             s = s.Substring(nameToRemove.Length);
@@ -211,13 +209,13 @@ public sealed class ClassicServerListCache
 
         // Extract content inside quotes
         var inner = line.Substring(idx + 1, lastIdx - idx - 1);
-        
+
         // Unescape BYOND/C string escapes
         // \" -> "
         // \n -> newline
         // \\ -> \
         // The most critical one is \n showing up as literal \n in UI.
-        
+
         // Simple manual unescape for common sequences
         return inner.Replace("\\\"", "\"")
                     .Replace("\\n", "\n")

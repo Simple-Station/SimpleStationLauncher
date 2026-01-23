@@ -52,7 +52,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         _loc = LocalizationManager.Instance;
 
         ServersTab = new ServerListTabViewModel(this);
-        ClassicServersTab = new ClassicServerListTabViewModel();
+        ClassicServersTab = new ClassicServerListTabViewModel(this);
         NewsTab = new NewsTabViewModel();
         HomeTab = new HomePageViewModel(this);
         OptionsTab = new OptionsTabViewModel();

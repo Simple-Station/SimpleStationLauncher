@@ -1,21 +1,10 @@
-using System.Collections.Generic;
-
 namespace SS14.Launcher.Models.ServerStatus;
 
-public class ClassicServerStatusData
+public class ClassicServerStatusData(string name, string address, int playerCount, string status, string roundTime)
 {
-    public string Name { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public int PlayerCount { get; set; }
-    public string Status { get; set; } = string.Empty;
-    public string RoundTime { get; set; } = string.Empty;
-
-    public ClassicServerStatusData(string name, string address, int playerCount, string status, string roundTime)
-    {
-        Name = name;
-        Address = address;
-        PlayerCount = playerCount;
-        Status = status;
-        RoundTime = roundTime;
-    }
+    public string Name { get; } = name;
+    public string Address { get; } = address;
+    public int PlayerCount { get; } = playerCount;
+    public string Status { get; } = status;
+    public string RoundTime { get; } = roundTime;
 }

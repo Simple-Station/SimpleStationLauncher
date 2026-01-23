@@ -11,11 +11,12 @@ namespace SS14.Launcher.ViewModels.MainWindowTabs;
 
 public class ClassicServerListTabViewModel : MainWindowTabViewModel
 {
+    private readonly MainWindowViewModel _mainWindow;
     private readonly ClassicServerListCache _cache;
 
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
-    public override string Name => _loc.GetString("tab-servers-classic-title"); 
+    public override string Name => _loc.GetString("tab-servers-byond-title");
 
     private string? _searchString;
 
@@ -32,11 +33,12 @@ public class ClassicServerListTabViewModel : MainWindowTabViewModel
     public ObservableCollection<ClassicServerEntryViewModel> AllServers { get; } = new();
     public ReactiveCommand<System.Reactive.Unit, System.Reactive.Unit> RefreshPressed { get; }
 
-    public ClassicServerListTabViewModel()
+    public ClassicServerListTabViewModel(MainWindowViewModel mainWindow)
     {
+        _mainWindow = mainWindow;
         _cache = Locator.Current.GetRequiredService<ClassicServerListCache>();
         RefreshPressed = ReactiveCommand.CreateFromTask(_cache.Refresh);
-        
+
         // Initial populate if any
         UpdateList();
 
@@ -54,10 +56,10 @@ public class ClassicServerListTabViewModel : MainWindowTabViewModel
         // Filter then Sort by Players descending
         var filtered = _cache.AllServers.Where(DoesSearchMatch);
         var sorted = filtered.OrderByDescending(s => s.PlayerCount).ToList();
-        
+
         foreach (var s in sorted)
         {
-            AllServers.Add(new ClassicServerEntryViewModel(s));
+            AllServers.Add(new ClassicServerEntryViewModel(_mainWindow, s));
         }
     }
 
@@ -65,7 +67,7 @@ public class ClassicServerListTabViewModel : MainWindowTabViewModel
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
-        
+
         return data.Name.Contains(_searchString, System.StringComparison.CurrentCultureIgnoreCase);
     }
 
