@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mainWindowTabs="clr-namespace:SS14.Launcher.ViewModels.MainWindowTabs"
+             xmlns:loc="clr-namespace:SS14.Launcher.Localization"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50"
+             x:Class="SS14.Launcher.Views.MainWindowTabs.ClassicServerEntryView">
+    <Design.DataContext>
+        <mainWindowTabs:ClassicServerEntryViewModel />
+    </Design.DataContext>
+
+    <Panel>
+        <Expander Name="Expando" Classes="NoPad" IsExpanded="{Binding IsExpanded}">
+            <Expander.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" /> <!-- Server Name -->
+                        <ColumnDefinition SharedSizeGroup="TimeCol" MinWidth="80" Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="PlayerCol" MinWidth="80" Width="Auto" />
+                        <ColumnDefinition SharedSizeGroup="ConnectCol" Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Classes="GridCell">
+                        <TextBlock VerticalAlignment="Center"
+                          Text="{Binding Name}" TextTrimming="CharacterEllipsis"
+                          HorizontalAlignment="Left" />
+                    </Border>
+
+                    <Border Grid.Column="1" Classes="GridCell">
+                        <!-- Round Time -->
+                        <TextBlock Text="{Binding RoundTime}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <Border Grid.Column="2" Classes="GridCell">
+                        <TextBlock Classes="Numeric" Text="{Binding PlayerCount}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <Border Grid.Column="3" Classes="GridCell">
+                        <Button Content="{loc:Loc server-entry-connect}"
+                          Command="{Binding ConnectCommand}" />
+                    </Border>
+                </Grid>
+            </Expander.Header>
+            <DockPanel Margin="10">
+                <TextBlock Text="{Binding Status}" TextWrapping="Wrap" />
+            </DockPanel>
+        </Expander>
+    </Panel>
+</UserControl>
