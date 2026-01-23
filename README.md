@@ -18,6 +18,7 @@
     - Can fetch server name from the listing while editing
   - Can raise/lower servers instead of fumbling with "move to top" and its inconsistencies
 - Supports launching from the web (`ss14`/`ss14s` protocols) on Windows and Linux, nobody uses Mac ;)
+- Supports launching Space Station 13 servers via BYOND, and prompts to install BYOND if not found (Mac not *supported* but might work?)
 - A lot more (maybe) funny loading screen messages
 
 ## Development
