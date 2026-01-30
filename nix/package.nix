@@ -13,22 +13,9 @@
   libXcursor,
   libXext,
   libXrandr,
-  fontconfig,
-  glew,
-  SDL2,
-  glfw,
-  glibc,
   libGL,
   freetype,
-  openal,
-  fluidsynth,
-  gtk3,
-  pango,
-  atk,
-  cairo,
-  zlib,
   glib,
-  gdk-pixbuf,
   soundfont-fluid,
   # Path to set ROBUST_SOUNDFONT_OVERRIDE to, essentially the default soundfont used.
   soundfont-path ? "${soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2",
@@ -58,9 +45,8 @@ buildDotnetModule rec {
     inherit version;
   };
 
-  # A Robust Loader component uses sdk_8_0
-  dotnet-sdk = with dotnetCorePackages; combinePackages [ sdk_9_0 sdk_8_0 ];
-  dotnet-runtime = with dotnetCorePackages; combinePackages [ runtime_9_0 runtime_8_0 ];
+  dotnet-sdk = dotnetCorePackages.sdk_10_0;
+  dotnet-runtime = dotnetCorePackages.runtime_10_0;
 
   dotnetFlags = [
     "-p:FullRelease=true"
@@ -69,31 +55,15 @@ buildDotnetModule rec {
   ];
 
   nativeBuildInputs = [
-    wrapGAppsHook
     iconConvTools
     copyDesktopItems
   ];
 
   runtimeDeps = [
-    # Required by the game.
     glfw
-    SDL2
-    glibc
     libGL
-    openal
     freetype
-    fluidsynth
-
-    # Needed for file dialogs.
-    gtk3
-    pango
-    cairo
-    atk
-    zlib
     glib
-    gdk-pixbuf
-
-    # Avalonia UI dependencies.
     libX11
     libICE
     libSM
@@ -101,8 +71,6 @@ buildDotnetModule rec {
     libXcursor
     libXext
     libXrandr
-    fontconfig
-    glew
 
     # TODO: Figure out dependencies for CEF support.
   ];

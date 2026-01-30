@@ -13,7 +13,7 @@
     in
     rec {
       packages = forAllSystems (pkgs: {
-        default = packages.${pkgs.system}.simple-station-launcher-development;
+        default = packages.${pkgs.stdenv.hostPlatform.system}.simple-station-launcher-development;
         # Build via nix build -L 'git+file://PATH?submodules=1'
         simple-station-launcher-development = pkgs.callPackage ./nix/package.nix { };
         simple-station-launcher = pkgs.callPackage ./nix/package.nix rec {

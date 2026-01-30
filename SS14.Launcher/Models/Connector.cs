@@ -716,7 +716,7 @@ public class Connector : ReactiveObject
             basePath = Path.GetFullPath(Path.Combine(
                 LauncherPaths.DirLauncherInstall,
                 "..", "..", "..", "..",
-                "SS14.Loader", "bin", "Debug", "net9.0"));
+                "SS14.Loader", "bin", "Debug", "net10.0"));
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
