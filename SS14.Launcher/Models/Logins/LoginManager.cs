@@ -9,6 +9,7 @@ using DynamicData;
 using ReactiveUI;
 using Serilog;
 using SS14.Launcher.Api;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.Data;
 
 namespace SS14.Launcher.Models.Logins;
@@ -26,12 +27,16 @@ public sealed class LoginManager : ReactiveObject
 
     private readonly DataManager _cfg;
     private readonly AuthApi _authApi;
+    private readonly CdnManager _cdnManager;
 
     private IDisposable? _timer;
 
     private Guid? _activeLoginId;
 
     private readonly IObservableCache<ActiveLoginData, Guid> _logins;
+
+    public ConfigConstants.AuthServer DefaultAuthServer =>
+        _cdnManager.ResolveDefinition(ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer]);
 
     public Guid? ActiveAccountId
     {
@@ -62,10 +67,11 @@ public sealed class LoginManager : ReactiveObject
 
     public IObservableCache<LoggedInAccount, Guid> Logins { get; }
 
-    public LoginManager(DataManager cfg, AuthApi authApi)
+    public LoginManager(DataManager cfg, AuthApi authApi, CdnManager cdnManager)
     {
         _cfg = cfg;
         _authApi = authApi;
+        _cdnManager = cdnManager;
 
         _logins = _cfg.Logins
             .Connect()
@@ -193,42 +199,6 @@ public sealed class LoginManager : ReactiveObject
         }
     }
 
-    public static ConfigConstants.AuthServer GetAuthServerById(string serverId, string? customAuthUrl = null, string? customAccountSite = null)
-    {
-        if (serverId != ConfigConstants.CustomAuthServer)
-            return ConfigConstants.AuthUrls[serverId];
-
-        if (customAuthUrl == null)
-            throw new ArgumentException("Custom server selected but no custom URLs provided.");
-
-        customAccountSite ??= TryGetAccountUrl(serverId, customAuthUrl);
-        if (customAccountSite == null)
-            throw new ArgumentException("Failed to get account URL for custom server.");
-
-        return new ConfigConstants.AuthServer(new(customAuthUrl), new(customAccountSite));
-    }
-
-    public static string? TryGetAccountUrl(string serverId, string? customAuthUrl = null)
-    {
-        if (serverId != ConfigConstants.CustomAuthServer)
-            return GetAuthServerById(serverId).AccountSite.ToString();
-
-        if (customAuthUrl == null)
-            throw new ArgumentException("Custom server selected but no custom URLs provided.");
-
-        // Make an http request to the custom URL to get the account URL
-        var http = HappyEyeballsHttp.CreateHttpClient();
-        var response = http.GetAsync(new Uri(customAuthUrl) + ConfigConstants.TemplateAuthServer.AuthAccountSitePath).Result;
-        http.Dispose();
-        if (!response.IsSuccessStatusCode)
-        {
-            Log.Error("Failed to get account URL from custom auth server with status {status}", response.StatusCode);
-            return null;
-        }
-
-        return response.Content.AsJson<AccountSiteResponse>().Result.WebBaseUrl;
-    }
-
     private sealed class ActiveLoginData : LoggedInAccount
     {
         private AccountLoginStatus _status;
@@ -245,6 +215,4 @@ public sealed class LoginManager : ReactiveObject
             Log.Debug("Setting status for login {account} to {status}", LoginInfo, status);
         }
     }
-
-    private sealed record AccountSiteResponse(string WebBaseUrl);
 }

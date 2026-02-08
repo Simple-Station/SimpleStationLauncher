@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Serilog;
 using Splat;
 using SS14.Launcher.Api;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Utility;
 
 namespace SS14.Launcher.Models.ServerStatus;
@@ -24,10 +25,12 @@ public sealed class ServerStatusCache : IServerSource
     // Oh well!
     private readonly Dictionary<string, CacheReg> _cachedData = new();
     private readonly HttpClient _http;
+    private readonly CdnManager _cdnManager;
 
     public ServerStatusCache()
     {
         _http = Locator.Current.GetRequiredService<HttpClient>();
+        _cdnManager = Locator.Current.GetRequiredService<CdnManager>();
     }
 
     /// <summary>
@@ -75,7 +78,7 @@ public sealed class ServerStatusCache : IServerSource
         }
     }
 
-    public static async Task UpdateStatusFor(ServerStatusData data, HttpClient http, CancellationToken cancel)
+    public async Task UpdateStatusFor(ServerStatusData data, HttpClient http, CancellationToken cancel)
     {
         try
         {
@@ -119,7 +122,7 @@ public sealed class ServerStatusCache : IServerSource
         }
     }
 
-    public static void ApplyStatus(ServerStatusData data, ServerApi.ServerStatus status)
+    public void ApplyStatus(ServerStatusData data, ServerApi.ServerStatus status)
     {
         data.Status = ServerStatusCode.Online;
         data.Name = status.Name;
@@ -149,7 +152,7 @@ public sealed class ServerStatusCache : IServerSource
         var inferredTags = ServerTagInfer.InferTags(status);
 
         data.Tags = baseTags.Concat(inferredTags).ToArray();
-        data.Auths = status.AuthMethods ?? [ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer].AuthUrl.AbsoluteUri];
+        data.Auths = status.AuthMethods ?? [_cdnManager.ResolveDefinition(ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer]).AuthUrl.AbsoluteUri];
     }
 
     public static async void UpdateInfoForCore(ServerStatusData data, Func<CancellationToken, Task<ServerInfo?>> fetch)

@@ -36,7 +36,12 @@ public class RegisterViewModel : BaseLoginViewModel
     [Reactive] public bool Is13OrOlder { get; set; }
 
 
-    public RegisterViewModel(MainWindowLoginViewModel parentVm, DataManager cfg, AuthApi authApi, LoginManager loginMgr)
+    public RegisterViewModel(
+        MainWindowLoginViewModel parentVm,
+        DataManager cfg,
+        AuthApi authApi,
+        LoginManager loginMgr,
+        LoginProviderManager loginProviderManager)
         : base(parentVm)
     {
         _cfg = cfg;
@@ -51,7 +56,7 @@ public class RegisterViewModel : BaseLoginViewModel
             .Subscribe(s =>
             {
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
-                ServerUrlPlaceholder = LoginManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
+                ServerUrlPlaceholder = loginProviderManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && !string.IsNullOrEmpty(EditingEmail) && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
             });
     }

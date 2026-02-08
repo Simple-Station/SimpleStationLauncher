@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DynamicData;
 using Splat;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Utility;
 
@@ -12,10 +13,11 @@ namespace SS14.Launcher.ViewModels;
 
 public class HubSettingsViewModel : ViewModelBase
 {
-    public Uri[] DefaultHubs => ConfigConstants.DefaultHubUrls;
+    public Uri[] DefaultHubs => _cdnManager.ResolveDefinition(ConfigConstants.DefaultHubUrls).ToArray();
     public ObservableCollection<HubViewModel> HubList { get; set; } = new();
 
     private readonly DataManager _dataManager = Locator.Current.GetRequiredService<DataManager>();
+    private readonly CdnManager _cdnManager = Locator.Current.GetRequiredService<CdnManager>();
 
     public void Save()
     {

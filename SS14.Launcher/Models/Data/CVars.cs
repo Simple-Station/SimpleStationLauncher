@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Utility;
 
 namespace SS14.Launcher.Models.Data;
@@ -114,6 +115,12 @@ public static class CVars
     /// Language the user selected. Null means it should be automatically selected based on system language.
     /// </summary>
     public static readonly CVarDef<string?> Language = CVarDef.Create<string?>("Language", null);
+
+    /// <summary>
+    /// Cdn data for mirrors.
+    /// </summary>
+    public static readonly CVarDef<string> CdnVars = CVarDef.Create("CdnVars",
+        CdnDataListSerializer.SerializeCdnList(CdnHelper.DefaultCdnList));
 }
 
 /// <summary>

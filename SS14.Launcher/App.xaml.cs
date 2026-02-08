@@ -17,6 +17,7 @@ using Serilog;
 using Splat;
 using SS14.Launcher.Localization;
 using SS14.Launcher.Models;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.ContentManagement;
 using SS14.Launcher.Models.OverrideAssets;
 using SS14.Launcher.Utility;
@@ -200,14 +201,16 @@ public class App : Application
         }
     }
 
-    private void OnStartup(object? s, ControlledApplicationLifetimeStartupEventArgs e)
+    private async void OnStartup(object? s, ControlledApplicationLifetimeStartupEventArgs e)
     {
         var loc = Locator.Current.GetRequiredService<LocalizationManager>();
         var msgr = Locator.Current.GetRequiredService<LauncherMessaging>();
         var contentManager = Locator.Current.GetRequiredService<ContentManager>();
         var overrideAssets = Locator.Current.GetRequiredService<OverrideAssetsManager>();
         var launcherInfo = Locator.Current.GetRequiredService<LauncherInfoManager>();
+        var cdnManager = Locator.Current.GetRequiredService<CdnManager>();
 
+        await cdnManager.SortFastestAndMap();
         loc.Initialize();
         launcherInfo.Initialize();
         contentManager.Initialize();

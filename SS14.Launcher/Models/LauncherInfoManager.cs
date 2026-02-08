@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Serilog;
+using SS14.Launcher.Models.CDN;
+using SS14.Launcher.Utility;
 
 namespace SS14.Launcher.Models;
 
 /// <summary>
 /// Fetches and caches information from <see cref="ConfigConstants.UrlLauncherInfo"/>.
 /// </summary>
-public sealed class LauncherInfoManager(HttpClient httpClient)
+public sealed class LauncherInfoManager(HttpClient httpClient, CdnManager cdnManager)
 {
     private readonly Random _messageRandom = new();
     private string[]? _messages;
@@ -39,8 +41,9 @@ public sealed class LauncherInfoManager(HttpClient httpClient)
         LauncherInfoModel? info;
         try
         {
-            Log.Debug("Loading launcher info... {Url}", ConfigConstants.UrlLauncherInfo);
-            info = await ConfigConstants.UrlLauncherInfo.GetFromJsonAsync<LauncherInfoModel>(httpClient);
+            var url = cdnManager.ResolveUrlSet(ConfigConstants.UrlLauncherInfo);
+            Log.Debug("Loading launcher info... {Url}", url);
+            info = await url.GetFromJsonAsync<LauncherInfoModel>(httpClient);
             if (info == null)
             {
                 Log.Warning("Launcher info response was null.");

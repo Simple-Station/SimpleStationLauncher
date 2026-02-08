@@ -126,7 +126,8 @@ public sealed class ServerListCache : ReactiveObject, IServerSource
             _allServers.AddItems(entries.Select(entry =>
             {
                 var statusData = new ServerStatusData(entry.Address, entry.HubAddress);
-                ServerStatusCache.ApplyStatus(statusData, entry.StatusData);
+                var cache = new ServerStatusCache();
+                cache.ApplyStatus(statusData, entry.StatusData);
                 return statusData;
             }));
 

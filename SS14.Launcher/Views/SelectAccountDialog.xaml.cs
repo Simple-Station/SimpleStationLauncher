@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.Logins;
 using SS14.Launcher.Utility;
 
@@ -12,12 +13,12 @@ public partial class SelectAccountDialog : Window
     public IEnumerable<LoggedInAccount> Accounts { get; set; }
     public bool Error { get; set; }
 
-    public SelectAccountDialog(string[] authMethods, LoginManager loginManager)
+    public SelectAccountDialog(string[] authMethods, LoginManager loginManager, CdnManager cdnManager)
     {
         InitializeComponent();
 
         Accounts = loginManager.Logins.KeyValues
-            .Where(x => authMethods.FirstOrDefault(m => m == ConfigConstants.AuthUrls[x.Value.Server].AuthUrl.AbsoluteUri) != null)
+            .Where(x => authMethods.FirstOrDefault(m => m == cdnManager.ResolveDefinition(ConfigConstants.AuthUrls[x.Value.Server]).AuthUrl.AbsoluteUri) != null)
             .Select(x => x.Value);
         Error = !Accounts.Any();
     }

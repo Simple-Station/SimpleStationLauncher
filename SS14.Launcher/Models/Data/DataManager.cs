@@ -16,6 +16,8 @@ using Microsoft.Data.Sqlite;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using ReactiveUI;
 using Serilog;
+using Splat;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Utility;
 
 namespace SS14.Launcher.Models.Data;
@@ -334,9 +336,14 @@ public sealed class DataManager : ReactiveObject
             SetCVar(CVars.Fingerprint, Guid.NewGuid().ToString());
         }
 
+        CommitConfig();
+    }
+
+    public void LoadHubs(CdnManager cdnManager)
+    {
         // If we don't have any hubs, add the defaults
         if (Hubs.Count == 0)
-            foreach (var hub in ConfigConstants.DefaultHubUrls)
+            foreach (var hub in cdnManager.ResolveDefinition(ConfigConstants.DefaultHubUrls))
                 Hubs.Add(new Hub(hub, Hubs.Count));
 
         CommitConfig();

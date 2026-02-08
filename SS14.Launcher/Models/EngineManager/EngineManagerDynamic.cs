@@ -13,6 +13,7 @@ using Microsoft.Data.Sqlite;
 using NSec.Cryptography;
 using Serilog;
 using Splat;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Utility;
 
@@ -27,6 +28,7 @@ public sealed partial class EngineManagerDynamic : IEngineManager
 
     private readonly DataManager _cfg = Locator.Current.GetRequiredService<DataManager>();
     private readonly HttpClient _http = Locator.Current.GetRequiredService<HttpClient>();
+    private readonly CdnManager _cdnManager = Locator.Current.GetRequiredService<CdnManager>();
 
     public string GetEnginePath(string engineVersion)
     {
@@ -323,9 +325,10 @@ public sealed partial class EngineManagerDynamic : IEngineManager
 
     public async Task<EngineModuleManifest> GetEngineModuleManifest(string engine, CancellationToken cancel = default)
     {
-        if (!ConfigConstants.EngineBuildsUrl.TryGetValue(engine, out var urls))
+        if (!ConfigConstants.EngineBuildsUrl.TryGetValue(engine, out var rawurls))
             throw new InvalidOperationException("No manifest URL for engine module");
 
+        var urls = new UrlFallbackSet([_cdnManager.ResolveDefinition(rawurls).ToString()]);
         if (await urls.GetFromJsonAsync<EngineModuleManifest>(_http, cancel) is { } manifest)
             return manifest;
 

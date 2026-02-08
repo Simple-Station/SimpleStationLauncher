@@ -9,6 +9,7 @@ using DynamicData.Alias;
 using ReactiveUI.Fody.Helpers;
 using Splat;
 using SS14.Launcher.Localization;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.Logins;
 using SS14.Launcher.Models.ServerStatus;
@@ -33,7 +34,7 @@ public class HomePageViewModel : MainWindowTabViewModel
         _cfg.FavoriteServers
             .Connect()
             .Select(x =>
-                new ServerEntryViewModel(MainWindowViewModel, _statusCache.GetStatusFor(x.Address), x, _statusCache, _cfg, Locator.Current.GetRequiredService<LoginManager>())
+                new ServerEntryViewModel(MainWindowViewModel, _statusCache.GetStatusFor(x.Address), x, _statusCache, _cfg, Locator.Current.GetRequiredService<LoginManager>(), Locator.Current.GetRequiredService<CdnManager>())
                     { ViewedInFavoritesPane = true, IsExpanded = _cfg.ExpandedServers.Contains(x.Address) })
             .OnItemAdded(a =>
             {

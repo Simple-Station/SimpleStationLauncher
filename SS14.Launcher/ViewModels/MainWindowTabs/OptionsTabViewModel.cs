@@ -16,6 +16,7 @@ public class OptionsTabViewModel : MainWindowTabViewModel
     private readonly IEngineManager _engineManager;
     private readonly ContentManager _contentManager;
     private readonly LoginManager _loginMgr;
+    private readonly LoginProviderManager _loginProviderMgr;
 
     public LanguageSelectorViewModel Language { get; } = new();
 
@@ -23,6 +24,7 @@ public class OptionsTabViewModel : MainWindowTabViewModel
     {
         Cfg = Locator.Current.GetRequiredService<DataManager>();
         _loginMgr = Locator.Current.GetRequiredService<LoginManager>();
+        _loginProviderMgr = Locator.Current.GetRequiredService<LoginProviderManager>();
         _engineManager = Locator.Current.GetRequiredService<IEngineManager>();
         _contentManager = Locator.Current.GetRequiredService<ContentManager>();
 
@@ -98,6 +100,7 @@ public class OptionsTabViewModel : MainWindowTabViewModel
     }
 
     private double _uiScalingY;
+
     public double UiScalingY
     {
         get => _uiScalingY;
@@ -147,8 +150,8 @@ public class OptionsTabViewModel : MainWindowTabViewModel
     public void OpenAccountSettings()
     {
         if (_loginMgr.ActiveAccount is not { } account
-            || LoginManager.TryGetAccountUrl(account.Server, account.ServerUrl) is not { } url)
+            || _loginProviderMgr.TryGetAccountUrl(account.Server, account.ServerUrl) is not { } url)
             return;
-        Helpers.OpenUri(LoginManager.GetAuthServerById(account.Server, account.ServerUrl, url).AccountManUrl);
+        Helpers.OpenUri(_loginProviderMgr.GetAuthServerById(account.Server, account.ServerUrl, url).AccountManUrl);
     }
 }
