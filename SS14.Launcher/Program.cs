@@ -93,7 +93,7 @@ internal static class Program
         var cfg = new DataManager();
         cfg.Load();
         var cdnManager = new CdnManager(cfg);
-        cfg.LoadHubs(cdnManager);
+
         Locator.CurrentMutable.RegisterConstant(cfg);
         Locator.CurrentMutable.RegisterConstant(cdnManager);
 

@@ -18,11 +18,11 @@ public static class CdnDataListSerializer
 
     public static string SerializeCdnList(IEnumerable<UriCdnData> cdnList)
     {
-        var strBuilder = new StringBuilder();
+        var str = "";
         foreach (var data in cdnList)
         {
-            strBuilder.AppendLine(data.ToString());
+            str += data.ToString();
         }
-        return strBuilder.ToString();
+        return str;
     }
 }

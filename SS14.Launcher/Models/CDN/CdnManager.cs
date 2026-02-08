@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using Serilog;
+using SS14.Launcher.Controls.CDN;
 using SS14.Launcher.Models.Data;
 
 namespace SS14.Launcher.Models.CDN;
@@ -20,7 +21,7 @@ public class CdnManager
     private readonly List<UriCdnData> _cdnList;
     private readonly Dictionary<UriCdnDefinition, UriCdnData> _cdnMap = [];
 
-    public static PingCache Cache = new PingCache();
+    private static readonly PingCache Cache = new();
 
     public CdnManager(DataManager cfg)
     {
@@ -29,11 +30,9 @@ public class CdnManager
 
         if (_cdnList.Count == 0)
         {
-
+            _cdnList = CdnHelper.DefaultCdnList;
+            Dirty();
         }
-
-        _cdnList = CdnHelper.DefaultCdnList;
-        Dirty();
     }
 
     public IEnumerable<Uri> ResolveDefinition(IEnumerable<UriCdnDefinition> definitions)
