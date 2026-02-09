@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SS14.Launcher.Controls.CDN.CdnPingEntry">
-  <StackPanel Orientation="Horizontal" Spacing="5" Margin="5">
-    <Label Name="UrlName"/>
-    <Label Name="Status"/>
-  </StackPanel>
+  <Border Background="Transparent" BorderBrush="White" BorderThickness="0,0,0,1">
+    <Panel>
+      <TextBlock x:Name="UrlName" Padding="5"/>
+      <TextBlock MinWidth="100" Foreground="#222222" Background="White" Padding="5" x:Name="Status" HorizontalAlignment="Right"/>
+    </Panel>
+  </Border>
 </UserControl>
 

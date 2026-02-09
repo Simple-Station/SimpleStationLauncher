@@ -92,7 +92,7 @@ internal static class Program
 
         var cfg = new DataManager();
         cfg.Load();
-        var cdnManager = new CdnManager(cfg);
+        var cdnManager = new CdnManager();
 
         Locator.CurrentMutable.RegisterConstant(cfg);
         Locator.CurrentMutable.RegisterConstant(cdnManager);

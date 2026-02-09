@@ -212,7 +212,8 @@ public class App : Application
         var cdnManager = Locator.Current.GetRequiredService<CdnManager>();
         var cfg = Locator.Current.GetRequiredService<DataManager>();
 
-        await cdnManager.SortFastestAndMap();
+        cdnManager.ShowPingWindow();
+        await Task.Run(cdnManager.SortFastestAndMap);
         cfg.LoadHubs(cdnManager);
         loc.Initialize();
         launcherInfo.Initialize();

@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -16,17 +17,19 @@ namespace SS14.Launcher.Models.CDN;
 
 public class CdnManager
 {
-    private readonly DataManager _cfg;
-
     private readonly List<UriCdnData> _cdnList;
     private readonly Dictionary<UriCdnDefinition, UriCdnData> _cdnMap = [];
 
     private static readonly PingCache Cache = new();
 
-    public CdnManager(DataManager cfg)
+    private static readonly string DataPath = Path.Combine(LauncherPaths.DirUserData, "mirrors.txt");
+
+    public CdnManager()
     {
-        _cfg = cfg;
-        _cdnList = CdnDataListSerializer.DeserializeCdnList(_cfg.GetCVar(CVars.CdnVars)).ToList();
+        using var fileStream = File.Open(DataPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
+        using var streamReader = new StreamReader(fileStream);
+
+        _cdnList = CdnDataListSerializer.DeserializeCdnList(streamReader.ReadToEnd()).ToList();
 
         if (_cdnList.Count == 0)
         {
@@ -56,21 +59,18 @@ public class CdnManager
         throw new KeyNotFoundException($"Cdn definition {definition} not found");
     }
 
-    public void AddCdn(UriCdnData data)
-    {
-        _cdnList.Add(data);
-        Dirty();
-    }
-
     private CdnPingWindow _pingWindow = default!;
+
+    public void ShowPingWindow()
+    {
+        _pingWindow = new CdnPingWindow();
+        _pingWindow.Show();
+    }
 
     public async Task SortFastestAndMap()
     {
         Log.Information("Resolving all CDN data with length: {0}", _cdnList.Count);
 
-        _pingWindow = new CdnPingWindow();
-
-        _pingWindow.Show();
         _cdnMap.Clear();
 
         var compoundMap = new Dictionary<UriCdnDefinition, List<CdnDataCompound>>();
@@ -138,7 +138,7 @@ public class CdnManager
 
     private void Dirty()
     {
-        _cfg.SetCVar(CVars.CdnVars, CdnDataListSerializer.SerializeCdnList(_cdnList));
+        File.WriteAllText(DataPath, CdnDataListSerializer.SerializeCdnList(_cdnList));
     }
 }
 
@@ -213,14 +213,14 @@ public class PingCache
 
             var resp = reply.Status == IPStatus.Success
                 ? new CdnPingResponse((int)reply.RoundtripTime, "Successful")
-                : new CdnPingResponse(null, reply.Status.ToString());
+                : new CdnPingResponse(null, reply.Status.ToString(), true);
 
             _cache[host] = resp;
             return resp;
         }
         catch (Exception ex)
         {
-            var resp = new CdnPingResponse(null, ex.Message);
+            var resp = new CdnPingResponse(null, ex.Message, true);
             _cache[host] = resp;
             return resp;
         }
@@ -229,41 +229,7 @@ public class PingCache
             _resolvingCache.TryRemove(host, out _);
         }
     }
-
-    private record CacheEntry(CdnPingResponse Response, DateTime ExpiresAt)
-    {
-        public bool IsExpired => DateTime.UtcNow > ExpiresAt;
-    }
 }
 
-public static class TcpPing
-{
-    public static async Task<long?> PingAsync(
-        string host,
-        int port = 80,
-        int timeoutMs = 1000)
-    {
-        using var client = new TcpClient();
-        using var cts = new CancellationTokenSource(timeoutMs);
-
-        var sw = Stopwatch.StartNew();
-
-        try
-        {
-            await client.ConnectAsync(host, port, cts.Token);
-            sw.Stop();
-            return sw.ElapsedMilliseconds;
-        }
-        catch (OperationCanceledException)
-        {
-            return null; // таймаут
-        }
-        catch (SocketException)
-        {
-            return null; // хост недоступен
-        }
-    }
-}
-
-public record struct CdnPingResponse(int? TimeoutMs, string Reason = "");
+public record struct CdnPingResponse(int? TimeoutMs, string Reason = "", bool Error = false);
 

@@ -8,11 +8,14 @@ public static class CdnDataListSerializer
 {
     public static IEnumerable<UriCdnData> DeserializeCdnList(string raw)
     {
-        foreach (var splited in raw.Split(';'))
+        foreach (var newLine in raw.Split("\n"))
         {
-            var nameValue = splited.Split('=');
-            if(nameValue.Length != 2) continue;
-            yield return new UriCdnData(nameValue[0], new Uri(nameValue[1]));
+            foreach (var splited in newLine.Trim().Split(';'))
+            {
+                var nameValue = splited.Split('=');
+                if(nameValue.Length != 2) continue;
+                yield return new UriCdnData(nameValue[0], new Uri(nameValue[1]));
+            }
         }
     }
 
@@ -21,7 +24,7 @@ public static class CdnDataListSerializer
         var str = "";
         foreach (var data in cdnList)
         {
-            str += data.ToString();
+            str += data.ToString() + "\n";
         }
         return str;
     }

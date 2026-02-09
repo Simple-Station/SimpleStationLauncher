@@ -5,7 +5,7 @@ using Avalonia.Markup.Xaml;
 
 namespace SS14.Launcher.Controls.CDN;
 
-public partial class CdnPingGroupControl : StackPanel
+public partial class CdnPingGroupControl : Border
 {
     private Dictionary<string, CdnPingEntry> _entries = new();
 

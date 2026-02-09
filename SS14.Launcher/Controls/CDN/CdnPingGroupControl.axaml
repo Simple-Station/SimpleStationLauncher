@@ -1,12 +1,14 @@
-﻿<StackPanel xmlns="https://github.com/avaloniaui"
-            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-            mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Spacing="5"
-            x:Class="SS14.Launcher.Controls.CDN.CdnPingGroupControl">
-  <Border Background="#222222">
-    <Label Margin="5" Name="GroupLabel"></Label>
-  </Border>
-  <StackPanel Margin="5" Orientation="Vertical" Spacing="5" Name="PingInfoContainer"/>
-</StackPanel>
+﻿<Border xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="SS14.Launcher.Controls.CDN.CdnPingGroupControl">
+  <StackPanel>
+    <Border Background="White">
+      <Label Foreground="#222222" Margin="5" Name="GroupLabel"></Label>
+    </Border>
+    <StackPanel Orientation="Vertical" Name="PingInfoContainer"/>
+  </StackPanel>
+</Border>
 

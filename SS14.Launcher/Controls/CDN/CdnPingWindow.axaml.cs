@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using DynamicData;
 using SS14.Launcher.Models.CDN;
 
@@ -16,15 +17,18 @@ public partial class CdnPingWindow : Window
 
     public void ResolveItem(CdnDataCompound cdnDataCompound)
     {
-        if(!ActiveCdnGroups.TryGetValue(cdnDataCompound.CdnData.Id, out var group))
+        Dispatcher.UIThread.Post(() =>
         {
-            group = new CdnPingGroupControl();
-            group.GroupLabel.Content = cdnDataCompound.CdnData.Id.ToString();
-            ActiveCdnGroups.Add(cdnDataCompound.CdnData.Id, group);
-            CdnPanel.Children.Add(group);
-        }
+            if(!ActiveCdnGroups.TryGetValue(cdnDataCompound.CdnData.Id, out var group))
+            {
+                group = new CdnPingGroupControl();
+                group.GroupLabel.Content = cdnDataCompound.CdnData.Id.ToString();
+                ActiveCdnGroups.Add(cdnDataCompound.CdnData.Id, group);
+                CdnPanel.Children.Add(group);
+            }
 
-        var entry = group.EnsureEntry(cdnDataCompound.CdnData.Uri.AbsoluteUri);
-        entry.SetData(cdnDataCompound);
+            var entry = group.EnsureEntry(cdnDataCompound.CdnData.Uri.AbsoluteUri);
+            entry.SetData(cdnDataCompound);
+        });
     }
 }
