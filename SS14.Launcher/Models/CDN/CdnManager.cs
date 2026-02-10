@@ -38,14 +38,6 @@ public class CdnManager
         }
     }
 
-    public IEnumerable<Uri> ResolveDefinition(IEnumerable<UriCdnDefinition> definitions)
-    {
-        foreach (var definition in definitions)
-        {
-            yield return ResolveDefinition(definition);
-        }
-    }
-
     public Uri ResolveDefinition(UriCdnDefinition definition)
     {
         if (_cdnMap.TryGetValue(definition, out var cdnData)) return cdnData.Uri;

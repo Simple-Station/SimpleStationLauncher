@@ -40,7 +40,7 @@ public static class CdnHelper
 
         //Launcher assets
         new UriCdnData("LauncherInfo", new Uri("http://assets.simplestation.org/launcher/info.json")),
-        new UriCdnData("LauncherAssetsBase", new Uri("http://assets.simplestation.org/launcher/info.json")),
+        new UriCdnData("LauncherAssetsBase", new Uri("http://assets.simplestation.org/launcher/assets/")),
     };
 
     public static ConfigConstants.AuthServer ResolveDefinition(this CdnManager cdnManager, ConfigConstants.AuthServerDefinition definition)
@@ -55,5 +55,13 @@ public static class CdnHelper
     public static UrlFallbackSet ResolveUrlSet(this CdnManager cdnManager, UriCdnDefinition definition)
     {
         return new UrlFallbackSet([cdnManager.ResolveDefinition(definition).AbsoluteUri]);
+    }
+
+    public static IEnumerable<Uri> ResolveDefinition(this CdnManager cdnManager, IEnumerable<UriCdnDefinition> definitions)
+    {
+        foreach (var definition in definitions)
+        {
+            yield return cdnManager.ResolveDefinition(definition);
+        }
     }
 }
