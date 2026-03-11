@@ -6,7 +6,7 @@ in import (builtins.fetchTarball {
 }) { }) }:
 
 let
-  dotnet = with pkgs.dotnetCorePackages; combinePackages [ sdk_9_0 sdk_8_0 ];
+  dotnet = pkgs.dotnetCorePackages.sdk_10_0;
   dependencies = with pkgs; [
     util-linux
     dotnet
@@ -51,7 +51,6 @@ let
     fontconfig
     # Nix Stuff
     nuget-to-json
-    nuget-to-nix
   ];
 in pkgs.mkShell {
   name = "space-station-beyond-devshell";
