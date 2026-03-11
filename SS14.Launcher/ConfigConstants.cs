@@ -48,7 +48,7 @@ public static class ConfigConstants
         },
         {
             CustomAuthServer,
-            new (new("https://example.com/"), new("https://example.com/"))
+            TemplateAuthServer
         },
     };
 
