@@ -58,9 +58,8 @@ buildDotnetModule rec {
     inherit version;
   };
 
-  # A Robust Loader component uses sdk_8_0
-  dotnet-sdk = with dotnetCorePackages; combinePackages [ sdk_9_0 sdk_8_0 ];
-  dotnet-runtime = with dotnetCorePackages; combinePackages [ runtime_9_0 runtime_8_0 ];
+  dotnet-sdk = dotnetCorePackages.sdk_10_0;
+  dotnet-runtime = dotnetCorePackages.runtime_10_0;
 
   dotnetFlags = [
     "-p:FullRelease=true"

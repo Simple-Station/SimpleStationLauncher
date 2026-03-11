@@ -121,7 +121,6 @@ public static class ConfigConstants
 
     public const string FallbackUsername = "JoeGenero";
 
-
     public class AuthServer(
         Uri authUrl,
         Uri accountSite,

@@ -9,6 +9,7 @@ publish_test
 Dependencies
 SS14.Launcher/FodyWeavers.xsd
 !PublishFiles/SimpleStation14 Launcher.app/Contents/Resources/bin/
+__pycache__
 .direnv
 result
 result/

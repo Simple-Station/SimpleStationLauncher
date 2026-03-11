@@ -80,6 +80,7 @@ public sealed class ServerListCache : ReactiveObject, IServerSource
             // Await all requests
             try
             {
+                // await Task.Delay(2000, cancel);
                 await Task.WhenAll(requests.Select(t => t.Request));
             }
             catch

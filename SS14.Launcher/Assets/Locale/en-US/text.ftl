@@ -33,6 +33,8 @@ connecting-status-update-error =
     If you are still having issues, first try contacting the server you are attempting to join before asking for support on the Official Space Station 14 Discord or Forums.
 
     Technical error: { $err }
+connecting-status-update-error-no-engine-for-platform = This game is using an older version that does not support your current platform. Please try another server or try again later.
+connecting-status-update-error-no-module-for-platform = This game requires additional functionality that is not yet supported on your current platform. Please try another server or try again later.
 connecting-status-update-error-unknown = Unknown
 connecting-status-updating = Updating: { $status }
 connecting-status-connecting = Fetching connection info from server…
@@ -63,7 +65,7 @@ connecting-privacy-policy-decline = Decline (disconnect)
 
 ## Strings for the "direct connect" dialog window.
 
-direct-connect-title = Direct Connect…
+direct-connect-title = Direct Connect
 direct-connect-text = Enter server address to connect:
 direct-connect-connect = Connect
 direct-connect-address-invalid = Address is invalid
@@ -176,6 +178,22 @@ main-window-out-of-date-desc-steam =
 main-window-out-of-date-exit = Exit
 main-window-out-of-date-ignore = Ignore
 main-window-out-of-date-download-manual = Download (manual)
+main-window-intel-degrade-title = Intel 13th/14th Generation CPU detected.
+main-window-intel-degrade-desc =
+    The Intel 13th/14th generation CPUs are known to silently degrade permanently and die due to a microcode bug by Intel. We sadly can't tell if you are currently affected by this bug, so this warning appears for all users with these CPUs.
+
+    We STRONGLY encourage you to update your motherboard's BIOS to the latest version to ensure prevention of further damage. If you are having stability issues/failing to start the game, downclock your CPU to get it stable again and use your warranty to ask about getting it replaced.
+
+    We are not responsible to help with any issues that may arise from affected processors, unless you took the precautions and are sure your CPU is stable. This message will not appear again after you accept it.
+main-window-intel-degrade-accept = I understand and have taken the necessary precautions.
+main-window-rosetta-title = You are running the game using Rosetta 2!
+main-window-rosetta-desc =
+    You seem to be on an Apple Silicon Mac and are running the game using Rosetta 2. You may enjoy better performance and battery life by running the game natively.
+
+    To do this, right click the launcher in Finder, select "Get Info" and uncheck "Open using Rosetta". After that, restart the launcher.
+
+    If you are intentionally running the game using Rosetta 2, you can dismiss this message and it will not appear again. Although if you are doing this in an attempt to fix a problem, please make a bug report.
+main-window-rosetta-accept = Continue
 main-window-drag-drop-prompt = Drop to run game
 main-window-busy-checking-update = Checking for launcher update…
 main-window-busy-checking-login-status = Refreshing login status…
@@ -349,8 +367,8 @@ filters-rp-high-desc = High
 
 server-entry-connect = Connect
 server-entry-update-info = Edit
-server-entry-add-favorite = Add Favorite
-server-entry-remove-favorite = Remove Favorite
+server-entry-add-favorite = Favorite
+server-entry-remove-favorite = Unfavorite
 server-entry-offline = OFFLINE
 server-entry-player-count =
     { $players } / { $max ->
@@ -386,10 +404,10 @@ tab-development-enable-engine-override-desc = Override path to load engine zips 
 ## Strings for the "home" tab
 
 tab-home-title = Home
-tab-home-favorite-servers = Favorite Servers:
-tab-home-add-favorite = Add Favorite…
+tab-home-favorite-servers = Favorite Servers
+tab-home-add-favorite = Add favorite
 tab-home-refresh = Refresh
-tab-home-direct-connect = Direct Connect To Server…
+tab-home-direct-connect = Direct connect to server
 tab-home-run-content-bundle = Run content bundle/replay
 tab-home-go-to-servers-tab = Go to the servers tab
 tab-home-favorites-guide = Mark servers as favorite for easy access here
@@ -406,6 +424,7 @@ tab-options-title = Options
 tab-options-flip = { "*" }flip
 tab-options-clear-engines = Clear installed engines
 tab-options-clear-content = Clear installed server content
+tab-options-clear-content-close-client = Close running clients first
 tab-options-open-log-directory = Open log directory
 tab-options-account-settings = Account Settings
 tab-options-account-settings-desc = You can manage your account settings, such as changing email or password, through our website.
@@ -440,3 +459,8 @@ language-selector-help-translate = Want to help translate? You can!
 language-selector-system-language = System language ({ $languageName })
 # Used for contents of each language button.
 language-selector-language = { $languageName } ({ $englishName })
+
+## Miscellaneous
+
+# Generic "Done!" message used for some buttons.
+button-done = Done!

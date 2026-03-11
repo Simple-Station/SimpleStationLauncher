@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -27,7 +28,7 @@ namespace SS14.Launcher.Models;
 /// Responsible for actually launching the game.
 /// Either by connecting to a game server, or by launching a local content bundle.
 /// </summary>
-public class Connector : ReactiveObject
+public partial class Connector : ReactiveObject
 {
     private readonly Updater _updater;
     private readonly DataManager _cfg;
@@ -127,7 +128,10 @@ public class Connector : ReactiveObject
         // Run update.
         Status = ConnectionStatus.Updating;
 
-        var installation = await RunUpdateAsync(info, cancel);
+        // Must have been set when retrieving build info (inferred to be automatic zipping).
+        Debug.Assert(info.BuildInformation != null, "info.BuildInformation != null");
+
+        var installation = await RunUpdateAsync(info.BuildInformation, cancel);
 
         var connectAddress = GetConnectAddress(info, infoAddr);
 
@@ -260,9 +264,25 @@ public class Connector : ReactiveObject
             // The launcher will create a new version in the Content DB that contains just the manifest.yml.
             // (or base build data overlaid if necessary)
             // The loader would still be in charge of transparently merging in the zip file at runtime.
-            //
 
-            installation = await InstallContentBundleAsync(zipFile, zipHash, metadata, cancel);
+            //
+            // EXCEPT!
+            // SS14 replays, the biggest files, don't have a manifest.yml! So that above comment is all for naught!
+            // We only ingest into the ContentDB if there isn't a manifest.yml and there *is* a base build.
+            // Why this set of requirements? ...because it's the least intrusive to make SS14 replays better.
+            // Also, we need to actually be able to access the zip as a path to give it to the launcher.
+            //
+            if (zipFile.GetEntry("manifest.yml") is null
+                && metadata.BaseBuild is not null
+                && file.TryGetLocalPath() is { } localPath)
+            {
+                installation = await RunUpdateAsync(metadata.GetBaseBuildInformation(), cancel);
+                installation = installation with { OverlayZip = localPath };
+            }
+            else
+            {
+                installation = await InstallContentBundleAsync(zipFile, zipHash, metadata, cancel);
+            }
 
             if (metadata.ServerGC == true)
                 installation = installation with { ServerGC = true };
@@ -354,6 +374,8 @@ public class Connector : ReactiveObject
 
         try
         {
+            var compatMode = (_cfg.GetCVar(CVars.CompatMode) && !OperatingSystem.IsMacOS()) || CheckForceCompatMode();
+
             var args = new List<string>
             {
                 // Pass username to launched client.
@@ -361,7 +383,7 @@ public class Connector : ReactiveObject
                 "--username", _loginManager.ActiveAccount?.Username ?? ConfigConstants.FallbackUsername,
 
                 // GLES2 forcing or using default fallback
-                "--cvar", $"display.compat={_cfg.GetCVar(CVars.CompatMode) && !OperatingSystem.IsMacOS()}",
+                "--cvar", $"display.compat={compatMode}",
 
                 // Tell game we are launcher
                 "--cvar", "launch.launcher=true"
@@ -390,10 +412,10 @@ public class Connector : ReactiveObject
                 args.Add(parsedAddr.ToString());
             }
 
-            // Pass build info to client. This is not critical to the client's function,
-            // it was added to aid client replay recording.
+            // Pass build info to client. Initally added for replays, it is now used for connecting on modern robust CDN versions.
+            // If engine_version or manifest_hash is null, the client WILL fail to connect.
+            // serverBuildInformation is only null in case of content bundles which shouldn't try to connect to live servers anyways
 
-            // No point reporting engine version: obviously the client already knows that.
             BuildCVar("download_url", serverBuildInformation?.DownloadUrl);
             BuildCVar("manifest_url", serverBuildInformation?.ManifestUrl);
             BuildCVar("manifest_download_url", serverBuildInformation?.ManifestDownloadUrl);
@@ -401,6 +423,7 @@ public class Connector : ReactiveObject
             BuildCVar("fork_id", serverBuildInformation?.ForkId);
             BuildCVar("hash", serverBuildInformation?.Hash);
             BuildCVar("manifest_hash", serverBuildInformation?.ManifestHash);
+            BuildCVar("engine_version", serverBuildInformation?.EngineVersion);
 
             void BuildCVar(string name, string? value)
             {
@@ -445,12 +468,9 @@ public class Connector : ReactiveObject
         }
     }
 
-    private async Task<ContentLaunchInfo> RunUpdateAsync(ServerInfo info, CancellationToken cancel)
+    private async Task<ContentLaunchInfo> RunUpdateAsync(ServerBuildInformation info, CancellationToken cancel)
     {
-        // Must have been set when retrieving build info (inferred to be automatic zipping).
-        Debug.Assert(info.BuildInformation != null, "info.BuildInformation != null");
-
-        var installation = await _updater.RunUpdateForLaunchAsync(info.BuildInformation, cancel);
+        var installation = await _updater.RunUpdateForLaunchAsync(info, cancel);
         if (installation == null)
         {
             throw new ConnectException(ConnectionStatus.UpdateError);
@@ -550,6 +570,7 @@ public class Connector : ReactiveObject
 
         EnvVar("SS14_LOADER_CONTENT_DB", LauncherPaths.PathContentDb);
         EnvVar("SS14_LOADER_CONTENT_VERSION", launchInfo.Version.ToString());
+        EnvVar("SS14_LOADER_OVERLAY_ZIP", launchInfo.OverlayZip);
 
         // Env vars for engine modules.
         foreach (var (moduleName, moduleVersion) in launchInfo.ModuleInfo)
@@ -570,20 +591,13 @@ public class Connector : ReactiveObject
         EnvVar("SS14_LAUNCHER_DATADIR", "SimpleStation14");
         EnvVar("SS14_LAUNCHER_APPDATA_NAME", LauncherPaths.GetAppDataName());
 
-        // ReSharper disable once ReplaceWithSingleAssignment.False
-        var manualPipeLogging = false;
-        if (_cfg.GetCVar(CVars.LogClient))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            manualPipeLogging = true;
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                EnvVar("SS14_LOG_CLIENT", LauncherPaths.PathClientMacLog);
-            }
-
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
+            EnvVar("SS14_LOG_CLIENT", LauncherPaths.PathClientMacLog);
         }
+
+        startInfo.RedirectStandardOutput = true;
+        startInfo.RedirectStandardError = true;
 
         // Performance tweaks
         EnvVar("DOTNET_TieredPGO", "1");
@@ -602,16 +616,21 @@ public class Connector : ReactiveObject
         startInfo.UseShellExecute = false;
         startInfo.ArgumentList.AddRange(extraArgs);
 
-        /*
-        foreach (var arg in startInfo.ArgumentList)
+        var commandBuilder = new StringBuilder();
+        commandBuilder.Append(startInfo.FileName);
+
+        for (var i = 0; i < startInfo.ArgumentList.Count; i++)
         {
-            Log.Debug("arg: {Arg}", arg);
+            var arg = startInfo.ArgumentList[i];
+
+            commandBuilder.Append($" [{i}] {arg}");
         }
-        */
+
+        Log.Debug("Launch command: {LaunchCommand}", commandBuilder.ToString());
 
         var process = Process.Start(startInfo);
 
-        if (manualPipeLogging && process != null)
+        if (process != null)
         {
             Log.Debug("Setting up manual-pipe logging for new client with PID {pid}.", process.Id);
 
@@ -713,10 +732,15 @@ public class Connector : ReactiveObject
         }
         else
         {
+#if RELEASE
+            const string buildConfiguration = "Release";
+#else
+            const string buildConfiguration = "Debug";
+#endif
             basePath = Path.GetFullPath(Path.Combine(
                 LauncherPaths.DirLauncherInstall,
                 "..", "..", "..", "..",
-                "SS14.Loader", "bin", "Debug", "net9.0"));
+                "SS14.Loader", "bin", buildConfiguration, "net10.0"));
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -762,11 +786,31 @@ public class Connector : ReactiveObject
 
                 await xattr.WaitForExitAsync();
 
-                return new ProcessStartInfo
+                var startInfo = new ProcessStartInfo
                 {
                     FileName = "open",
-                    ArgumentList = {appPath, "--args"},
+                    ArgumentList = { appPath },
                 };
+
+                if (RuntimeInformation.OSArchitecture != Architecture.X64)
+                {
+                    // Intel macs may be running unsupported macOS versions without open --arch.
+                    // So don't add it. It's not necessary anyways.
+
+                    // Versions before Sonoma also don't have it.
+                    // If you're on one of those... uhh.. Why are you running an outdated OS?
+                    // But don't add --arch so that people on an outdated OS can still use native Apple Silicon.
+                    if (OperatingSystem.IsMacOSVersionAtLeast(14))
+                    {
+                        startInfo.ArgumentList.Add("--arch");
+                        startInfo.ArgumentList.Add(
+                            RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "arm64" : "x86_64");
+                    }
+                }
+
+                startInfo.ArgumentList.Add("--args");
+
+                return startInfo;
             }
             else
             {
@@ -814,11 +858,34 @@ public class Connector : ReactiveObject
 }
 
 public sealed record ContentBundleMetadata(
-    [property: JsonPropertyName("server_gc")] bool? ServerGC,
-    [property: JsonPropertyName("engine_version")] string EngineVersion,
-    [property: JsonPropertyName("base_build")] ContentBundleBaseBuild? BaseBuild,
+    [property: JsonPropertyName("server_gc")]
+    bool? ServerGC,
+    [property: JsonPropertyName("engine_version")]
+    string EngineVersion,
+    [property: JsonPropertyName("base_build")]
+    ContentBundleBaseBuild? BaseBuild,
     [property: JsonPropertyName("engine")] string Engine = "Robust"
-);
+)
+{
+    public ServerBuildInformation GetBaseBuildInformation()
+    {
+        if (BaseBuild == null)
+            throw new InvalidOperationException("Metadata must have base build!");
+
+        return new ServerBuildInformation
+        {
+            DownloadUrl = BaseBuild.DownloadUrl,
+            ManifestUrl = BaseBuild.ManifestUrl,
+            ManifestDownloadUrl = BaseBuild.ManifestDownloadUrl,
+            EngineVersion = EngineVersion,
+            Version = BaseBuild.Version,
+            ForkId = BaseBuild.ForkId,
+            Hash = BaseBuild.Hash,
+            ManifestHash = BaseBuild.ManifestHash,
+            Acz = false
+        };
+    }
+}
 
 public sealed record ContentBundleBaseBuild(
     [property: JsonPropertyName("fork_id")] string ForkId,

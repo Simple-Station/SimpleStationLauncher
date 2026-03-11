@@ -68,7 +68,8 @@ public sealed record EngineModuleData(
 );
 
 public sealed record EngineModuleVersionData(
-    Dictionary<string, EngineModulePlatformData> Platforms
+    Dictionary<string, EngineModulePlatformData> Platforms,
+    bool Insecure = false
 );
 
 public sealed record EngineModulePlatformData(
