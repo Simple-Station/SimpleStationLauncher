@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:SS14.Launcher.Views"
              xmlns:vml="clr-namespace:SS14.Launcher.ViewModels.Login;assembly=SS14.Launcher"
              xmlns:loc="clr-namespace:SS14.Launcher.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -65,13 +66,15 @@
     </DockPanel>
 
     <DockPanel DockPanel.Dock="Top" LastChildFill="False" MaxWidth="500">
-        <Button DockPanel.Dock="Left" HorizontalAlignment="Center" Content="{loc:Loc login-login-button-resend}"
-                Command="{Binding ResendConfirmationPressed}"
-                IsEnabled="{Binding IsServerPotentiallyValid}"/>
+        <Button DockPanel.Dock="Left" HorizontalAlignment="Center"
+                Command="{Binding ResendConfirmationPressed}" IsEnabled="{Binding IsServerPotentiallyValid}">
+            <v:IconLabel Icon="{DynamicResource InfoIcon-web}" Content="{loc:Loc login-login-button-resend}" />
+        </Button>
     </DockPanel>
 
-    <Button DockPanel.Dock="Bottom" Classes="BigButton" Margin="0 4" HorizontalAlignment="Center"
-            Content="{loc:Loc login-login-button-register}" Command="{Binding RegisterPressed}"
-            IsEnabled="{Binding IsServerPotentiallyValid}" />
+    <Button DockPanel.Dock="Bottom" Margin="0 4" HorizontalAlignment="Center"
+            Command="{Binding RegisterPressed}" IsEnabled="{Binding IsServerPotentiallyValid}">
+        <v:IconLabel Icon="{DynamicResource InfoIcon-web}" FontSize="20" Content="{Binding RegisterButtonContent}" />
+    </Button>
   </DockPanel>
 </UserControl>

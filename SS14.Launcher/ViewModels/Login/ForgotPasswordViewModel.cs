@@ -36,7 +36,7 @@ public sealed class ForgotPasswordViewModel : BaseLoginViewModel
             .Subscribe(s =>
             {
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
-                ServerUrlPlaceholder = LoginManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
+                ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(Server).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && !string.IsNullOrEmpty(EditingEmail) && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
             });
     }
