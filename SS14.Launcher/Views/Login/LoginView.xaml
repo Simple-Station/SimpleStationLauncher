@@ -74,7 +74,7 @@
 
     <Button DockPanel.Dock="Bottom" Margin="0 4" HorizontalAlignment="Center"
             Command="{Binding RegisterPressed}" IsEnabled="{Binding IsServerPotentiallyValid}">
-        <v:IconLabel Icon="{DynamicResource InfoIcon-web}" FontSize="20" Content="{loc:Loc login-login-button-register}" />
+        <v:IconLabel Icon="{DynamicResource InfoIcon-web}" FontSize="20" Content="{Binding RegisterButtonContent}" />
     </Button>
   </DockPanel>
 </UserControl>

@@ -151,7 +151,7 @@ login-login-auth-server = Account Provider
 login-login-button-log-in = Log in
 login-login-button-forgot = Forgot your password?
 login-login-button-resend = Resend email confirmation
-login-login-button-register = Don't have an account? Register!
+login-login-button-register = Don't have an account? Register with { $server }!
 login-login-busy-logging-in = Logging in…
 login-login-error-title = Unable to log in
 

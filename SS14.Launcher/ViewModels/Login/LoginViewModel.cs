@@ -25,6 +25,7 @@ public class LoginViewModel : BaseLoginViewModel
     [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
     [Reactive] public bool IsCustom { get; private set; }
     [Reactive] public bool IsServerPotentiallyValid { get; private set; }
+    [Reactive] public string RegisterButtonContent { get; private set; } = "";
 
     [Reactive] public string EditingUsername { get; set; } = "";
     [Reactive] public string EditingPassword { get; set; } = "";
@@ -49,6 +50,7 @@ public class LoginViewModel : BaseLoginViewModel
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
                 ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(Server).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
+                RegisterButtonContent = _loc.GetString("login-login-button-register", ("server", Server));
             });
     }
 
