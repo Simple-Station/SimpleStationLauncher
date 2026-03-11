@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Serilog;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.Data;
 
 namespace SS14.Launcher.Models.OverrideAssets;
@@ -19,6 +20,7 @@ public sealed class OverrideAssetsManager
     private readonly DataManager _dataManager;
     private readonly HttpClient _httpClient;
     private readonly LauncherInfoManager _infoManager;
+    private readonly CdnManager _cdnManager;
 
     private bool _overridesUpdated;
 
@@ -26,11 +28,12 @@ public sealed class OverrideAssetsManager
 
     public event Action<OverrideAssetsChanged>? AssetsChanged;
 
-    public OverrideAssetsManager(DataManager dataManager, HttpClient httpClient, LauncherInfoManager infoManager)
+    public OverrideAssetsManager(DataManager dataManager, HttpClient httpClient, LauncherInfoManager infoManager, CdnManager cdnManager)
     {
         _dataManager = dataManager;
         _httpClient = httpClient;
         _infoManager = infoManager;
+        _cdnManager = cdnManager;
     }
 
     public void Initialize()
@@ -143,7 +146,7 @@ public sealed class OverrideAssetsManager
 
             Log.Debug("Downloading override asset for {AssetName}: {OverrideName}", name, overrideName);
 
-            var url = ConfigConstants.UrlAssetsBase + overrideName;
+            var url = _cdnManager.ResolveUrlSet(ConfigConstants.UrlAssetsBase) + overrideName;
             var data = await url.GetByteArrayAsync(_httpClient, cancel);
 
             db.Execute("INSERT OR REPLACE INTO OverrideAsset(Name, OverrideName, Data) VALUES (@Name, @OverrideName, @Data)",

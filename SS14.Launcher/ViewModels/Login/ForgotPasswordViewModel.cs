@@ -27,7 +27,7 @@ public sealed class ForgotPasswordViewModel : BaseLoginViewModel
 
     public ForgotPasswordViewModel(
         MainWindowLoginViewModel parentVM,
-        AuthApi authApi)
+        AuthApi authApi, LoginProviderManager loginProviderManager)
         : base(parentVM)
     {
         _authApi = authApi;
@@ -36,7 +36,7 @@ public sealed class ForgotPasswordViewModel : BaseLoginViewModel
             .Subscribe(s =>
             {
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
-                ServerUrlPlaceholder = LoginManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
+                ServerUrlPlaceholder = loginProviderManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && !string.IsNullOrEmpty(EditingEmail) && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
             });
     }

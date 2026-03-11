@@ -16,6 +16,7 @@ public class LoginViewModel : BaseLoginViewModel
 {
     private readonly AuthApi _authApi;
     private readonly LoginManager _loginMgr;
+    private readonly LoginProviderManager _loginProviderManager;
     private readonly DataManager _dataManager;
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
@@ -33,11 +34,12 @@ public class LoginViewModel : BaseLoginViewModel
     [Reactive] public bool IsPasswordVisible { get; set; }
 
     public LoginViewModel(MainWindowLoginViewModel parentVm, AuthApi authApi,
-        LoginManager loginMgr, DataManager dataManager) : base(parentVm)
+        LoginManager loginMgr, LoginProviderManager loginProviderManager, DataManager dataManager) : base(parentVm)
     {
         BusyText = _loc.GetString("login-login-busy-logging-in");
         _authApi = authApi;
         _loginMgr = loginMgr;
+        _loginProviderManager = loginProviderManager;
         _dataManager = dataManager;
 
         this.WhenAnyValue(x => x.Server, x => x.ServerUrl, x => x.EditingUsername, x => x.EditingPassword)
@@ -47,7 +49,7 @@ public class LoginViewModel : BaseLoginViewModel
                     ? !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item3)
                     : !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item3);
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
-                ServerUrlPlaceholder = LoginManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
+                ServerUrlPlaceholder = loginProviderManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
             });
     }
@@ -87,7 +89,7 @@ public class LoginViewModel : BaseLoginViewModel
         if (resp.IsSuccess)
         {
             var loginInfo = resp.LoginInfo;
-            loginInfo.ServerUrl ??= ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer].AuthUrl.AbsoluteUri;
+            loginInfo.ServerUrl ??= loginMgr.DefaultAuthServer.AuthUrl.AbsoluteUri;
             Log.Information($"Login successful for user {loginInfo.UserId} on server {loginInfo.Server} at {loginInfo.ServerUrl}");
             var oldLogin = loginMgr.Logins.KeyValues.FirstOrDefault(a =>
                 a.Key == loginInfo.UserId && a.Value.Server == loginInfo.Server
@@ -125,7 +127,7 @@ public class LoginViewModel : BaseLoginViewModel
 
     // Registration is purely via website for now
     public void RegisterPressed() =>
-        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl).AccountRegUrl);
+        Helpers.OpenUri(_loginProviderManager.GetAuthServerById(Server, ServerUrl).AccountRegUrl);
     public void ResendConfirmationPressed() =>
-        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl).AccountResendUrl);
+        Helpers.OpenUri(_loginProviderManager.GetAuthServerById(Server, ServerUrl).AccountResendUrl);
 }

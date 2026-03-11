@@ -68,20 +68,22 @@ public sealed partial class EngineManagerDynamic
     {
         // TODO: If-Modified-Since and If-None-Match request conditions.
 
-        if (ConfigConstants.EngineBuildsUrl.TryGetValue(name, out var urlSet))
-            foreach (var url in urlSet.Urls)
+        if (ConfigConstants.EngineBuildsUrl.TryGetValue(name, out var urlDefinition))
+        {
+            var url = _cdnManager.ResolveDefinition(urlDefinition).ToString();
+
+            try
             {
-                try
-                {
-                    _cachedEngineVersionInfo.Remove(name);
-                    _cachedEngineVersionInfo.Add(name, await new UrlFallbackSet([url]).GetFromJsonAsync<Dictionary<string, VersionInfo>>(_http, cancel));
-                    break;
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e, "Failed to download manifest from {url}", url);
-                }
+                _cachedEngineVersionInfo.Remove(name);
+                _cachedEngineVersionInfo.Add(name,
+                    await new UrlFallbackSet([url])
+                        .GetFromJsonAsync<Dictionary<string, VersionInfo>>(_http, cancel));
             }
+            catch (Exception e)
+            {
+                Log.Error(e, "Failed to download manifest from {url}", url);
+            }
+        }
 
         _robustCacheValidUntil = _manifestStopwatch.Elapsed + ConfigConstants.RobustManifestCacheTime;
     }

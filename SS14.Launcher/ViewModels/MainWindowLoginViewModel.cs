@@ -14,6 +14,7 @@ public class MainWindowLoginViewModel : ViewModelBase
     private readonly AuthApi _authApi;
     private readonly LoginManager _loginMgr;
     private BaseLoginViewModel _screen;
+    private readonly LoginProviderManager _loginProviderMgr;
 
     public LanguageSelectorViewModel LanguageSelector { get; } = new();
 
@@ -32,6 +33,7 @@ public class MainWindowLoginViewModel : ViewModelBase
         _cfg = Locator.Current.GetRequiredService<DataManager>();
         _authApi = Locator.Current.GetRequiredService<AuthApi>();
         _loginMgr = Locator.Current.GetRequiredService<LoginManager>();
+        _loginProviderMgr = Locator.Current.GetRequiredService<LoginProviderManager>();
 
         _screen = default!;
         SwitchToLogin();
@@ -39,7 +41,7 @@ public class MainWindowLoginViewModel : ViewModelBase
 
     public void SwitchToLogin()
     {
-        Screen = new LoginViewModel(this, _authApi, _loginMgr, _cfg);
+        Screen = new LoginViewModel(this, _authApi, _loginMgr, _loginProviderMgr, _cfg);
     }
 
     public void SwitchToExpiredLogin(LoggedInAccount account)
@@ -49,22 +51,22 @@ public class MainWindowLoginViewModel : ViewModelBase
 
     public void SwitchToRegister()
     {
-        Screen = new RegisterViewModel(this, _cfg, _authApi, _loginMgr);
+        Screen = new RegisterViewModel(this, _cfg, _authApi, _loginMgr, _loginProviderMgr);
     }
 
     public void SwitchToForgotPassword()
     {
-        Screen = new ForgotPasswordViewModel(this, _authApi);
+        Screen = new ForgotPasswordViewModel(this, _authApi, _loginProviderMgr);
     }
 
     public void SwitchToAuthTfa(AuthApi.AuthenticateRequest request)
     {
-        Screen = new AuthTfaViewModel(this, request, _loginMgr, _authApi, _cfg);
+        Screen = new AuthTfaViewModel(this, request, _loginMgr, _loginProviderMgr, _authApi, _cfg);
     }
 
     public void SwitchToResendConfirmation()
     {
-        Screen = new ResendConfirmationViewModel(this, _authApi);
+        Screen = new ResendConfirmationViewModel(this, _authApi, _loginProviderMgr);
     }
 
     public void SwitchToRegisterNeedsConfirmation(string server, string? serverUrl, string username, string password)

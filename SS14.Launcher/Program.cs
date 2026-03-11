@@ -15,6 +15,7 @@ using Splat;
 using SS14.Launcher.Api;
 using SS14.Launcher.Localization;
 using SS14.Launcher.Models;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.ContentManagement;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.ServerStatus;
@@ -91,7 +92,10 @@ internal static class Program
 
         var cfg = new DataManager();
         cfg.Load();
+        var cdnManager = new CdnManager();
+
         Locator.CurrentMutable.RegisterConstant(cfg);
+        Locator.CurrentMutable.RegisterConstant(cdnManager);
 
         CheckWindowsVersion();
         // Bad antivirus check disabled: I assume Avast/AVG fixed their shit.
@@ -119,7 +123,7 @@ internal static class Program
 
         try
         {
-            BuildAvaloniaApp(cfg).StartWithClassicDesktopLifetime(args);
+            BuildAvaloniaApp(cfg, cdnManager).StartWithClassicDesktopLifetime(args);
         }
         finally
         {
@@ -209,7 +213,7 @@ internal static class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    private static AppBuilder BuildAvaloniaApp(DataManager cfg)
+    private static AppBuilder BuildAvaloniaApp(DataManager cfg, CdnManager cdnManager)
     {
         var locator = Locator.CurrentMutable;
 
@@ -221,13 +225,15 @@ internal static class Program
         Locator.CurrentMutable.RegisterConstant(http);
 
         var loc = new LocalizationManager(cfg);
-        var authApi = new AuthApi(http);
+        var loginProviderManager = new LoginProviderManager(cdnManager);
+        var authApi = new AuthApi(http, loginProviderManager);
         var hubApi = new HubApi(http);
-        var launcherInfo = new LauncherInfoManager(http);
-        var overrideAssets = new OverrideAssetsManager(cfg, http, launcherInfo);
-        var loginManager = new LoginManager(cfg, authApi);
+        var launcherInfo = new LauncherInfoManager(http, cdnManager);
+        var overrideAssets = new OverrideAssetsManager(cfg, http, launcherInfo, cdnManager);
+        var loginManager = new LoginManager(cfg, authApi, cdnManager);
 
         locator.RegisterConstant(loc);
+        locator.RegisterConstant(loginProviderManager);
         locator.RegisterConstant(new ContentManager());
         locator.RegisterConstant<IEngineManager>(new EngineManagerDynamic());
         locator.RegisterConstant(new Updater());

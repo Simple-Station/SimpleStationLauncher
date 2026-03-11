@@ -11,6 +11,7 @@ public sealed class AuthTfaViewModel : BaseLoginViewModel
 {
     private readonly AuthApi.AuthenticateRequest _request;
     private readonly LoginManager _loginMgr;
+    private readonly LoginProviderManager _loginProviderManager;
     private readonly AuthApi _authApi;
     private readonly DataManager _cfg;
 
@@ -22,11 +23,13 @@ public sealed class AuthTfaViewModel : BaseLoginViewModel
         MainWindowLoginViewModel parentVm,
         AuthApi.AuthenticateRequest request,
         LoginManager loginMgr,
+        LoginProviderManager loginProviderManager,
         AuthApi authApi,
         DataManager cfg) : base(parentVm)
     {
         _request = request;
         _loginMgr = loginMgr;
+        _loginProviderManager = loginProviderManager;
         _authApi = authApi;
         _cfg = cfg;
 
@@ -75,7 +78,7 @@ public sealed class AuthTfaViewModel : BaseLoginViewModel
     {
         // I don't want to implement recovery code stuff, so if you need them,
         // bloody use them to disable your authenticator app online.
-        Helpers.OpenUri(LoginManager.GetAuthServerById(_request.Server ?? ConfigConstants.FallbackAuthServer, _request.ServerUrl).AccountManUrl);
+        Helpers.OpenUri(_loginProviderManager.GetAuthServerById(_request.Server ?? ConfigConstants.FallbackAuthServer, _request.ServerUrl).AccountManUrl);
     }
 
     public void Cancel()

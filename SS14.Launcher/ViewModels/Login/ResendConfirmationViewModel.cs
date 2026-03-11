@@ -23,7 +23,7 @@ public class ResendConfirmationViewModel : BaseLoginViewModel
 
     private bool _errored;
 
-    public ResendConfirmationViewModel(MainWindowLoginViewModel parentVM, AuthApi authApi) : base(parentVM)
+    public ResendConfirmationViewModel(MainWindowLoginViewModel parentVM, AuthApi authApi, LoginProviderManager loginProviderManager) : base(parentVM)
     {
         _authApi = authApi;
 
@@ -31,7 +31,7 @@ public class ResendConfirmationViewModel : BaseLoginViewModel
             .Subscribe(s =>
             {
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
-                ServerUrlPlaceholder = LoginManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
+                ServerUrlPlaceholder = loginProviderManager.GetAuthServerById(IsCustom ? ConfigConstants.AuthUrls.First().Key : Server).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && !string.IsNullOrEmpty(EditingEmail) && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
             });
     }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Utility;
-using TerraFX.Interop.Windows;
 
 namespace SS14.Launcher;
 
@@ -32,32 +32,33 @@ public static class ConfigConstants
     // Amount of time to wait to let a redialling client properly die
     public const int LauncherCommandsRedialWaitTimeout = 1000;
 
-    public const string FallbackAuthServer = "Space-Wizards";
-    public const string GuestAuthServer = "guest";
-    public const string CustomAuthServer = "Custom";
+    public static readonly UriCdnDefinition FallbackAuthServer = "Space-Wizards";
+    public static readonly UriCdnDefinition GuestAuthServer = "guest";
+    public static readonly UriCdnDefinition CustomAuthServer = "Custom";
     public static readonly AuthServer TemplateAuthServer = new(new("https://example.com/"), new("https://example.com/"));
-    public static readonly Dictionary<string, AuthServer> AuthUrls = new()
+
+    public static readonly Dictionary<string, AuthServerDefinition> AuthUrls = new()
     {
         {
             "SimpleStation",
-            new(new("https://auth.simplestation.org/"), new("https://account.simplestation.org/"), true)
+            new("SimpleStationAuth", "SimpleStationAccount", true)
         },
         {
             FallbackAuthServer,
-            new(new("https://auth.spacestation14.com/"), new("https://account.spacestation14.com/"), false)
+            new("FallbackAuthServerAuth", "FallbackAuthServerAccount", false)
         },
         {
             CustomAuthServer,
-            new (new("https://example.com/"), new("https://example.com/"))
+            new ("CustomAuthServerAuth", "CustomAuthServerAccount")
         },
     };
 
-    public static readonly Uri[] DefaultHubUrls =
+    public static readonly UriCdnDefinition[] DefaultHubUrls =
     [
-        new("https://hub.simplestation.org/"),
-        new("https://hub.singularity14.co.uk/"),
-        new("https://cdn.spacestationmultiverse.com/hub/"),
-        new("https://hub.spacestation14.com/"),
+        "SimpleStationHub",
+        "SingularityHub",
+        "MultiverseHub",
+        "SpaceStationHub",
     ];
 
     public const string DiscordUrl = "https://discord.gg/49KeKwXc8g";
@@ -66,61 +67,42 @@ public static class ConfigConstants
     public const string NewsFeedUrl = "https://spacestation14.com/post/index.xml"; //TODO
     public const string TranslateUrl = "https://docs.spacestation14.com/en/general-development/contributing-translations.html"; //TODO
 
-    public static readonly Dictionary<string, UrlFallbackSet> EngineBuildsUrl = new()
+    public static readonly Dictionary<string, UriCdnDefinition> EngineBuildsUrl = new()
     {
         {
-            "Robust",
-            new UrlFallbackSet([
-                "https://robust-builds.cdn.spacestation14.com/manifest.json",
-                "https://robust-builds.fallback.cdn.spacestation14.com/manifest.json",
-            ])
+            "Robust", "RobustEngine"
         },
         {
-            "Multiverse",
-            new UrlFallbackSet([
-                "https://cdn.spacestationmultiverse.com/ssmv-engine-manifest",
-            ])
+            "Multiverse", "MultiverseEngine"
         },
         {
-            "Supermatter",
-            new UrlFallbackSet([
-                "https://cdn.simplestation.org/supermatter/manifest.json",
-            ])
+            "Supermatter", "SupermatterEngine"
         },
     };
 
-    public static readonly Dictionary<string, UrlFallbackSet> EngineModulesUrl = new()
+    public static readonly Dictionary<string, UriCdnDefinition> EngineModulesUrl = new()
     {
         {
-            "Robust",
-            new UrlFallbackSet([
-                "https://robust-builds.cdn.spacestation14.com/modules.json",
-                "https://robust-builds.fallback.cdn.spacestation14.com/modules.json",
-            ])
+            "Robust", "RobustModules"
         },
         {
-            "Multiverse",
-            new UrlFallbackSet([
-                // Same as Robust for now
-                "https://robust-builds.cdn.spacestation14.com/modules.json",
-                "https://robust-builds.fallback.cdn.spacestation14.com/modules.json",
-            ])
+            "Multiverse", "MultiverseModules"
         },
     };
-
-    private static readonly UrlFallbackSet LauncherDataBaseUrl = new([
-        "http://assets.simplestation.org/launcher/",
-    ]);
 
     // How long to keep cached copies of Robust manifests.
     // TODO: Take this from Cache-Control header responses instead.
     public static readonly TimeSpan RobustManifestCacheTime = TimeSpan.FromMinutes(15);
 
-    public static readonly UrlFallbackSet UrlLauncherInfo = LauncherDataBaseUrl + "info.json";
-    public static readonly UrlFallbackSet UrlAssetsBase = LauncherDataBaseUrl + "assets/";
+    public static readonly UriCdnDefinition UrlLauncherInfo = "LauncherInfo";
+    public static readonly UriCdnDefinition UrlAssetsBase = "LauncherAssetsBase";
 
     public const string FallbackUsername = "JoeGenero";
 
+    public record struct AuthServerDefinition(
+        UriCdnDefinition AuthUrl,
+        UriCdnDefinition AccountSite,
+        bool? Recommended = null);
 
     public class AuthServer(
         Uri authUrl,

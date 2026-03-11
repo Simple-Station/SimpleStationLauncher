@@ -1,0 +1,19 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="350" Width="800" Height="600"
+        x:Class="SS14.Launcher.Controls.CDN.CdnPingWindow"
+        Title="CDN Ping resolver">
+  <StackPanel Orientation="Vertical">
+    <Border HorizontalAlignment="Stretch" Background="White">
+      <TextBlock Text="CDN Ping resolver" Padding="10" HorizontalAlignment="Center" Foreground="#222222"/>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Orientation="Vertical" Margin="0,5,0,0" Spacing="5" Name="CdnPanel">
+
+      </StackPanel>
+    </ScrollViewer>
+  </StackPanel>
+</Window>
+

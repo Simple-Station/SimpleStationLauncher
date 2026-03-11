@@ -33,6 +33,7 @@ public class Connector : ReactiveObject
     private readonly DataManager _cfg;
     private readonly LoginManager _loginManager;
     private readonly IEngineManager _engineManager;
+    private readonly LoginProviderManager _loginProviderManager;
 
     private ConnectionStatus _status = ConnectionStatus.None;
     private bool _clientExitedBadly;
@@ -47,6 +48,7 @@ public class Connector : ReactiveObject
         _updater = Locator.Current.GetRequiredService<Updater>();
         _cfg = Locator.Current.GetRequiredService<DataManager>();
         _loginManager = Locator.Current.GetRequiredService<LoginManager>();
+        _loginProviderManager = Locator.Current.GetRequiredService<LoginProviderManager>();
         _engineManager = Locator.Current.GetRequiredService<IEngineManager>();
         _http = Locator.Current.GetRequiredService<HttpClient>();
     }
@@ -328,7 +330,7 @@ public class Connector : ReactiveObject
             var account = _loginManager.Logins.Items.FirstOrDefault(l =>
                 info.AuthInformation.LoginUrls?.Contains(l.ServerUrl) ?? l.Server == ConfigConstants.FallbackAuthServer);
             var authServers = info.AuthInformation.LoginUrls?.ToString() ??
-                "(Fallback) " + LoginManager.GetAuthServerById(ConfigConstants.FallbackAuthServer).AuthUrl;
+                "(Fallback) " + _loginProviderManager.GetAuthServerById(ConfigConstants.FallbackAuthServer).AuthUrl;
             if (account == null)
             {
                 Log.Error("No logged in account found for any of the server's allowed auth providers: {AuthServers}", string.Join(", ", authServers));
@@ -341,8 +343,8 @@ public class Connector : ReactiveObject
                 _loginManager.ActiveAccount = account;
             }
 
-            var authServer = LoginManager.GetAuthServerById(account.Server, account.ServerUrl,
-                LoginManager.TryGetAccountUrl(account.Server, account.ServerUrl)).AuthUrl.ToString();
+            var authServer = _loginProviderManager.GetAuthServerById(account.Server, account.ServerUrl,
+                _loginProviderManager.TryGetAccountUrl(account.Server, account.ServerUrl)).AuthUrl.ToString();
 
             cVars.Add(("ROBUST_AUTH_TOKEN", account.LoginInfo.Token.Token));
             cVars.Add(("ROBUST_AUTH_USERID", account.LoginInfo.UserId.ToString()));

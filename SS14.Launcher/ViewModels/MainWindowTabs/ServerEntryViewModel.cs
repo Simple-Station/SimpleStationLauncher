@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using SS14.Launcher.Api;
 using SS14.Launcher.Localization;
+using SS14.Launcher.Models.CDN;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.Logins;
 using SS14.Launcher.Models.ServerStatus;
@@ -22,19 +23,21 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
     private readonly IServerSource _serverSource;
     private readonly DataManager _cfg;
     private readonly LoginManager _loginManager;
+    private readonly CdnManager _cdnManager;
     private readonly MainWindowViewModel _windowVm;
     private string Address => _cacheData.Address;
     private string _fallbackName = string.Empty;
     private bool _isExpanded;
 
     public ServerEntryViewModel(MainWindowViewModel windowVm, ServerStatusData cacheData, IServerSource serverSource,
-        DataManager cfg, LoginManager loginManager)
+        DataManager cfg, LoginManager loginManager, CdnManager cdnManager)
     {
         _windowVm = windowVm;
         _cacheData = cacheData;
         _serverSource = serverSource;
         _cfg = cfg;
         _loginManager = loginManager;
+        _cdnManager = cdnManager;
     }
 
     public ServerEntryViewModel(
@@ -43,8 +46,8 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
         FavoriteServer favorite,
         IServerSource serverSource,
         DataManager cfg,
-        LoginManager loginManager)
-        : this(windowVm, cacheData, serverSource, cfg, loginManager)
+        LoginManager loginManager, CdnManager cdnManager)
+        : this(windowVm, cacheData, serverSource, cfg, loginManager, cdnManager)
     {
         Favorite = favorite;
     }
@@ -54,8 +57,8 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
         ServerStatusDataWithFallbackName ssdfb,
         IServerSource serverSource,
         DataManager cfg,
-        LoginManager loginManager)
-        : this(windowVm, ssdfb.Data, serverSource, cfg, loginManager)
+        LoginManager loginManager, CdnManager cdnManager)
+        : this(windowVm, ssdfb.Data, serverSource, cfg, loginManager, cdnManager)
     {
         FallbackName = ssdfb.FallbackName ?? "";
     }
@@ -75,7 +78,7 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
         }
 
         // If there are multiple supported auth methods and we haven't picked a matching one, show a dialog to select an account that fits
-        var dialog = new SelectAccountDialog(_cacheData.Auths, _loginManager);
+        var dialog = new SelectAccountDialog(_cacheData.Auths, _loginManager, _cdnManager);
         dialog.Closed += (_, _) =>
         {
             if (dialog.SelectedAccount != null)
