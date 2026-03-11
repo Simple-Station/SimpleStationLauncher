@@ -39,12 +39,12 @@ public static class ConfigConstants
     public static readonly Dictionary<string, AuthServer> AuthUrls = new()
     {
         {
-            "SimpleStation",
-            new(new("https://auth.simplestation.org/"), new("https://account.simplestation.org/"), true)
-        },
-        {
             FallbackAuthServer,
             new(new("https://auth.spacestation14.com/"), new("https://account.spacestation14.com/"), false)
+        },
+        {
+            "SimpleStation",
+            new(new("https://auth.simplestation.org/"), new("https://account.simplestation.org/"), true)
         },
         {
             CustomAuthServer,
