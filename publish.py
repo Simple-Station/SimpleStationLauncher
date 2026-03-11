@@ -60,11 +60,11 @@ def publish_windows(x64_only: bool):
         os.makedirs("bin/publish/Windows/bin_arm64/loader", exist_ok=True)
         os.makedirs("bin/publish/Windows/dotnet_arm64", exist_ok=True)
 
-    bootstrap_path = f"SS14.Launcher.Bootstrap/bin/Release/{TFM}-windows/win-x64/publish/Space Station 14 Launcher.exe"
+    bootstrap_path = f"SS14.Launcher.Bootstrap/bin/Release/{TFM}-windows/win-x64/publish/SimpleStation14 Launcher.exe"
     # Natively compiled copy we need to get from a separate worker.
-    if os.path.isfile("Space Station 14 Launcher.exe"):
-        bootstrap_path = "Space Station 14 Launcher.exe"
-    shutil.copyfile(bootstrap_path, "bin/publish/Windows/Space Station 14 Launcher.exe")
+    if os.path.isfile("SimpleStation14 Launcher.exe"):
+        bootstrap_path = "SimpleStation14 Launcher.exe"
+    shutil.copyfile(bootstrap_path, "bin/publish/Windows/SimpleStation14 Launcher.exe")
     shutil.copyfile("SS14.Launcher.Bootstrap/console.bat", "bin/publish/Windows/console.bat")
 
     shutil.copytree("Dependencies/dotnet/windows", "bin/publish/Windows/dotnet_x64", dirs_exist_ok=True)
@@ -121,11 +121,11 @@ def publish_osx():
     clear_prev_publish("macOS")
 
     os.makedirs("bin/publish/macOS", exist_ok=True)
-    shutil.copytree("PublishFiles/Space Station 14 Launcher.app", "bin/publish/macOS/Space Station 14 Launcher.app")
+    shutil.copytree("PublishFiles/SimpleStation14 Launcher.app", "bin/publish/macOS/SimpleStation14 Launcher.app")
 
-    res_root = "bin/publish/macOS/Space Station 14 Launcher.app/Contents/Resources"
+    res_root = "bin/publish/macOS/SimpleStation14 Launcher.app/Contents/Resources"
 
-    loader_res_root = f"{res_root}/Space Station 14.app/Contents/Resources"
+    loader_res_root = f"{res_root}/SimpleStation14.app/Contents/Resources"
 
     for arch in ["x64", "arm64"]:
         full_arch_name = "x86_64" if arch == "x64" else arch

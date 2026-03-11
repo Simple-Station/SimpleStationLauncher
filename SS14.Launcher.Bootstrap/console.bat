@@ -1,3 +1,3 @@
-"Space Station 14 Launcher.exe" --debug
+"SimpleStation14 Launcher.exe" --debug
 
 PAUSE
