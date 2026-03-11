@@ -170,7 +170,7 @@
             <!-- Favorite add/remove button -->
             <Button Name="FavoriteButton"
                     Classes="FavoriteButton"
-                    Classes.OpenRight="{Binding ViewedInFavoritesPane}"
+                    Classes.OpenLeft="{Binding ViewedInFavoritesPane}"
                     Classes.IsFavorite="{Binding IsFavorite}"
                     Command="{Binding FavoriteButtonPressed}">
               <views:IconLabel Name="FavoriteButtonIconLabel"
