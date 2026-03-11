@@ -4,9 +4,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:loc="clr-namespace:SS14.Launcher.Localization"
         xmlns:v="clr-namespace:SS14.Launcher.Views"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="150"
-        MinWidth="600" MinHeight="150"
-        Width="600" Height="150"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="200"
+        MinWidth="600" MinHeight="200"
+        Width="600" Height="200"
         x:Class="SS14.Launcher.Views.SelectAccountDialog"
         Icon="{DynamicResource WindowIcon}"
         Title="{loc:Loc select-account-dialog-title}"
@@ -16,20 +16,26 @@
   <v:ScaledControl>
     <DockPanel>
       <TextBlock DockPanel.Dock="Top" Classes="NanoHeading" Text="{loc:Loc select-account-dialog-header}" />
-      <TextBlock DockPanel.Dock="Top" Text="{loc:Loc select-account-dialog-description}" TextWrapping="Wrap" />
-      <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Accounts, RelativeSource={RelativeSource AncestorType=Window}}" IsVisible="{Binding !Error, RelativeSource={RelativeSource AncestorType=Window}}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <Button Content="{Binding LoginInfo.DisplayName}"
-              Command="{Binding Confirm, RelativeSource={RelativeSource AncestorType=Window}}"
-              CommandParameter="{Binding}" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-      <Button DockPanel.Dock="Top" Content="{loc:Loc select-account-dialog-error}"
-        Command="{Binding Confirm, RelativeSource={RelativeSource AncestorType=Window}}"
-        CommandParameter="{Binding SelectedAccount, RelativeSource={RelativeSource AncestorType=Window}}"
-        IsVisible="{Binding Error, RelativeSource={RelativeSource AncestorType=Window}}" />
+      <TextBlock DockPanel.Dock="Top" Text="{Binding Description, RelativeSource={RelativeSource AncestorType=Window}}" TextWrapping="Wrap" />
+      <ScrollViewer DockPanel.Dock="Bottom" Margin="0,8,0,0" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel>
+          <ItemsControl ItemsSource="{Binding Accounts, RelativeSource={RelativeSource AncestorType=Window}}" IsVisible="{Binding !Error, RelativeSource={RelativeSource AncestorType=Window}}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Button Content="{Binding LoginInfo.DisplayName}"
+                  Command="{Binding Confirm, RelativeSource={RelativeSource AncestorType=Window}}"
+                  CommandParameter="{Binding}" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Button Command="{Binding Confirm, RelativeSource={RelativeSource AncestorType=Window}}"
+            CommandParameter="{Binding SelectedAccount, RelativeSource={RelativeSource AncestorType=Window}}"
+            IsVisible="{Binding Error, RelativeSource={RelativeSource AncestorType=Window}}">
+            <TextBlock Text="{loc:Loc select-account-dialog-error}" TextWrapping="Wrap" />
+          </Button>
+          <Button Content="{loc:Loc account-drop-down-add-account}" Command="{Binding AddAccount, RelativeSource={RelativeSource AncestorType=Window}}" />
+        </StackPanel>
+      </ScrollViewer>
     </DockPanel>
   </v:ScaledControl>
 </Window>
