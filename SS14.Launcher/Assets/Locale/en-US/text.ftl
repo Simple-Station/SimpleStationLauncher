@@ -106,7 +106,7 @@ login-error-invalid-credentials = Invalid login credentials
 login-error-account-unconfirmed = The email address for this account still needs to be confirmed. Please confirm your email address before trying to log in
 login-error-account-2fa-required = 2-factor authentication required
 login-error-account-2fa-invalid = 2-factor authentication code invalid
-login-error-account-account-locked = Account has been locked. Please contact us if you believe this to be in error.
+login-error-account-account-locked = Account has been locked. Please contact your account provider if you believe this to be in error.
 login-error-unknown = Unknown error
 login-errors-button-ok = Ok
 
