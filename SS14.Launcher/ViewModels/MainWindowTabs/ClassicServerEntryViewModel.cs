@@ -42,19 +42,31 @@ public class ClassicServerEntryViewModel : ViewModelBase
 
     private void Connect()
     {
-        if (IsByondInstalled())
-            Helpers.OpenUri(new Uri(Address));
-        else
+        try
         {
-            Log.Information("User attempted to connect to BYOND server but BYOND is not installed.");
-            // Set the MainWindowViewModel's CustomInfo to show the BYOND not installed message
-            // I didn't wanna make another dialog, reuse the generic thing :)
+            if (IsByondInstalled())
+                Helpers.OpenUri(new Uri(Address));
+            else
+            {
+                Log.Information("User attempted to connect to BYOND server but BYOND is not installed.");
+                // Set the MainWindowViewModel's CustomInfo to show the BYOND not installed message
+                // I didn't wanna make another dialog, reuse the generic thing :)
+                _mainWindow.CustomInfo = new LauncherInfoManager.CustomInfo()
+                {
+                    Message = LocalizationManager.Instance.GetString("tab-servers-byond-error-msg"),
+                    Description = LocalizationManager.Instance.GetString("tab-servers-byond-error-desc"),
+                    LinkText = LocalizationManager.Instance.GetString("tab-servers-byond-error-link-text"),
+                    Link = "https://www.byond.com/download/",
+                };
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "Error while connecting to BYOND server {Address}", Address);
             _mainWindow.CustomInfo = new LauncherInfoManager.CustomInfo()
             {
-                Message = LocalizationManager.Instance.GetString("tab-servers-byond-error-msg"),
-                Description = LocalizationManager.Instance.GetString("tab-servers-byond-error-desc"),
-                LinkText = LocalizationManager.Instance.GetString("tab-servers-byond-error-link-text"),
-                Link = "https://www.byond.com/download/",
+                Message = "Failed to connect to BYOND server",
+                Description = $"An error occurred while trying to launch BYOND:\n{e.Message}",
             };
         }
     }
