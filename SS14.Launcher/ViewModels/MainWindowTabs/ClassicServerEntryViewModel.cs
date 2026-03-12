@@ -65,8 +65,8 @@ public class ClassicServerEntryViewModel : ViewModelBase
             Log.Error(e, "Error while connecting to BYOND server {Address}", Address);
             _mainWindow.CustomInfo = new LauncherInfoManager.CustomInfo()
             {
-                Message = "Failed to connect to BYOND server",
-                Description = $"An error occurred while trying to launch BYOND:\n{e.Message}",
+                Message = LocalizationManager.Instance.GetString("tab-servers-byond-error-msg"),
+                Description = LocalizationManager.Instance.GetString("tab-servers-byond-error-desc") + $"\n{e.Message}",
             };
         }
     }

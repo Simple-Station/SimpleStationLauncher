@@ -257,6 +257,9 @@ tab-servers-byond-title = BYOND Servers
 tab-servers-byond-error-msg = BYOND not installed or found
 tab-servers-byond-error-desc = To connect to BYOND servers, please install BYOND from https://www.byond.com/download/ and ensure it is set as the default program for handling byond:// links.
 tab-servers-byond-error-link-text = Download BYOND
+tab-servers-byond-exception-msg = Failed to connect to BYOND server
+tab-servers-byond-exception-desc = An error occurred while trying to launch BYOND: 
+
 tab-servers-refresh = Refresh
 filters = Filters ({ $filteredServers } / { $totalServers })
 tab-servers-search-watermark = Search For Servers…
