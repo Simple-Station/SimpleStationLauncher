@@ -57,7 +57,7 @@ public sealed class ClassicServerListCache
         {
             var name = ExtractNameFromStatus(server.Status) ?? "Unknown Server";
             var roundTime = ExtractRoundTimeFromStatus(server.Status) ?? "In-Lobby";
-            var address = $"byond://BYOND.world.{server.UrlId}";
+            var address = $"byond://BYOND.world.{Uri.EscapeDataString(server.UrlId)}";
             
             list.Add(new ClassicServerStatusData(name, address, server.Players, CleanStatus(server.Status, name) ?? "", roundTime));
         }
