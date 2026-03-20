@@ -728,7 +728,11 @@ public partial class Connector : ReactiveObject
 
         if (release)
         {
-            basePath = Path.Combine(LauncherPaths.DirLauncherInstall, "loader");
+            basePath = LauncherPaths.DirLauncherInstall;
+            if (OperatingSystem.IsMacOS())
+                basePath = Path.Combine(basePath, "..", "..");
+            else
+                basePath = Path.Combine(basePath, "loader");
         }
         else
         {
