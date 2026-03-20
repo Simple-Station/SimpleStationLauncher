@@ -1,6 +1,6 @@
 # SimpleStationLauncher (Space Station: Beyond)
 
-## [Direct Download (GitHub)](https://github.com/Simple-Station/SimpleStationLauncher/releases/latest) | [Steam (not yet public)](https://store.steampowered.com/app/3731580/Space_Station_Beyond/) | [Website](https://simplestation.org) | [Discord](https://discord.gg/49KeKwXc8g)
+## [Direct Download (GitHub)](https://github.com/Simple-Station/SimpleStationLauncher/releases/latest) | [Steam](https://store.steampowered.com/app/3731580/Space_Station_Beyond/) | [Website](https://simplestation.org) | [Discord](https://discord.gg/49KeKwXc8g)
 
 **Note:** Do not copy your launcher data from your Space Wizards launcher install, as it may make this launcher unable to launch due to incompatible data.
 
