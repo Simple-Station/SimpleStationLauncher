@@ -9,7 +9,6 @@ using System.Runtime.Loader;
 using NSec.Cryptography;
 using Robust.LoaderApi;
 
-
 namespace SS14.Loader;
 
 internal enum ExitCode : int
@@ -27,11 +26,6 @@ internal class Program
 
     private readonly IFileApi _fileApi;
 
-    /// <summary>
-    /// Main Program class constructor. Loads assembly contexts.
-    /// </summary>
-    /// <param name="robustPath"></param>
-    /// <param name="engineArgs"></param>
     private Program(string robustPath, string[] engineArgs)
     {
         _engineArgs = engineArgs;
@@ -59,22 +53,22 @@ internal class Program
         return IntPtr.Zero;
     }
 
-    /// <summary>
-    /// Runs the program.
-    /// </summary>
-    /// <returns></returns>
     private bool Run()
     {
-        if (!TryOpenAssembly(RobustAssemblyName, out Assembly? clientAssembly))
+        if (!TryOpenAssembly(RobustAssemblyName, out var clientAssembly))
         {
-            Console.WriteLine("Unable to locate Robust.Client.dll in engine build!");
+            Console.WriteLine($"Unable to locate {RobustAssemblyName} assembly in engine build!");
             return false;
         }
 
         if (!TryGetLoader(clientAssembly, out var loader))
             return false;
 
+#if USE_SYSTEM_SQLITE
+        SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
+#else
         SQLitePCL.Batteries_V2.Init();
+#endif
 
         var launcher = Environment.GetEnvironmentVariable("SS14_LAUNCHER_PATH");
         var redialApi = launcher != null ? new RedialApi(launcher) : null;
@@ -112,7 +106,6 @@ internal class Program
             contentApi?.Dispose();
             overlayApi?.Dispose();
         }
-
         return true;
     }
 
@@ -134,7 +127,7 @@ internal class Program
             return false;
         }
 
-        loader = (ILoaderEntryPoint)Activator.CreateInstance(type)!;
+        loader = (ILoaderEntryPoint) Activator.CreateInstance(type)!;
         return true;
     }
 
@@ -170,11 +163,10 @@ internal class Program
     [STAThread]
     internal static int Main(string[] args)
     {
-        // TEMP: Arguments can be parsed separately for tighter error handling.
         if (args.Length < 3)
         {
             Console.WriteLine("Usage: SS14.Loader <robustPath> <signature> <public key> [engineArg [engineArg...]]");
-            return (int)ExitCode.InvalidSignature;
+            return (int) ExitCode.InvalidSignature;
         }
 
         var robustPath = args[0];
@@ -201,17 +193,16 @@ internal class Program
 #endif
             {
                 Console.WriteLine("Failed to verify engine signature!");
-                return (int)ExitCode.InvalidSignature;
+                return (int) ExitCode.InvalidSignature;
             }
         }
 
         var program = new Program(robustPath, args[3..]);
         if (!program.Run())
         {
-            return (int)ExitCode.FailedProgramExecution;
+            return (int) ExitCode.FailedProgramExecution;
         }
 
-        // WIP: Remove if not needed.
         /*Console.WriteLine("lsasm dump:");
         foreach (var asmLoadContext in AssemblyLoadContext.All)
         {
@@ -222,6 +213,6 @@ internal class Program
             }
         }*/
 
-        return (int)ExitCode.Success;
+        return (int) ExitCode.Success;
     }
 }
