@@ -767,7 +767,7 @@ public partial class Connector : ReactiveObject
         {
             if (release)
             {
-                var appPath = Path.Combine(basePath, "SimpleStation14.app");
+                var appPath = Path.GetFullPath(Path.Combine(basePath, "SimpleStation14.app"));
                 Log.Debug("Using app bundle: {appPath}", appPath);
 
                 Log.Debug("Clearing quarantine on loader.");
