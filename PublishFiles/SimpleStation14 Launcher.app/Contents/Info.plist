@@ -5,7 +5,7 @@
     <key>CFBundleName</key>
     <string>SS14L</string>
     <key>CFBundleDisplayName</key>
-    <string>SimpleStation14 Launcher</string>
+    <string>SimpleStation14</string>
     <key>CFBundleExecutable</key>
     <string>SS14</string>
     <!--
