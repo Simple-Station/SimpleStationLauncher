@@ -40,17 +40,17 @@ def publish_windows(x64_only: bool):
 
     clear_prev_publish("Windows")
 
-    dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", "win-x64", False, "/p:FullRelease=True", "/p:RobustILLink=true")
-    dotnet_publish("SS14.Loader/SS14.Loader.csproj", "win-x64", False, "/p:FullRelease=True", "/p:RobustILLink=true")
+    dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", "win-x64", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Windows")
+    dotnet_publish("SS14.Loader/SS14.Loader.csproj", "win-x64", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Windows")
     if os.name == 'nt':
-        dotnet_publish("SS14.Launcher.Bootstrap/SS14.Launcher.Bootstrap.csproj", "win-x64", True, "/p:FullRelease=True", "/p:RobustILLink=true")
+        dotnet_publish("SS14.Launcher.Bootstrap/SS14.Launcher.Bootstrap.csproj", "win-x64", True, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Windows")
 
     safe_set_subsystem(f"SS14.Launcher/bin/Release/{TFM}/win-x64/publish/SS14.Launcher.exe")
     safe_set_subsystem(f"SS14.Loader/bin/Release/{TFM}/win-x64/publish/SS14.Loader.exe")
 
     if not x64_only:
-        dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", "win-arm64", False, "/p:FullRelease=True", "/p:RobustILLink=true")
-        dotnet_publish("SS14.Loader/SS14.Loader.csproj", "win-arm64", False, "/p:FullRelease=True", "/p:RobustILLink=true")
+        dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", "win-arm64", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Windows")
+        dotnet_publish("SS14.Loader/SS14.Loader.csproj", "win-arm64", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Windows")
         safe_set_subsystem(f"SS14.Launcher/bin/Release/{TFM}/win-arm64/publish/SS14.Launcher.exe")
         safe_set_subsystem(f"SS14.Loader/bin/Release/{TFM}/win-arm64/publish/SS14.Loader.exe")
 
@@ -87,12 +87,12 @@ def publish_linux(x64_only: bool):
 
     os.makedirs("bin/publish/Linux", exist_ok=True)
 
-    dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", "linux-x64", False, "/p:FullRelease=True", "/p:RobustILLink=true")
-    dotnet_publish("SS14.Loader/SS14.Loader.csproj", "linux-x64", False, "/p:FullRelease=True", "/p:RobustILLink=true")
+    dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", "linux-x64", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Linux")
+    dotnet_publish("SS14.Loader/SS14.Loader.csproj", "linux-x64", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Linux")
 
     if not x64_only:
-        dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", "linux-arm64", False, "/p:FullRelease=True", "/p:RobustILLink=true")
-        dotnet_publish("SS14.Loader/SS14.Loader.csproj", "linux-arm64", False, "/p:FullRelease=True", "/p:RobustILLink=true")
+        dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", "linux-arm64", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Linux")
+        dotnet_publish("SS14.Loader/SS14.Loader.csproj", "linux-arm64", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=Linux")
 
     os.makedirs("bin/publish/Linux/bin_x64/loader", exist_ok=True)
     os.makedirs("bin/publish/Linux/dotnet_x64", exist_ok=True)
@@ -129,8 +129,8 @@ def publish_osx():
 
     for arch in ["x64", "arm64"]:
         full_arch_name = "x86_64" if arch == "x64" else arch
-        dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", f"osx-{arch}", False, "/p:FullRelease=True", "/p:RobustILLink=true")
-        dotnet_publish("SS14.Loader/SS14.Loader.csproj", f"osx-{arch}", False, "/p:FullRelease=True", "/p:RobustILLink=true")
+        dotnet_publish("SS14.Launcher/SS14.Launcher.csproj", f"osx-{arch}", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=MacOS")
+        dotnet_publish("SS14.Loader/SS14.Loader.csproj", f"osx-{arch}", False, "/p:FullRelease=True", "/p:RobustILLink=true", "/p:TargetOS=MacOS")
 
         shutil.copytree(f"SS14.Launcher/bin/Release/{TFM}/osx-{arch}/publish", f"{res_root}/{full_arch_name}/bin", dirs_exist_ok=True)
         shutil.copytree(f"SS14.Loader/bin/Release/{TFM}/osx-{arch}/publish", f"{loader_res_root}/{full_arch_name}/bin", dirs_exist_ok=True)
