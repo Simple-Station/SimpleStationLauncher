@@ -6,32 +6,32 @@ on:
       - 'v*'
 
 jobs:
-  build-windows-bootstrap:
-    runs-on: windows-2022
+  # build-windows-bootstrap:
+  #   runs-on: windows-2022
 
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: false
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       submodules: false
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 10.0.x
+  #   - name: Setup .NET
+  #     uses: actions/setup-dotnet@v3
+  #     with:
+  #       dotnet-version: 10.0.x
 
-    - name: Publish bootstrap
-      working-directory: SS14.Launcher.Bootstrap
-      run: dotnet publish -r win-x64
+  #   - name: Publish bootstrap
+  #     working-directory: SS14.Launcher.Bootstrap
+  #     run: dotnet publish -r win-x64
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: "bootstrap"
-        retention-days: 1
-        path: "SS14.Launcher.Bootstrap/bin/Release/net10.0-windows/win-x64/publish/SimpleStation14 Launcher.exe"
+  #   - uses: actions/upload-artifact@v4
+  #     with:
+  #       name: "bootstrap"
+  #       retention-days: 1
+  #       path: "SS14.Launcher.Bootstrap/bin/Release/net10.0-windows/win-x64/publish/SimpleStation14 Launcher.exe"
 
   build:
     runs-on: ubuntu-latest
-    needs: build-windows-bootstrap
+    # needs: build-windows-bootstrap
 
     steps:
     - name: Checkout code
@@ -45,15 +45,18 @@ jobs:
         dotnet-version: 10.0.x
 
     - name: Create build (macOS & Linux)
-      run: ./publish.py osx linux
+      run: ./publish.py osx # linux
 
-    - name: Download Windows Bootstrap
-      uses: actions/download-artifact@v5
-      with:
-        name: "bootstrap"
+    - name: Debug show files
+      run: ls -R bin/**
 
-    - name: Create build (Windows)
-      run: ./publish.py windows --x64-only
+    # - name: Download Windows Bootstrap
+    #   uses: actions/download-artifact@v5
+    #   with:
+    #     name: "bootstrap"
+
+    # - name: Create build (Windows)
+    #   run: ./publish.py windows --x64-only
 
     - name: Create Release
       id: create_release
@@ -66,27 +69,27 @@ jobs:
         draft: false
         prerelease: ${{ contains(github.ref, 'pre') }}
 
-    # Upload Linux
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./SS14.Launcher_Linux.zip
-        asset_name: SS14.Launcher_Linux.zip
-        asset_content_type: application/zip
+    # # Upload Linux
+    # - name: Upload Release Asset
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./SS14.Launcher_Linux.zip
+    #     asset_name: SS14.Launcher_Linux.zip
+    #     asset_content_type: application/zip
 
-    # Upload Windows
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./SS14.Launcher_Windows.zip
-        asset_name: SS14.Launcher_Windows.zip
-        asset_content_type: application/zip
+    # # Upload Windows
+    # - name: Upload Release Asset
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./SS14.Launcher_Windows.zip
+    #     asset_name: SS14.Launcher_Windows.zip
+    #     asset_content_type: application/zip
 
     # Upload macOS
     - name: Upload Release Asset
