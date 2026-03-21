@@ -26,6 +26,15 @@ public sealed class ClassicServerListCache
         AllServers = new ReadOnlyObservableCollection<ClassicServerStatusData>(_allServers);
     }
 
+    public ClassicServerStatusData GetStatusFor(string address)
+    {
+        foreach (var server in _allServers)
+            if (server.Address == address)
+                return server;
+
+        return new ClassicServerStatusData("Unknown Server", address, 0, "Fetching...", "");
+    }
+
     public async Task Refresh()
     {
         try
