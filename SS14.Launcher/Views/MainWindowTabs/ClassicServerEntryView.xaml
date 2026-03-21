@@ -4,11 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mainWindowTabs="clr-namespace:SS14.Launcher.ViewModels.MainWindowTabs"
              xmlns:loc="clr-namespace:SS14.Launcher.Localization"
+             xmlns:views="clr-namespace:SS14.Launcher.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50"
              x:Class="SS14.Launcher.Views.MainWindowTabs.ClassicServerEntryView">
     <Design.DataContext>
         <mainWindowTabs:ClassicServerEntryViewModel />
     </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="Button.FavoriteButton > views|IconLabel">
+            <Setter Property="Icon" Value="{DynamicResource 'ButtonIcon-star-outline'}" />
+        </Style>
+        <Style Selector="Button.FavoriteButton.IsFavorite > views|IconLabel">
+            <Setter Property="Icon" Value="{DynamicResource 'ButtonIcon-star'}" />
+        </Style>
+    </UserControl.Styles>
 
     <Panel>
         <Expander Name="Expando" Classes="NoPad" IsExpanded="{Binding IsExpanded}">
@@ -43,7 +53,28 @@
                 </Grid>
             </Expander.Header>
             <DockPanel Margin="10">
-                <TextBlock Text="{Binding Status}" TextWrapping="Wrap" />
+                <TextBlock DockPanel.Dock="Top" Text="{Binding Status}" TextWrapping="Wrap" />
+
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 8, 0, 0">
+                    <Button IsVisible="{Binding ViewedInFavoritesPane}"
+                            Classes="OpenBoth"
+                            Content="{loc:Loc server-entry-raise}"
+                            Command="{Binding FavoriteRaiseButtonPressed}" />
+                    <Button IsVisible="{Binding ViewedInFavoritesPane}"
+                            Classes="OpenBoth"
+                            Content="{loc:Loc server-entry-lower}"
+                            Command="{Binding FavoriteLowerButtonPressed}" />
+
+                    <Button Name="FavoriteButton"
+                            Classes="FavoriteButton"
+                            Classes.OpenLeft="{Binding ViewedInFavoritesPane}"
+                            Classes.IsFavorite="{Binding IsFavorite}"
+                            Command="{Binding FavoriteButtonPressed}">
+                        <views:IconLabel Name="FavoriteButtonIconLabel"
+                                         Content="{Binding FavoriteButtonText}"
+                                         Height="20" />
+                    </Button>
+                </StackPanel>
             </DockPanel>
         </Expander>
     </Panel>

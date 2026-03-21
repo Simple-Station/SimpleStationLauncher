@@ -13,6 +13,7 @@ public class ClassicServerListTabViewModel : MainWindowTabViewModel
 {
     private readonly MainWindowViewModel _mainWindow;
     private readonly ClassicServerListCache _cache;
+    private readonly SS14.Launcher.Models.Data.DataManager _cfg;
 
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
@@ -37,6 +38,7 @@ public class ClassicServerListTabViewModel : MainWindowTabViewModel
     {
         _mainWindow = mainWindow;
         _cache = Locator.Current.GetRequiredService<ClassicServerListCache>();
+        _cfg = Locator.Current.GetRequiredService<SS14.Launcher.Models.Data.DataManager>();
         RefreshPressed = ReactiveCommand.CreateFromTask(_cache.Refresh);
 
         // Initial populate if any
@@ -59,7 +61,7 @@ public class ClassicServerListTabViewModel : MainWindowTabViewModel
 
         foreach (var s in sorted)
         {
-            AllServers.Add(new ClassicServerEntryViewModel(_mainWindow, s));
+            AllServers.Add(new ClassicServerEntryViewModel(_mainWindow, s, null, _cfg));
         }
     }
 

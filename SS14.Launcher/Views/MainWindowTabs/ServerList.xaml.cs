@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Metadata;
 using Serilog;
+using SS14.Launcher.ViewModels;
 using SS14.Launcher.ViewModels.MainWindowTabs;
 
 namespace SS14.Launcher.Views.MainWindowTabs;
@@ -60,16 +61,16 @@ public sealed partial class ServerList : TemplatedControl
         set => SetAndRaise(SpinnerVisibleProperty, ref _spinnerVisible, value);
     }
 
-    public static readonly DirectProperty<ServerList, IReadOnlyCollection<ServerEntryViewModel>> ListProperty =
-        AvaloniaProperty.RegisterDirect<ServerList, IReadOnlyCollection<ServerEntryViewModel>>(
+    public static readonly DirectProperty<ServerList, IReadOnlyCollection<IViewModelBase>> ListProperty =
+        AvaloniaProperty.RegisterDirect<ServerList, IReadOnlyCollection<IViewModelBase>>(
             nameof(List),
             o => o.List,
             (o, v) => o.List = v
         );
 
-    private IReadOnlyCollection<ServerEntryViewModel> _serverList = Array.Empty<ServerEntryViewModel>();
+    private IReadOnlyCollection<IViewModelBase> _serverList = Array.Empty<IViewModelBase>();
 
-    public IReadOnlyCollection<ServerEntryViewModel> List
+    public IReadOnlyCollection<IViewModelBase> List
     {
         get => _serverList;
         set => SetAndRaise(ListProperty, ref _serverList, value);
