@@ -132,7 +132,7 @@ public sealed partial class Updater : ReactiveObject
 
         await Task.Run(() => { CullOldContentVersions(con); }, CancellationToken.None);
 
-        return await InstallEnginesForVersion(con, versionRowId, buildInfo.EngineType, cancel);
+        return await InstallEnginesForVersion(con, versionRowId, buildInfo.EngineType, moduleManifest, cancel);
     }
 
     private async Task<ContentLaunchInfo> InstallContentBundle(
@@ -254,32 +254,36 @@ public sealed partial class Updater : ReactiveObject
             return versionId;
         }, CancellationToken.None);
 
-        return await InstallEnginesForVersion(con, versionId, metadata.Engine, cancel);
+        return await InstallEnginesForVersion(con, versionId, metadata.Engine, moduleManifest, cancel);
     }
 
     private async Task<ContentLaunchInfo> InstallEnginesForVersion(
         SqliteConnection con,
         long versionRowId,
         string engine,
+        Lazy<Task<EngineModuleManifest>> moduleManifest,
         CancellationToken cancel)
     {
         Status = UpdateStatus.CheckingClientUpdate;
         var modules = con.Query<(string, string)>(
-            "SELECT ModuleName, moduleVersion FROM ContentEngineDependency WHERE ModuleName = @Engine AND VersionId = @Version",
-            new { Engine = engine, Version = versionRowId }).ToArray();
+            "SELECT ModuleName, moduleVersion FROM ContentEngineDependency WHERE VersionId = @Version",
+            new { Version = versionRowId }).ToArray();
 
         for (var index = 0; index < modules.Length; index++)
         {
             var (name, version) = modules[index];
 
-            if (!ConfigConstants.EngineBuildsUrl.TryGetValue(name, out _))
+            if (name == engine)
             {
-                Log.Error($"No engine URL set for module {name}");
-                continue;
+                var newEngineVersion = await InstallEngineVersionIfMissing(version, name, cancel);
+                modules[index] = (name, newEngineVersion);
             }
-
-            var newEngineVersion = await InstallEngineVersionIfMissing(version, name, cancel);
-            modules[index] = (name, newEngineVersion);
+            else
+            {
+                Status = UpdateStatus.DownloadingEngineModules;
+                var manifest = await moduleManifest.Value;
+                await _engineManager.DownloadModuleIfNecessary(name, version, manifest, progress: null, cancel);
+            }
         }
 
         Status = UpdateStatus.CullingEngine;

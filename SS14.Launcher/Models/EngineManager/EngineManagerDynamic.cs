@@ -326,8 +326,11 @@ public sealed partial class EngineManagerDynamic : IEngineManager
 
     public async Task<EngineModuleManifest> GetEngineModuleManifest(string engine, CancellationToken cancel = default)
     {
-        if (!ConfigConstants.EngineBuildsUrl.TryGetValue(engine, out var urls))
-            throw new InvalidOperationException("No manifest URL for engine module");
+        if (!ConfigConstants.EngineModulesUrl.TryGetValue(engine, out var urls))
+        {
+            if (!ConfigConstants.EngineModulesUrl.TryGetValue("Robust", out urls))
+                throw new InvalidOperationException("No manifest URL for engine module");
+        }
 
         if (await urls.GetFromJsonAsync<EngineModuleManifest>(_http, cancel) is { } manifest)
             return manifest;
