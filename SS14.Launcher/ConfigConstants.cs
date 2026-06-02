@@ -106,6 +106,13 @@ public static class ConfigConstants
                 "https://robust-builds.fallback.cdn.spacestation14.com/modules.json",
             ])
         },
+        {
+            "Supermatter",
+            new UrlFallbackSet([
+                "https://robust-builds.cdn.spacestation14.com/modules.json",
+                "https://robust-builds.fallback.cdn.spacestation14.com/modules.json",
+            ])
+        },
     };
 
     private static readonly UrlFallbackSet LauncherDataBaseUrl = new([
