@@ -8,13 +8,18 @@ using SS14.Launcher.Localization;
 using SS14.Launcher.Models;
 using SS14.Launcher.Models.ServerStatus;
 using SS14.Launcher.Utility;
+using SS14.Launcher.Models.Data;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace SS14.Launcher.ViewModels.MainWindowTabs;
 
-public class ClassicServerEntryViewModel : ViewModelBase
+public class ClassicServerEntryViewModel : ViewModelBase, IRecipient<FavoritesChanged>
 {
     private readonly MainWindowViewModel _mainWindow;
     private readonly ClassicServerStatusData _server;
+    private readonly DataManager? _cfg;
+
+    public FavoriteServer? Favorite { get; }
 
     public string Name => _server.Name;
     public string Address => _server.Address;
@@ -32,12 +37,62 @@ public class ClassicServerEntryViewModel : ViewModelBase
 
     public ReactiveCommand<System.Reactive.Unit, System.Reactive.Unit> ConnectCommand { get; }
 
-    public ClassicServerEntryViewModel(MainWindowViewModel mainWindow, ClassicServerStatusData server)
+    public ClassicServerEntryViewModel(MainWindowViewModel mainWindow, ClassicServerStatusData server, FavoriteServer? favorite = null, DataManager? cfg = null)
     {
         _mainWindow = mainWindow;
         _server = server;
+        Favorite = favorite;
+        _cfg = cfg;
 
         ConnectCommand = ReactiveCommand.Create(Connect);
+
+        WeakReferenceMessenger.Default.Register(this);
+    }
+
+    public bool ViewedInFavoritesPane { get; set; }
+
+    public bool IsFavorite => _cfg?.FavoriteServers.Lookup(Address).HasValue ?? false;
+
+    public string FavoriteButtonText => IsFavorite
+        ? LocalizationManager.Instance.GetString("server-entry-remove-favorite")
+        : LocalizationManager.Instance.GetString("server-entry-add-favorite");
+
+    public void FavoriteButtonPressed()
+    {
+        if (_cfg == null) return;
+        if (IsFavorite)
+            _cfg.RemoveFavoriteServer(_cfg.FavoriteServers.Lookup(Address).Value);
+        else
+        {
+            var fav = new FavoriteServer(Name, Address);
+            _cfg.AddFavoriteServer(fav);
+        }
+
+        _cfg.CommitConfig();
+    }
+
+    public void FavoriteRaiseButtonPressed()
+    {
+        if (_cfg == null || !IsFavorite)
+            return;
+
+        _cfg.ReorderFavoriteServer(_cfg.FavoriteServers.Lookup(Address).Value, 1);
+        _cfg.CommitConfig();
+    }
+
+    public void FavoriteLowerButtonPressed()
+    {
+        if (_cfg == null || !IsFavorite)
+            return;
+
+        _cfg.ReorderFavoriteServer(_cfg.FavoriteServers.Lookup(Address).Value, -1);
+        _cfg.CommitConfig();
+    }
+
+    public void Receive(FavoritesChanged message)
+    {
+        this.RaisePropertyChanged(nameof(IsFavorite));
+        this.RaisePropertyChanged(nameof(FavoriteButtonText));
     }
 
     private void Connect()
