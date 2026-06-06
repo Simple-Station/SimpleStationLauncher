@@ -46,10 +46,19 @@ public static class ConfigConstants
             "SimpleStation",
             new(new("https://auth.simplestation.org/"), new("https://account.simplestation.org/"), true)
         },
+        // No support yet
+        // {
+        //     "mvKeyAuth",
+        //     TemplateAuthServer
+        // },
         {
             CustomAuthServer,
             TemplateAuthServer
         },
+        // {
+        //     GuestAuthServer,
+        //     TemplateAuthServer
+        // },
     };
 
     public static readonly Uri[] DefaultHubUrls =

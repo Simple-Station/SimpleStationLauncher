@@ -76,6 +76,7 @@ select-account-dialog-header = Select Account
 select-account-dialog-description =
     Your currently selected account is not allowed to connect to this server, pick another one using an allowed account provider to join.
     Allowed account providers for this server: { $allowedAuths }
+select-account-dialog-unknown-auth = { $authUrl } (unsupported)
 select-account-dialog-error =
     You do not have any accounts logged in that can connect to this server, exit?
 
@@ -258,7 +259,7 @@ tab-servers-byond-error-msg = BYOND not installed or found
 tab-servers-byond-error-desc = To connect to BYOND servers, please install BYOND from https://www.byond.com/download/ and ensure it is set as the default program for handling byond:// links.
 tab-servers-byond-error-link-text = Download BYOND
 tab-servers-byond-exception-msg = Failed to connect to BYOND server
-tab-servers-byond-exception-desc = An error occurred while trying to launch BYOND: 
+tab-servers-byond-exception-desc = An error occurred while trying to launch BYOND:
 
 tab-servers-refresh = Refresh
 filters = Filters ({ $filteredServers } / { $totalServers })

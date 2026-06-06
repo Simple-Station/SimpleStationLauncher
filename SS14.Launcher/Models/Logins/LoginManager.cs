@@ -229,13 +229,9 @@ public sealed class LoginManager : ReactiveObject
         return response.Content.AsJson<AccountSiteResponse>().Result.WebBaseUrl;
     }
 
-    private sealed class ActiveLoginData : LoggedInAccount
+    public sealed class ActiveLoginData(LoginInfo info) : LoggedInAccount(info)
     {
         private AccountLoginStatus _status;
-
-        public ActiveLoginData(LoginInfo info) : base(info)
-        {
-        }
 
         public override AccountLoginStatus Status => _status;
 

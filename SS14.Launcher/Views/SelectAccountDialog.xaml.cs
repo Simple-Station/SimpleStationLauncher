@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using SS14.Launcher.Localization;
+using SS14.Launcher.Models;
+using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.Logins;
 using SS14.Launcher.Utility;
 
@@ -25,10 +27,24 @@ public partial class SelectAccountDialog : Window
         _loginMgr = loginManager;
 
         Accounts = _loginMgr.Logins.KeyValues
-            .Where(x => authMethods.FirstOrDefault(m => m == ConfigConstants.AuthUrls[x.Value.Server].AuthUrl.AbsoluteUri) != null)
+            .Where(x => authMethods.FirstOrDefault(m =>
+                m == ConfigConstants.AuthUrls[x.Value.Server].AuthUrl.AbsoluteUri) != null)
             .Select(x => x.Value);
+            // // Make a copy of every account but set the auth server to guest
+            // .Concat(_loginMgr.Logins.KeyValues
+            //     .Where(x => x.Value.Server != ConfigConstants.GuestAuthServer)
+            //     .Select(x => new LoginManager.ActiveLoginData(new LoginInfo
+            //     {
+            //         UserId = x.Value.UserId,
+            //         Username = x.Value.Username,
+            //         Server = ConfigConstants.GuestAuthServer,
+            //         ServerUrl = "",
+            //         Token = new LoginToken("", System.DateTimeOffset.UtcNow)
+            //     })));
         Error = !Accounts.Any();
-        Description = _loc.GetString("select-account-dialog-description", ("allowedAuths", string.Join(", ", authMethods.Select(m => ConfigConstants.AuthUrls.FirstOrDefault(kv => kv.Value.AuthUrl.AbsoluteUri == m).Key))));
+        Description = _loc.GetString("select-account-dialog-description", ("allowedAuths", string.Join(", ", authMethods.Select(m =>
+             ConfigConstants.AuthUrls.FirstOrDefault(kv => kv.Value.AuthUrl.AbsoluteUri == m || kv.Key == m).Key
+                ?? _loc.GetString("select-account-dialog-unknown-auth", ("authUrl", m))))));
     }
 
     public void Confirm(object account)
