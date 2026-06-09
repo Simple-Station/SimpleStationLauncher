@@ -115,7 +115,7 @@ buildDotnetModule rec {
     fontconfig
     glew
 
-    # Idk what these be
+    # Misc
     at-spi2-core
     at-spi2-atk
     libxkbcommon
