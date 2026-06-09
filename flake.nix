@@ -2,6 +2,7 @@
   description = "Flake providing a package for the SimpleStation14 Launcher.";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  inputs.self.submodules = true;
   outputs =
     { self, nixpkgs, ... }:
     let
@@ -15,7 +16,7 @@
       packages = forAllSystems (pkgs: {
         default = packages.${pkgs.system}.simple-station-launcher-development;
         # Build via nix build -L 'git+file://PATH?submodules=1'
-        simple-station-launcher-development = pkgs.callPackage ./nix/package.nix { };
+        simple-station-launcher-development = pkgs.callPackage ./nix/package.nix { source = self; };
         simple-station-launcher = pkgs.callPackage ./nix/package.nix rec {
           version = "4.1.0";
           source = pkgs.fetchFromGitHub {
