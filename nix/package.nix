@@ -83,6 +83,7 @@ buildDotnetModule rec {
   nativeBuildInputs = [
     iconConvTools
     copyDesktopItems
+    wrapGAppsHook4
   ];
 
   runtimeDeps = [
@@ -121,7 +122,6 @@ buildDotnetModule rec {
     libxkbcommon
     wayland
     fontconfig.lib
-    wrapGAppsHook4
 
     # TODO: Figure out dependencies for CEF support.
   ]
@@ -131,9 +131,7 @@ buildDotnetModule rec {
   ++ lib.optional pulseaudioSupport libpulseaudio;
 
   # Adapted from SS14.Launcher commit 02441df by Carlen White <WhiterSuburban@gmail.com>
-  makeWrapperArgs = [
-    ''--set ROBUST_SOUNDFONT_OVERRIDE ${soundfont-path}''
-  ];
+  makeWrapperArgs = [''--set ROBUST_SOUNDFONT_OVERRIDE ${soundfont-path}''];
 
   executables = [ "SS14.Launcher" ];
 
@@ -154,12 +152,6 @@ buildDotnetModule rec {
     cp -r SS14.Loader/bin/${buildType}/*/*/* $out/lib/${pname}/loader/
 
     icoFileToHiColorTheme SS14.Launcher/Assets/icon.ico ${pname} $out
-  '';
-
-  dontWrapGApps = true;
-
-  preFixup = ''
-    makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
   meta = with lib; {
