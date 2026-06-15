@@ -203,7 +203,15 @@ public sealed class LoginManager : ReactiveObject
 
         customAccountSite ??= TryGetAccountUrl(serverId, customAuthUrl);
         if (customAccountSite == null)
+        {
+#if DEBUG
+            // You fool
             throw new ArgumentException("Failed to get account URL for custom server.");
+#else
+            Log.Warning("Failed to get account URL for custom server, using template info.");
+            customAccountSite = ConfigConstants.TemplateAuthServer.AccountSite.ToString();
+#endif
+        }
 
         return new ConfigConstants.AuthServer(new(customAuthUrl), new(customAccountSite));
     }
@@ -218,8 +226,18 @@ public sealed class LoginManager : ReactiveObject
 
         // Make an http request to the custom URL to get the account URL
         var http = HappyEyeballsHttp.CreateHttpClient();
-        var response = http.GetAsync(new Uri(customAuthUrl) + ConfigConstants.TemplateAuthServer.AuthAccountSitePath).Result;
+        HttpResponseMessage response;
+        try
+        {
+            response = http.GetAsync(new Uri(customAuthUrl) + ConfigConstants.TemplateAuthServer.AuthAccountSitePath).Result;
+        }
+        catch (Exception e)
+        {
+            Log.Error($"Failed to contact custom auth server at {customAuthUrl} to get account URL: {e}");
+            return null;
+        }
         http.Dispose();
+
         if (!response.IsSuccessStatusCode)
         {
             Log.Error("Failed to get account URL from custom auth server with status {status}", response.StatusCode);
