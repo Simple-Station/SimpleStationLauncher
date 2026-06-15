@@ -19,9 +19,6 @@ public class RegisterViewModel : BaseLoginViewModel
     private readonly AuthApi _authApi;
     private readonly LoginManager _loginMgr;
 
-    [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
-    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.Select(a => LocalizationManager.Instance.GetString($"login-login-auth-{a}")).ToList();
-    public string FirstServer => Servers.First();
     [Reactive] public string? ServerUrl { get; set; }
     [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
     [Reactive] public bool IsCustom { get; private set; }
@@ -52,9 +49,12 @@ public class RegisterViewModel : BaseLoginViewModel
         this.WhenAnyValue(x => x.Server, x => x.ServerUrl, x => x.EditingUsername, x => x.EditingPassword)
             .Subscribe(s =>
             {
-                IsCustom = Server == ConfigConstants.CustomAuthServer;
-                ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(Server).AuthUrl.ToString();
-                IsServerPotentiallyValid = !IsCustom || !Busy && !string.IsNullOrEmpty(EditingEmail) && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
+                IsCustom = ServerID == ConfigConstants.CustomAuthServer;
+                IsInputValid = IsCustom
+                    ? !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item3) && !string.IsNullOrEmpty(s.Item4)
+                    : !string.IsNullOrEmpty(ServerID) && !string.IsNullOrEmpty(s.Item3) && !string.IsNullOrEmpty(s.Item4);
+                ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(ServerID).AuthUrl.ToString();
+                IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
             });
     }
 

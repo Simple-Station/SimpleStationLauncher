@@ -19,9 +19,6 @@ public class LoginViewModel : BaseLoginViewModel
     private readonly DataManager _dataManager;
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
-    [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
-    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.Select(a => LocalizationManager.Instance.GetString($"login-login-auth-{a}")).ToList();
-    public string FirstServer => Servers.First();
     [Reactive] public string? ServerUrl { get; set; }
     [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
     [Reactive] public bool IsCustom { get; private set; }
@@ -45,13 +42,13 @@ public class LoginViewModel : BaseLoginViewModel
         this.WhenAnyValue(x => x.Server, x => x.ServerUrl, x => x.EditingUsername, x => x.EditingPassword)
             .Subscribe(s =>
             {
-                IsInputValid = s.Item1 == ConfigConstants.CustomAuthServer
-                    ? !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item3)
-                    : !string.IsNullOrEmpty(s.Item1) && !string.IsNullOrEmpty(s.Item3);
-                IsCustom = Server == ConfigConstants.CustomAuthServer;
-                ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(Server).AuthUrl.ToString();
+                IsCustom = ServerID == ConfigConstants.CustomAuthServer;
+                IsInputValid = IsCustom
+                    ? !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item3)
+                    : !string.IsNullOrEmpty(ServerID) && !string.IsNullOrEmpty(s.Item3);
+                ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(ServerID).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
-                RegisterButtonContent = _loc.GetString("login-login-button-register", ("server", _loc.GetString($"login-login-auth-{Server}")));
+                RegisterButtonContent = _loc.GetString("login-login-button-register", ("server", Server));
             });
     }
 
@@ -65,7 +62,7 @@ public class LoginViewModel : BaseLoginViewModel
         Busy = true;
         try
         {
-            var request = new AuthApi.AuthenticateRequest(Server, ServerUrl, EditingUsername, null, EditingPassword);
+            var request = new AuthApi.AuthenticateRequest(ServerID, ServerUrl, EditingUsername, null, EditingPassword);
             var resp = await _authApi.AuthenticateAsync(request);
 
             await DoLogin(this, request, resp, _loginMgr, _authApi);
@@ -128,7 +125,7 @@ public class LoginViewModel : BaseLoginViewModel
 
     // Registration is purely via website for now
     public void RegisterPressed() =>
-        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl).AccountRegUrl);
+        Helpers.OpenUri(LoginManager.GetAuthServerById(ServerID, ServerUrl).AccountRegUrl);
     public void ResendConfirmationPressed() =>
-        Helpers.OpenUri(LoginManager.GetAuthServerById(Server, ServerUrl).AccountResendUrl);
+        Helpers.OpenUri(LoginManager.GetAuthServerById(ServerID, ServerUrl).AccountResendUrl);
 }
