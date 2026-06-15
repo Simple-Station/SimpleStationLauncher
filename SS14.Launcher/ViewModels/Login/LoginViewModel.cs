@@ -20,7 +20,8 @@ public class LoginViewModel : BaseLoginViewModel
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
     [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
-    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.ToList();
+    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.Select(a => LocalizationManager.Instance.GetString($"login-login-auth-{a}")).ToList();
+    public string FirstServer => Servers.First();
     [Reactive] public string? ServerUrl { get; set; }
     [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
     [Reactive] public bool IsCustom { get; private set; }
@@ -50,7 +51,7 @@ public class LoginViewModel : BaseLoginViewModel
                 IsCustom = Server == ConfigConstants.CustomAuthServer;
                 ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(Server).AuthUrl.ToString();
                 IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
-                RegisterButtonContent = _loc.GetString("login-login-button-register", ("server", Server));
+                RegisterButtonContent = _loc.GetString("login-login-button-register", ("server", _loc.GetString($"login-login-auth-{Server}")));
             });
     }
 

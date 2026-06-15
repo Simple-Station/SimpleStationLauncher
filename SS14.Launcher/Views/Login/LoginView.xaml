@@ -35,7 +35,7 @@
     <!-- Dropdown button that lets you pick between auth servers, with a Custom option that makes 2 editable text boxes appear -->
     <ComboBox DockPanel.Dock="Top" MaxWidth="500" Margin="0, 0, 0, 0"
       ItemsSource="{Binding Servers}"
-      SelectedItem="{Binding Server}"
+      SelectedItem="{Binding FirstServer}"
       IsEnabled="{Binding !Busy}">
       <ComboBox.ItemTemplate>
         <DataTemplate DataType="vml:LoginViewModel">

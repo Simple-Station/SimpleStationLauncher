@@ -7,6 +7,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Robust.Shared.AuthLib;
 using SS14.Launcher.Api;
+using SS14.Launcher.Localization;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Models.Logins;
 
@@ -19,7 +20,8 @@ public class RegisterViewModel : BaseLoginViewModel
     private readonly LoginManager _loginMgr;
 
     [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
-    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.ToList();
+    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.Select(a => LocalizationManager.Instance.GetString($"login-login-auth-{a}")).ToList();
+    public string FirstServer => Servers.First();
     [Reactive] public string? ServerUrl { get; set; }
     [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
     [Reactive] public bool IsCustom { get; private set; }
