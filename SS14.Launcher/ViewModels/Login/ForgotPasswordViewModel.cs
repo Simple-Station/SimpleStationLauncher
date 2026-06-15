@@ -14,14 +14,13 @@ public sealed class ForgotPasswordViewModel : BaseLoginViewModel
     private readonly AuthApi _authApi;
     private readonly LocalizationManager _loc = LocalizationManager.Instance;
 
-    [Reactive] public string Server { get; set; } = ConfigConstants.AuthUrls.First().Key;
-    [Reactive] public List<string> Servers { get; set; } = ConfigConstants.AuthUrls.Keys.ToList();
     [Reactive] public string? ServerUrl { get; set; }
     [Reactive] public string ServerUrlPlaceholder { get; set; } = ConfigConstants.AuthUrls.First().Value.AuthUrl.ToString();
     [Reactive] public bool IsCustom { get; private set; }
     [Reactive] public bool IsServerPotentiallyValid { get; private set; }
 
     [Reactive] public string EditingEmail { get; set; } = "";
+    [Reactive] public bool IsInputValid { get; private set; }
 
     private bool _errored;
 
@@ -32,12 +31,15 @@ public sealed class ForgotPasswordViewModel : BaseLoginViewModel
     {
         _authApi = authApi;
 
-        this.WhenAnyValue(x => x.Server, x => x.ServerUrl)
+        this.WhenAnyValue(x => x.Server, x => x.ServerUrl, x => x.EditingEmail)
             .Subscribe(s =>
             {
-                IsCustom = Server == ConfigConstants.CustomAuthServer;
-                ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(Server).AuthUrl.ToString();
-                IsServerPotentiallyValid = !IsCustom || !Busy && !string.IsNullOrEmpty(EditingEmail) && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
+                IsCustom = ServerID == ConfigConstants.CustomAuthServer;
+                IsInputValid = IsCustom
+                    ? !string.IsNullOrEmpty(s.Item2) && !string.IsNullOrEmpty(s.Item3)
+                    : !string.IsNullOrEmpty(ServerID) && !string.IsNullOrEmpty(s.Item3);
+                ServerUrlPlaceholder = IsCustom ? ServerUrl : LoginManager.GetAuthServerById(ServerID).AuthUrl.ToString();
+                IsServerPotentiallyValid = !IsCustom || !Busy && Uri.TryCreate(ServerUrl, UriKind.Absolute, out _);
             });
     }
 

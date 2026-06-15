@@ -32,7 +32,7 @@
                Text="{loc:Loc login-login-auth-server}" />
 
 
-    <!-- Dropdown button that lets you pick between auth servers, with a Custom option that makes 2 editable text boxes appear -->
+    <!-- Dropdown button that lets you pick between auth servers plus a Custom option -->
     <ComboBox DockPanel.Dock="Top" MaxWidth="500" Margin="0, 0, 0, 0"
       ItemsSource="{Binding Servers}"
       SelectedItem="{Binding Server}"

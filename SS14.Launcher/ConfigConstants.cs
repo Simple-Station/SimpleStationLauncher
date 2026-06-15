@@ -32,7 +32,7 @@ public static class ConfigConstants
     // Amount of time to wait to let a redialling client properly die
     public const int LauncherCommandsRedialWaitTimeout = 1000;
 
-    public const string FallbackAuthServer = "Space-Wizards";
+    public const string FallbackAuthServer = "Space-Wizards-Federation";
     public const string GuestAuthServer = "guest";
     public const string CustomAuthServer = "Custom";
     public static readonly AuthServer TemplateAuthServer = new(new("https://example.com/"), new("https://example.com/"));
@@ -40,6 +40,10 @@ public static class ConfigConstants
     {
         {
             FallbackAuthServer,
+            new(new("https://auth.playss14.com/"), new("https://account.playss14.com/"), false)
+        },
+        {
+            "Space-Wizards",
             new(new("https://auth.spacestation14.com/"), new("https://account.spacestation14.com/"), false)
         },
         {
