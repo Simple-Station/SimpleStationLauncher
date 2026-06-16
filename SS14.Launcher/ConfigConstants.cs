@@ -61,6 +61,7 @@ public static class ConfigConstants
         new("https://hub.simplestation.org/"),
         new("https://hub.singularity14.co.uk/"),
         new("https://cdn.spacestationmultiverse.com/hub/"),
+        new("https://hub.playss14.com/"),
         new("https://hub.spacestation14.com/"),
     ];
 
