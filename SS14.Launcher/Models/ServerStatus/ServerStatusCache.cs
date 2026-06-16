@@ -149,7 +149,22 @@ public sealed class ServerStatusCache : IServerSource
         var inferredTags = ServerTagInfer.InferTags(status);
 
         data.Tags = baseTags.Concat(inferredTags).ToArray();
-        data.Auths = status.AuthMethods ?? [ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer].AuthUrl.AbsoluteUri];
+
+        if (status.AuthMethods is not null)
+        {
+            data.Auths = status.AuthMethods;
+        }
+        else
+        {
+            // *usually* when you query from that hub server, you use that hub's default auth, so this is a small lookup table for it
+            data.Auths = data.HubAddress switch
+            {
+                "https://hub.simplestation.org/" => [ConfigConstants.AuthUrls["SimpleStation"].AuthUrl.AbsoluteUri],
+                "https://hub.spacestation14.com/" => [ConfigConstants.AuthUrls["Space-Wizards"].AuthUrl.AbsoluteUri],
+                "https://hub.playss14.com/" => [ConfigConstants.AuthUrls["Space-Wizards-Federation"].AuthUrl.AbsoluteUri],
+                _ => [ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer].AuthUrl.AbsoluteUri]
+            };
+        }
     }
 
     public static async void UpdateInfoForCore(ServerStatusData data, Func<CancellationToken, Task<ServerInfo?>> fetch)
