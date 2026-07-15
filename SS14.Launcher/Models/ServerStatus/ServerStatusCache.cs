@@ -142,7 +142,7 @@ public sealed class ServerStatusCache : IServerSource
 
         if (status.RoundStartTime != null)
         {
-            data.RoundStartTime = DateTime.Parse(status.RoundStartTime);
+            data.RoundStartTime = DateTime.Parse(status.RoundStartTime).ToUniversalTime();
         }
 
         var baseTags = status.Tags ?? Array.Empty<string>();
