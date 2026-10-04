@@ -1,8 +1,9 @@
 {
   lib,
+  stdenv,
+  config,
   buildDotnetModule,
   dotnetCorePackages,
-  wrapGAppsHook,
   iconConvTools,
   copyDesktopItems,
   makeDesktopItem,
@@ -28,11 +29,23 @@
   cairo,
   zlib,
   glib,
+  at-spi2-atk,
+  at-spi2-core,
   gdk-pixbuf,
+  alsa-lib,
+  libjack2,
+  pipewire,
+  libpulseaudio,
+  wayland,
+  libxkbcommon,
+  wrapGAppsHook4,
   soundfont-fluid,
   # Path to set ROBUST_SOUNDFONT_OVERRIDE to, essentially the default soundfont used.
   soundfont-path ? "${soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2",
-
+  alsaSupport ? stdenv.hostPlatform.isLinux,
+  jackSupport ? stdenv.hostPlatform.isLinux,
+  pipewireSupport ? stdenv.hostPlatform.isLinux,
+  pulseaudioSupport ? config.pulseaudio or stdenv.hostPlatform.isLinux,
   version ? "development",
   source ? ../.,
 }:
@@ -68,9 +81,9 @@ buildDotnetModule rec {
   ];
 
   nativeBuildInputs = [
-    wrapGAppsHook
     iconConvTools
     copyDesktopItems
+    wrapGAppsHook4
   ];
 
   runtimeDeps = [
@@ -103,11 +116,22 @@ buildDotnetModule rec {
     fontconfig
     glew
 
+    # Misc
+    at-spi2-core
+    at-spi2-atk
+    libxkbcommon
+    wayland
+    fontconfig.lib
+
     # TODO: Figure out dependencies for CEF support.
-  ];
+  ]
+  ++ lib.optional alsaSupport alsa-lib
+  ++ lib.optional jackSupport libjack2
+  ++ lib.optional pipewireSupport pipewire
+  ++ lib.optional pulseaudioSupport libpulseaudio;
 
   # Adapted from SS14.Launcher commit 02441df by Carlen White <WhiterSuburban@gmail.com>
-  makeWrapperArgs = [ ''--set ROBUST_SOUNDFONT_OVERRIDE ${soundfont-path}'' ];
+  makeWrapperArgs = [''--set ROBUST_SOUNDFONT_OVERRIDE ${soundfont-path}''];
 
   executables = [ "SS14.Launcher" ];
 
@@ -128,12 +152,6 @@ buildDotnetModule rec {
     cp -r SS14.Loader/bin/${buildType}/*/*/* $out/lib/${pname}/loader/
 
     icoFileToHiColorTheme SS14.Launcher/Assets/icon.ico ${pname} $out
-  '';
-
-  dontWrapGApps = true;
-
-  preFixup = ''
-    makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
   meta = with lib; {
