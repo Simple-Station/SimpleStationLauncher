@@ -7,7 +7,7 @@ namespace SS14.Launcher;
 
 public static class ConfigConstants
 {
-    public const string CurrentLauncherVersion = "4.2.1";
+    public const string CurrentLauncherVersion = "4.2.2";
     #if RELEASE
     public const bool DoVersionCheck = true;
     #else
