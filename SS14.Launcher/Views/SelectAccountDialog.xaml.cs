@@ -25,7 +25,9 @@ public partial class SelectAccountDialog : Window
         _loginMgr = loginManager;
 
         Accounts = _loginMgr.Logins.KeyValues
-            .Where(x => authMethods.FirstOrDefault(m => m == ConfigConstants.AuthUrls[x.Value.Server].AuthUrl.AbsoluteUri) != null)
+            .Where(x => authMethods.FirstOrDefault(m =>
+                ConfigConstants.AuthUrls.TryGetValue(x.Value.Server, out var server)
+                && m == server.AuthUrl.AbsoluteUri) != null)
             .Select(x => x.Value);
         Error = !Accounts.Any();
         Description = _loc.GetString("select-account-dialog-description", ("allowedAuths", string.Join(", ", authMethods.Select(m => ConfigConstants.AuthUrls.FirstOrDefault(kv => kv.Value.AuthUrl.AbsoluteUri == m).Key))));
