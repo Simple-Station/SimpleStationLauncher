@@ -196,7 +196,9 @@ public sealed class LoginManager : ReactiveObject
     public static ConfigConstants.AuthServer GetAuthServerById(string serverId, string? customAuthUrl = null, string? customAccountSite = null)
     {
         if (serverId != ConfigConstants.CustomAuthServer)
-            return ConfigConstants.AuthUrls[serverId];
+            return ConfigConstants.AuthUrls.TryGetValue(serverId, out var server)
+                ? server
+                : ConfigConstants.AuthUrls[ConfigConstants.FallbackAuthServer];
 
         if (customAuthUrl == null)
             throw new ArgumentException("Custom server selected but no custom URLs provided.");
